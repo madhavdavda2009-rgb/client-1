@@ -1,0 +1,26 @@
+* { box-sizing: border-box; }
+html { background: #fff; }
+body { margin: 0; }
+img { display: block; user-select: none; }
+.journey { position: relative; height: 1300svh; overflow: clip; }
+.stage { position: sticky; top: 0; width: 100%; height: 100svh; overflow: hidden; background: #fff; isolation: isolate; }
+.logo { position: absolute; left: 50%; top: 50%; width: min(86vw, 900px); transform: translate(-50%, -50%); transform-origin: center; z-index: 1; will-change: transform; }
+.logo img { width: 100%; height: auto; aspect-ratio: 1600 / 1131; }
+.portal { position: absolute; inset: 0; z-index: 2; clip-path: circle(0 at 50% 50%); opacity: 0; }
+.world-scene { position: absolute; inset: 0; overflow: hidden; background: #d2edfc; }
+.world-layer { position: absolute; inset: -15%; width: 130%; height: 130%; object-fit: cover; will-change: transform; }
+.product-camera { position: absolute; inset: 0; z-index: 5; will-change: transform; }
+.world-product { position: absolute; opacity: 0; visibility: hidden; }
+.world-product img { width: 100%; height: auto; max-height: 62svh; object-fit: contain; }
+.clouds { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.cloud-group { position: absolute; inset: 0; visibility: hidden; }
+.cloud-bank { position: absolute; left: -50%; width: 200%; height: 260%; will-change: transform; }
+.cloud-top { top: -100%; }
+.cloud-bottom { bottom: -100%; }
+.cloud-bank img { width: 100%; height: 100%; object-fit: cover; }
+.cloud-bottom img { transform: rotate(180deg); }
+.cloud-group-0 { filter: none; }
+.cloud-group-1 { filter: none; }
+.cloud-group-2 { filter: blur(3px); }
+@media (max-width: 767px) { .cloud-group { filter: none; } .cloud-group-0 { display: none; } .world-product img { max-height: 52svh; } }
+@media (prefers-reduced-motion: reduce) { .journey { height: 500svh; } .clouds { display: none; } .logo, .product-camera, .world-layer { will-change: auto; } }

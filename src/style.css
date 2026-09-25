@@ -2,28 +2,23 @@
 html { background: #fff; }
 body { margin: 0; }
 img { display: block; user-select: none; }
-.journey { position: relative; height: 1300svh; overflow: clip; }
-.stage { position: sticky; top: 0; width: 100%; height: 100svh; overflow: hidden; background: #fff; isolation: isolate; }
-.logo { position: absolute; left: 50%; top: 50%; width: min(86vw, 900px); transform: translate(-50%, -50%); transform-origin: center; z-index: 1; will-change: transform; }
-.logo img { width: 100%; height: auto; aspect-ratio: 1600 / 1131; }
-.portal { position: absolute; inset: 0; z-index: 2; clip-path: circle(0 at 50% 50%); opacity: 0; }
+.journey { position: relative; height: 1150svh; overflow: clip; }
+.stage { position: sticky; top: 0; width: 100%; height: 100svh; height: 100dvh; overflow: hidden; background: #fff; isolation: isolate; }
+.logo { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; overflow: hidden; }
+.portal { position: absolute; inset: 0; z-index: 2; opacity: 0; visibility: hidden; }
 .world-scene { position: absolute; inset: 0; overflow: hidden; background: #d2edfc; }
-.world-layer { position: absolute; inset: -2%; width: 104%; height: 104%; object-fit: cover; object-position: center bottom; will-change: transform; }
-.product-camera { opacity: 0; visibility: hidden; position: absolute; inset: 0; z-index: 5; will-change: transform; }
+.world-layer { position: absolute; inset: -2%; width: 104%; height: 104%; object-fit: cover; object-position: center bottom;  }
+.product-camera { opacity: 0; visibility: hidden; position: absolute; inset: 0; z-index: 5;  }
 .world-product { position: absolute; opacity: 0; visibility: hidden; }
 .world-product img { width: 100%; height: auto; max-height: 42svh; object-fit: contain; }
 .clouds { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
-.cloud-group { position: absolute; inset: 0; visibility: hidden; }
-.cloud-bank { position: absolute; left: -50%; width: 200%; height: 260%; will-change: transform; }
-.cloud-top { top: -100%; }
-.cloud-bottom { bottom: -100%; }
+.cloud-cover { position: absolute; inset: 0; visibility: hidden; opacity: 0; background: linear-gradient(135deg, #e8f5ff, #fff 55%, #dfedfa); }
+.cloud-bank { position: absolute; left: -30%; top: -25%; width: 160%; height: 150%; visibility: hidden; }
 .cloud-bank img { width: 100%; height: 100%; object-fit: cover; }
-.cloud-bottom img { transform: rotate(180deg); }
-.cloud-group-0 { filter: none; }
-.cloud-group-1 { filter: none; }
-.cloud-group-2 { filter: blur(3px); }
-@media (max-width: 767px) { .cloud-group { filter: none; } .cloud-group-0 { display: none; } .world-product img { max-height: 28svh; } }
-@media (prefers-reduced-motion: reduce) { .journey { height: 500svh; } .clouds { display: none; } .logo, .product-camera, .world-layer { will-change: auto; } }
+.cloud-depth-1 img { transform: rotate(180deg); }
+@media (min-width: 768px) { .cloud-depth-2 { filter: blur(1.5px); } }
+@media (max-width: 767px) { .world-product img { max-height: 28svh; } }
+@media (prefers-reduced-motion: reduce) { .journey { height: 500svh; } .clouds { display: none; } }
 
 .scroll-hint { position: absolute; z-index: 4; bottom: max(28px, env(safe-area-inset-bottom)); left: 16px; right: 16px; margin: 0; color: #47535b; text-align: center; font: 400 13px/1.5 system-ui, sans-serif; letter-spacing: .04em; pointer-events: none; }
 .scroll-hint span { display: block; margin-top: 8px; font-size: 20px; }
@@ -39,3 +34,7 @@ img { display: block; user-select: none; }
   .product-details p { font-size: 14px; line-height: 1.6; }
 }
 @media (max-height: 500px) and (min-width: 768px) { .product-details h2 { font-size: 26px; margin-bottom: 10px; } .product-details p { font-size: 14px; } }
+
+.scroll-hint span { animation: scroll-nudge 1.8s ease-in-out infinite; animation-play-state: inherit; }
+@keyframes scroll-nudge { 0%, 100% { transform: translate3d(0, 0, 0); opacity: .65; } 50% { transform: translate3d(0, 5px, 0); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .scroll-hint span { animation: none; } }

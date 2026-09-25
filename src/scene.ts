@@ -1,4 +1,4 @@
-import background from '../assets/christmas/background.png?url';
+import background from '../assets/opening/background.webp?url';
 export type Placement = { x: number; y: number; width: number; scale: number; rotation: number };
 export type Product = { id: string; image: string; alt: string; title: string; description: string; desktop: Placement; mobile: Placement; sway: number; z: number };
 export type Layer = { id: 'background' | 'far' | 'mid' | 'near' | 'foreground' | 'atmosphere'; image?: string; depth: number; z: number };

@@ -1,38 +1,29 @@
-# Toyon first world
+# Toyon opening and first world
 
-Run `npm install`, then `npm run dev`. Production validation: `npm run build`.
+Run `npm install`, then `npm run dev`; validate with `npm run build`.
 
-The approved Framer reference remains in `reference/ToyonIntro.framer.md`.
-Its original logo, O geometry, sticky stage, native scrolling, gradual zoom,
-one-second scrub and cloud transition are retained. One persistent world avoids
-scale resets at the portal handoff.
+The supplied `toyon.jpeg` is displayed unchanged. No tracing, recolouring,
+reconstructed lettering or depth treatment is applied. The viewport-sized SVG
+wrapper only positions that original image; it does NOT make the raster into a
+vector. Extreme zoom sharpness requires the original brand SVG/vector asset.
 
-## ZIP artwork update
+The native sticky opening uses one ScrollTrigger and one on-demand GSAP ticker.
+The ticker detaches at rest/unmount. The opening is 2.5 viewport lengths, directly
+targets the first O, and rate-limits progression through its essential stages
+when the visitor flings to the bottom. Product travel retains normal smoothing.
+Reduced motion uses crossfades and no cloud/camera movement.
 
-The following original files were extracted without modifying their bytes from
-`Balloon-Mockups-96-Minimal-2D-Worlds.zip`:
+The indicator follows actual scroll position and returns at the start. Its
+arrow gently loops only while visible (disabled with reduced motion).
 
-- `christmas/Backgrounds/background-01.png` → `assets/christmas/background.png`
-- `christmas/Clouds/cloud-transition-01.png` → `assets/christmas/clouds.png`
+Three image cloud layers surround one opaque cloud cover. The world remains
+hidden until full coverage; it is prepared under that cover before foreground
+clouds separate. The cloud and background are optimized derivatives of the
+supplied ZIP artwork (33 KB and 13 KB). Original PNGs and product files remain
+untouched. Products and their approved visual descriptions retain wide framing.
 
-Product images remain the original `frames/1.png`–`frames/8.png`. Only the
-Christmas world is implemented in this phase; other ZIP categories are untouched.
-The older generated winter path is no longer rendered.
-
-## Camera route
-
-Every product has a fixed world coordinate in `src/scene.ts`. A shared camera
-visits all eight coordinates in order. Each stop uses smooth movement followed
-by a short scroll-controlled hold. The environment moves more slowly for depth.
-The first four viewport lengths preserve the intro timing; each product then
-receives one viewport length. Scrolling backward reverses the route.
-Desktop/mobile artwork sizes are independently configurable. Adding products to
-the scene automatically extends the camera route and scroll length.
-
-Reduced motion replaces camera travel with centered product crossfades and
-removes zoom, sway and clouds. Live preference changes and GSAP cleanup remain.
-
-Verified: build, all eight centered and fully visible camera stops at 1440×900
-and 390×844, no horizontal overflow, reduced-motion camera disabled, no browser
-page errors. Original source asset files are untouched.
-
+The stage uses 100dvh with 100svh fallback. Static dimensions are measured only
+on refresh, not on every animation frame. Mobile has no cloud blur. Scrolling
+never uses wheel/touch interception. Six viewport widths are included in QA:
+320, 360, 375, 390, 414 and 430 pixels. Browser emulation is not a physical-device
+60 FPS guarantee.

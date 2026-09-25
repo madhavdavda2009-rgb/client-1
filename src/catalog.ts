@@ -5,10 +5,11 @@ export const products: Product[] = data.products;
 export const categories: Category[] = data.categories;
 export const productById = Object.fromEntries(products.map(p => [p.id, p]));
 export const categoryById = Object.fromEntries(categories.map(c => [c.id, c]));
-// Two encounters in each world, then the continuous road visits the next world.
-// Subsequent passes visit the remaining products, once each.
-export const journeyProducts: Product[] = [];
-for (let pass = 0; pass < 8; pass++) for (const category of categories) {
-  journeyProducts.push(...category.products.slice(pass * 2, pass * 2 + 2).map(id => productById[id]));
-}
-export const heroProducts = categories.map(c => productById[c.products[0]]);
+// Home is curated; the full catalogue remains available on Products.
+export const journeyProducts = categories.flatMap(category => category.products.slice(0, 8).map(id => productById[id]));
+export const journeySequence: { productIndex: number; transitionFrom?: number }[] = [];
+journeyProducts.forEach((product, index) => {
+  if (index && journeyProducts[index - 1].category !== product.category) journeySequence.push({ productIndex: index, transitionFrom: index - 1 });
+  journeySequence.push({ productIndex: index });
+});
+export const heroProducts = categories.slice(0, 6).map(c => productById[c.products[0]]);

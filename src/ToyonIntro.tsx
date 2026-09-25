@@ -22,6 +22,7 @@ export default function ToyonIntro() {
     const portal = root.querySelector<HTMLElement>('.portal')!;
     const world = root.querySelector<HTMLElement>('.world-scene')!;
     const camera = root.querySelector<HTMLElement>('.product-camera')!;
+    const detailNodes = Array.from(root.querySelectorAll<HTMLElement>('.product-details'));
     const hint = root.querySelector<HTMLElement>('.scroll-hint')!;
     const cloudGroups = Array.from(root.querySelectorAll<HTMLElement>('.cloud-group'));
     const productNodes = Array.from(root.querySelectorAll<HTMLElement>('.world-product'));
@@ -63,7 +64,7 @@ export default function ToyonIntro() {
         logo.style.opacity = `${reduced ? 1 - rangeProgress(total, 0.04, 0.18) : 1 - easeInOut(rangeProgress(progress, 0.69, 0.72))}`;
         portal.style.clipPath = reduced ? 'none' : `circle(${radius}px at ${cx}px ${cy}px)`;
         portal.style.opacity = `${reduced ? rangeProgress(total, 0.08, 0.22) : easeInOut(rangeProgress(progress, 0.015, 0.075))}`;
-        world.style.transform = reduced ? 'none' : `scale(${1.4 - 0.4 * easeInOut(rangeProgress(progress, 0.3, 0.72)) + travel * 0.035})`;
+        world.style.transform = reduced ? 'none' : `scale(${1.4 - 0.4 * easeInOut(rangeProgress(progress, 0.3, 0.72))})`;
         world.style.transformOrigin = '50% 50%';
         const t = reduced ? rangeProgress(total, 0.2, 1) : travel;
         const stop = Math.min(products.length - 1, Math.floor(t * products.length));
@@ -73,7 +74,7 @@ export default function ToyonIntro() {
         const previous = stop > 0 ? (mobile ? products[stop - 1].mobile : products[stop - 1].desktop) : { ...current, x: current.x + 0.18, y: current.y - 0.12 };
         const cameraX = previous.x + (current.x - previous.x) * blend;
         const cameraY = previous.y + (current.y - previous.y) * blend;
-        camera.style.transform = reduced ? 'none' : `translate(${vw * (0.5 - cameraX)}px, ${vh * (0.5 - cameraY)}px)`;
+        camera.style.transform = reduced ? 'none' : `translate(${vw * ((mobile ? 0.5 : 0.33) - cameraX)}px, ${vh * ((mobile ? 0.35 : 0.44) - cameraY)}px)`;
         root.dataset.focusProduct = products[stop].id;
         cloudGroups.forEach((group, i) => {
           const enter = easeInOut(rangeProgress(progress, 0.42 + i * 0.018, 0.69));
@@ -88,8 +89,8 @@ export default function ToyonIntro() {
         productNodes.forEach((node, i) => {
           const product = products[i], p = mobile ? product.mobile : product.desktop;
           const visibility = reduced ? (i === stop ? (stop === 0 ? 1 : blend) : i === stop - 1 ? 1 - blend : 0) : 1;
-          node.style.left = `${reduced ? 50 : p.x * 100}%`;
-          node.style.top = `${reduced ? 50 : p.y * 100}%`;
+          node.style.left = `${reduced ? (mobile ? 50 : 33) : p.x * 100}%`;
+          node.style.top = `${reduced ? (mobile ? 35 : 44) : p.y * 100}%`;
           node.style.width = `${p.width}%`;
           node.style.opacity = `${visibility}`;
           node.style.visibility = visibility > 0 ? 'visible' : 'hidden';
@@ -97,9 +98,18 @@ export default function ToyonIntro() {
           node.setAttribute('aria-hidden', i === stop && productReveal > 0.5 ? 'false' : 'true');
           node.style.transform = `translate(-50%, -50%) rotate(${reduced ? 0 : p.rotation + Math.sin(t * 9 + i) * product.sway}deg) scale(${p.scale})`;
         });
+        detailNodes.forEach((node, i) => {
+          const focus = reduced ? (i === stop ? (stop === 0 ? 1 : blend) : i === stop - 1 ? 1 - blend : 0)
+            : i === stop ? easeInOut(rangeProgress(blend, 0.68, 0.98)) : i === stop - 1 ? 1 - easeInOut(rangeProgress(segment, 0, 0.18)) : 0;
+          const opacity = focus * productReveal;
+          node.style.opacity = `${opacity}`;
+          node.style.visibility = opacity > 0 ? 'visible' : 'hidden';
+          node.setAttribute('aria-hidden', opacity < 0.5 ? 'true' : 'false');
+        });
         layerNodes.forEach(node => {
           const layer = layers.find(l => l.id === node.dataset.layer)!;
-          node.style.transform = reduced ? 'none' : `translate(${clamp((1.4 - cameraX) * layer.depth * vw, -vw * 0.12, vw * 0.12)}px, ${clamp((2.3 - cameraY) * layer.depth * vh, -vh * 0.12, vh * 0.12)}px)`;
+          // Keep the supplied landscape in view behind every product.
+          node.style.transform = reduced || mobile ? 'none' : `translate(${clamp((1.4 - cameraX) * layer.depth * vw * 0.1, -vw * 0.018, vw * 0.018)}px, 0)`;
         });
       };
       measure(); renderFrame();
@@ -108,7 +118,7 @@ export default function ToyonIntro() {
         onRefreshInit: measure, onRefresh: renderFrame });
       return () => {
         trigger.kill(); timeline.kill(); root.style.removeProperty('height');
-        [logo, portal, world, camera, hint, ...cloudGroups, ...productNodes, ...layerNodes, ...Array.from(root.querySelectorAll<HTMLElement>('.cloud-bank'))].forEach(el => el.removeAttribute('style'));
+        [logo, portal, world, camera, hint, ...cloudGroups, ...productNodes, ...detailNodes, ...layerNodes, ...Array.from(root.querySelectorAll<HTMLElement>('.cloud-bank'))].forEach(el => el.removeAttribute('style'));
       };
     }, root);
     return () => mm.revert();

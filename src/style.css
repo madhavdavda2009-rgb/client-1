@@ -9,7 +9,7 @@ img { display: block; user-select: none; }
 .portal { position: absolute; inset: 0; z-index: 2; clip-path: circle(0 at 50% 50%); opacity: 0; }
 .world-scene { position: absolute; inset: 0; overflow: hidden; background: #d2edfc; }
 .world-layer { position: absolute; inset: -15%; width: 130%; height: 130%; object-fit: cover; will-change: transform; }
-.product-camera { position: absolute; inset: 0; z-index: 5; will-change: transform; }
+.product-camera { opacity: 0; visibility: hidden; position: absolute; inset: 0; z-index: 5; will-change: transform; }
 .world-product { position: absolute; opacity: 0; visibility: hidden; }
 .world-product img { width: 100%; height: auto; max-height: 62svh; object-fit: contain; }
 .clouds { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
@@ -24,3 +24,6 @@ img { display: block; user-select: none; }
 .cloud-group-2 { filter: blur(3px); }
 @media (max-width: 767px) { .cloud-group { filter: none; } .cloud-group-0 { display: none; } .world-product img { max-height: 52svh; } }
 @media (prefers-reduced-motion: reduce) { .journey { height: 500svh; } .clouds { display: none; } .logo, .product-camera, .world-layer { will-change: auto; } }
+
+.scroll-hint { position: absolute; z-index: 4; bottom: max(28px, env(safe-area-inset-bottom)); left: 16px; right: 16px; margin: 0; color: #47535b; text-align: center; font: 400 13px/1.5 system-ui, sans-serif; letter-spacing: .04em; pointer-events: none; }
+.scroll-hint span { display: block; margin-top: 8px; font-size: 20px; }

@@ -22,6 +22,7 @@ export default function ToyonIntro() {
     const portal = root.querySelector<HTMLElement>('.portal')!;
     const world = root.querySelector<HTMLElement>('.world-scene')!;
     const camera = root.querySelector<HTMLElement>('.product-camera')!;
+    const hint = root.querySelector<HTMLElement>('.scroll-hint')!;
     const cloudGroups = Array.from(root.querySelectorAll<HTMLElement>('.cloud-group'));
     const productNodes = Array.from(root.querySelectorAll<HTMLElement>('.world-product'));
     const layerNodes = Array.from(root.querySelectorAll<HTMLElement>('[data-layer]'));
@@ -40,6 +41,11 @@ export default function ToyonIntro() {
         const total = state.progress;
         const progress = reduced ? total : clamp(total * (4 + products.length) / 4);
         const travel = reduced ? total : rangeProgress(total, 4 / (4 + products.length), 1);
+        const productReveal = easeInOut(reduced ? rangeProgress(total, 0.2, 0.26) : rangeProgress(total * (4 + products.length), 4, 4.3));
+        camera.style.opacity = `${productReveal}`;
+        camera.style.visibility = productReveal === 0 ? 'hidden' : 'visible';
+        hint.style.opacity = `${1 - easeInOut(rangeProgress(progress, 0.015, 0.12))}`;
+        hint.style.visibility = progress >= 0.12 ? 'hidden' : 'visible';
         const baseWidth = Math.min(vw * 0.86, 900);
         const baseHeight = baseWidth / (1600 / 1131);
         const target = clamp(Math.hypot(vw, vh) * 0.56 / (intro.holeRadius * baseWidth), 60, 120);
@@ -70,11 +76,11 @@ export default function ToyonIntro() {
         camera.style.transform = reduced ? 'none' : `translate(${vw * (0.5 - cameraX)}px, ${vh * (0.5 - cameraY)}px)`;
         root.dataset.focusProduct = products[stop].id;
         cloudGroups.forEach((group, i) => {
-          const enter = easeInOut(rangeProgress(progress, 0.5 + i * 0.014, 0.69));
-          const leave = easeInOut(rangeProgress(progress, 0.75 + i * 0.035, 0.86 + i * 0.045));
-          group.style.visibility = reduced || progress < 0.5 || leave === 1 ? 'hidden' : 'visible';
-          group.style.opacity = `${reduced ? 0 : rangeProgress(progress, 0.5 + i * 0.014, 0.58 + i * 0.014)}`;
-          const offset = (1 - enter + leave) * (115 + i * 8);
+          const enter = easeInOut(rangeProgress(progress, 0.42 + i * 0.018, 0.69));
+          const leave = easeInOut(rangeProgress(progress, 0.72 + i * 0.025, 0.92 + i * 0.035));
+          group.style.visibility = reduced || progress < 0.42 || leave === 1 ? 'hidden' : 'visible';
+          group.style.opacity = `${reduced ? 0 : easeInOut(rangeProgress(progress, 0.42 + i * 0.018, 0.56 + i * 0.018)) * (1 - easeInOut(rangeProgress(progress, 0.89 + i * 0.035, 0.92 + i * 0.035)))}`;
+          const offset = (1 - enter + leave) * (55 + i * 3);
           const banks = group.children;
           (banks[0] as HTMLElement).style.transform = `translate(${leave * (i % 2 ? 12 : -12)}%, ${-offset}%) scale(${1 + leave * 0.12})`;
           (banks[1] as HTMLElement).style.transform = `translate(${leave * (i % 2 ? -15 : 15)}%, ${offset}%) scale(${1 + leave * 0.16})`;
@@ -88,7 +94,7 @@ export default function ToyonIntro() {
           node.style.opacity = `${visibility}`;
           node.style.visibility = visibility > 0 ? 'visible' : 'hidden';
           node.style.zIndex = `${product.z}`;
-          node.setAttribute('aria-hidden', i === stop ? 'false' : 'true');
+          node.setAttribute('aria-hidden', i === stop && productReveal > 0.5 ? 'false' : 'true');
           node.style.transform = `translate(-50%, -50%) rotate(${reduced ? 0 : p.rotation + Math.sin(t * 9 + i) * product.sway}deg) scale(${p.scale})`;
         });
         layerNodes.forEach(node => {
@@ -102,7 +108,7 @@ export default function ToyonIntro() {
         onRefreshInit: measure, onRefresh: renderFrame });
       return () => {
         trigger.kill(); timeline.kill(); root.style.removeProperty('height');
-        [logo, portal, world, camera, ...cloudGroups, ...productNodes, ...layerNodes, ...Array.from(root.querySelectorAll<HTMLElement>('.cloud-bank'))].forEach(el => el.removeAttribute('style'));
+        [logo, portal, world, camera, hint, ...cloudGroups, ...productNodes, ...layerNodes, ...Array.from(root.querySelectorAll<HTMLElement>('.cloud-bank'))].forEach(el => el.removeAttribute('style'));
       };
     }, root);
     return () => mm.revert();
@@ -113,6 +119,7 @@ export default function ToyonIntro() {
       <div className="logo"><img src={logoUrl} alt="Toyon Industry Pvt Ltd" draggable={false} fetchPriority="high" /></div>
       <div className="portal"><WorldScene /></div>
       <CloudTransition />
+      <p className="scroll-hint">Scroll down to see the world<span aria-hidden="true">↓</span></p>
     </div>
   </main>;
 }

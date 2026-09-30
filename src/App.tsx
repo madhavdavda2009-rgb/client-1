@@ -1,5 +1,6 @@
-import { useEffect, useState, type FormEvent } from 'react';
-import ToyonIntro from './ToyonIntro';
+import { useEffect, useState, lazy, Suspense, type FormEvent } from 'react';
+import { LazyMotion, domAnimation, m, AnimatePresence, useReducedMotion, MotionConfig } from 'framer-motion';
+const ToyonIntro = lazy(() => import('./ToyonIntro'));
 import Preloader from './Preloader';
 import { categories, categoryById, productById, products, type Product } from './catalog';
 import { company } from './site-content';
@@ -7,13 +8,14 @@ import logo from '../assets/brand/toyon-original.svg?url';
 import './site.css';
 
 function Header() {
+  const home=location.pathname==='/';
   const [open, setOpen] = useState(false);
   const [paused, setPaused] = useState(false);
-  useEffect(() => { document.documentElement.dataset.ambientPaused = String(paused); }, [paused]);
+  useEffect(() => { document.documentElement.dataset.ambientPaused = String(paused); window.dispatchEvent(new Event('toyon:motion')); }, [paused]);
   useEffect(() => { const close = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); }; window.addEventListener('keydown', close); return () => window.removeEventListener('keydown', close); }, []);
-  return <header className="site-header"><a href="/" className="brand-link" aria-label="Toy-On home"><img src={logo} alt="Toy-On" /></a>
+  return <header className={`site-header${home ? ' home-header' : ''}`}>{!home && <a href="/" className="brand-link" aria-label="Toy-On home"><img src={logo} alt="Toy-On" /></a>}
     <div className="header-actions"><button className="motion-control" onClick={() => setPaused(!paused)} aria-pressed={paused}>{paused ? 'Resume motion' : 'Pause motion'}</button><button className="menu-toggle" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="site-menu">{open ? 'Close' : 'Menu'}</button></div>
-    <nav id="site-menu" className="site-menu" hidden={!open} aria-label="Main navigation">{[['/', 'Home'], ['/products', 'Products'], ['/categories', 'Categories'], ['/about', 'About us'], ['/contact', 'Contact']].map(([href, label]) => <a key={href} href={href}>{label}<span aria-hidden="true">↗</span></a>)}</nav>
+    <AnimatePresence>{open && <m.nav initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}} transition={{duration:.18}} id="site-menu" className="site-menu" aria-label="Main navigation">{[['/', 'Home'], ['/products', 'Products'], ['/categories', 'Categories'], ['/about', 'About us'], ['/contact', 'Contact']].map(([href, label]) => <a key={href} href={href}>{label}<span aria-hidden="true">↗</span></a>)}</m.nav>}</AnimatePresence>
   </header>;
 }
 function Footer() {
@@ -56,7 +58,11 @@ function AboutPage() {
 }
 function NotFound() { return <main className="content-page"><div className="page-heading"><span className="eyebrow">404</span><h1>A little<br />off the road.</h1><a href="/products" className="text-link">Explore the products ↗</a></div></main>; }
 function Home({ reduced }: { reduced: boolean }) {
-  return <>{reduced ? <main className="reduced-home"><img className="reduced-logo" src={logo} alt="Toy-On" /><div className="page-heading"><h1>Explore the<br />Toy-On worlds.</h1><a className="text-link" href="/products">Browse all designs ↗</a></div><CategoryRows /></main> : <><Preloader /><ToyonIntro /></>}<section className="journey-ending"><span className="eyebrow">There’s more to discover</span><h2>Which shape<br />is yours?</h2><div><a className="text-link" href="/products">Explore all {products.length} designs ↗</a><a className="text-link" href="/contact">Start an enquiry ↗</a></div><div className="ending-products" aria-hidden="true">{categories.slice(2, 6).map(c => <img key={c.id} src={productById[c.products[1]].thumb} alt="" loading="lazy" />)}</div></section></>;
+  return <>{reduced ? <main className="reduced-home"><img className="reduced-logo" src={logo} alt="Toy-On" /><div className="page-heading"><h1>Explore the<br />Toy-On worlds.</h1><a className="text-link" href="/products">Browse all designs ↗</a></div><CategoryRows /></main> : <><Preloader /><Suspense fallback={<div className="stage" />}><ToyonIntro /></Suspense></>}<section className="journey-ending"><img className="ending-logo" src={logo} alt="Toy-On" /><span className="eyebrow">The journey keeps going</span><h2>Which shape<br />is yours?</h2><div className="ending-actions"><a className="text-link" href="/products">Explore all {products.length} designs ↗</a><a className="text-link" href="/contact">Start an enquiry ↗</a></div><div className="ending-products" aria-hidden="true">{categories.slice(2, 6).map(c => <img key={c.id} src={productById[c.products[1]].thumb} alt="" loading="lazy" />)}</div></section></>;
+}
+function PageReveal({children}:{children:React.ReactNode}) {
+  const reduced=useReducedMotion();
+  return <m.div className="page-reveal" initial={reduced?false:{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{duration:.4,ease:'easeOut'}}>{children}</m.div>;
 }
 export default function App() {
   const [reduced, setReduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -74,5 +80,5 @@ export default function App() {
   else if (path === '/about') page = <AboutPage />;
   else if (path === '/contact') page = <ContactPage />;
   else page = <NotFound />;
-  return <><a className="skip-link" href="/products">Skip to product catalogue</a><Header />{page}<Footer /></>;
+  return <MotionConfig reducedMotion="user"><LazyMotion features={domAnimation}><a className="skip-link" href="/products">Skip to product catalogue</a><Header />{path==='/'?page:<PageReveal>{page}</PageReveal>}<Footer /></LazyMotion></MotionConfig>;
 }

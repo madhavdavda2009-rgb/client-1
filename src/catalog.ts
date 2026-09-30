@@ -6,7 +6,7 @@ export const categories: Category[] = data.categories;
 export const productById = Object.fromEntries(products.map(p => [p.id, p]));
 export const categoryById = Object.fromEntries(categories.map(c => [c.id, c]));
 // Home is curated; the full catalogue remains available on Products.
-export const journeyProducts = categories.flatMap(category => category.products.slice(0, 8).map(id => productById[id]));
+export const journeyProducts = categories.flatMap(category => category.products.slice(0, 4).map(id => productById[id]));
 export const journeySequence: { productIndex: number; transitionFrom?: number }[] = [];
 journeyProducts.forEach((product, index) => {
   if (index && journeyProducts[index - 1].category !== product.category) journeySequence.push({ productIndex: index, transitionFrom: index - 1 });

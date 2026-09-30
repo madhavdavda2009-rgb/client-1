@@ -1,6 +1,8 @@
 import { heroProducts } from './catalog';
+import Atmosphere from './Atmosphere';
 export default function HeroStream() {
   return <div className="hero-life">
+    <Atmosphere/>
     <div className="hero-orbit orbit-one" /><div className="hero-orbit orbit-two" />
     <div className="hero-sparkles" aria-hidden="true">{Array.from({ length: 6 }, (_, i) => <i key={i} style={{ left: `${8 + i * 17}%`, top: '-20px', animationDelay: `${-i * .6}s` }} />)}</div>
     <div className="hero-stream" aria-label="A moving selection of Toy-On products">

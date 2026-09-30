@@ -13,3 +13,24 @@
 @keyframes motif-fall{0%{transform:translate3d(0,-30px,0) rotate(-15deg)}100%{transform:translate3d(18px,105svh,0) rotate(130deg)}}
 @media(max-width:767px){.world-product img{height:25svh}.product-details{top:57%;width:84%}.world-sparkles i:nth-child(n+5){display:none}.world-sparkles i{width:14px;height:18px}.drift-cloud{animation:none;opacity:.24}.stream-track{animation-duration:50s}.hero-sparkles i:nth-child(n+5){display:none}.foreground-decoration{height:10%}.product-details p{max-width:32ch}.scene-background{mask-image:linear-gradient(to bottom,transparent,#000 20%)}}
 @media(prefers-reduced-motion:reduce){.world-sparkles i,.hero-sparkles i,.stream-track{animation:none}}
+/* Illustrated cluster journey: camera transform is separate from local balloon motion. */
+.cluster-world{position:absolute;inset:0;overflow:hidden;background:#dff1f6;color:#19313b;isolation:isolate}
+.world-camera{position:absolute;left:0;top:0;width:1200px;transform-origin:0 0;will-change:transform}
+.illustrated-world{position:absolute;left:0;top:0;max-width:none;overflow:visible}
+.world-clusters{position:absolute;inset:0;pointer-events:none}.product-cluster{position:absolute;width:1px;height:1px}
+.balloon-anchor{position:absolute;width:240px;height:1px;transform:translateX(-50%) scale(var(--balloon-size));transform-origin:center bottom;pointer-events:auto}
+.balloon-ground-shadow{position:absolute;left:35px;bottom:-12px;width:170px;height:32px;border-radius:50%;background:radial-gradient(ellipse,var(--shadow-ink) 0%,transparent 70%);opacity:.29;transform-origin:center;pointer-events:none}
+.balloon-assembly{position:absolute;left:0;bottom:0;width:240px;height:280px;display:block;transform-origin:center bottom}.balloon-idle{width:100%;height:100%;transform-origin:center bottom}.balloon-idle picture{display:block;width:100%;height:100%}.balloon-idle img{width:100%;height:100%;object-fit:contain;filter:none}
+.cluster-copy{position:absolute;z-index:8;top:38%;width:30%;color:#19313b;pointer-events:none}.cluster-copy a{pointer-events:auto}.cluster-copy[aria-hidden=true]{visibility:hidden}.cluster-copy-right{left:67%}.cluster-copy-left{left:7%}.cluster-copy .product-category{font-size:12px;font-weight:600;letter-spacing:.12em;color:#19313b}.cluster-copy h2{font-size:clamp(28px,3.3vw,52px);line-height:1.05;font-weight:500;letter-spacing:-.04em;margin:8px 0 24px;text-wrap:balance}.cluster-copy .explore-product{color:#19313b;font-weight:500}.journey[data-phase=opening] .world-clusters{visibility:hidden}.cluster-world .journey-browse,.cluster-world .journey-position{color:#19313b;font-weight:600;text-shadow:0 1px #fff8}
+.site-header.home-header{justify-content:flex-end}.site-header.home-header .brand-link{display:none}.site-header .motion-control,.site-header .menu-toggle{color:#183239;font-weight:600}.site-menu a{color:#183239}.page-heading,.detail-copy,.category-row,.catalogue-product,.browse-controls,.enquiry-form{color:#19313b}.catalogue-product .eyebrow{opacity:1;color:#345057}.result-count,.form-note,.back-link{color:#31474e}.site-footer{color:#fffdf1}.content-page,.product-page{background:#fffdf7}.page-reveal{min-height:60vh}.header-actions{position:relative;z-index:1}
+@media(max-width:767px){.cluster-copy,.cluster-copy-left,.cluster-copy-right{left:8%;top:65%;width:84%;text-align:center}.cluster-copy h2{font-size:clamp(25px,7vw,33px);margin:8px 0 18px}.cluster-copy .product-category{font-size:10px;margin-bottom:3px}.cluster-copy .explore-product{font-size:13px}.cluster-world .journey-position,.cluster-world .journey-browse{font-size:10px}.cluster-copy .cluster-name{min-height:96px}}
+@media(max-height:600px) and (min-width:768px){.cluster-copy{top:32%;width:30%}.cluster-copy h2{font-size:24px;margin-bottom:14px}}
+.site-header::before{content:"";position:absolute;left:0;right:0;top:0;height:115px;background:linear-gradient(#fffdf7e8,#fffdf7a8 45%,transparent);pointer-events:none}.site-header .brand-link{position:relative}.cluster-copy::before{content:"";position:absolute;inset:-40px -55px;z-index:-1;background:radial-gradient(ellipse,#fffdf7dc 0%,#fffdf786 48%,transparent 72%);pointer-events:none}.cluster-copy{isolation:isolate}@media(max-width:767px){.cluster-copy::before{opacity:.55}}
+/* Atmosphere supports the approved composition without tinting products or type. */
+.atmospheric-gradient{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;object-fit:cover}
+.hero-life>.atmospheric-gradient{opacity:.42;mask-image:radial-gradient(ellipse at 50% 25%,transparent 10%,#000 90%)}
+.world-camera{z-index:1}
+.cluster-world{background:transparent}
+.cluster-world>.atmospheric-gradient{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+
+html{font-family:'Outfit Variable',Outfit,Arial,sans-serif}

@@ -172,3 +172,15 @@
 .three-world-copy h2,.three-world-copy p,.three-world-copy .eyebrow{text-shadow:none}
 .three-road-world[data-active='2'] .three-world-copy h2,.three-road-world[data-active='2'] .three-world-copy p,.three-road-world[data-active='2'] .three-world-copy .eyebrow{color:#fff8e7;text-shadow:0 1px 3px #210a35}
 @media(max-width:900px){.three-road-world[data-active='2'] .three-world-copy h2,.three-road-world[data-active='2'] .three-world-copy p,.three-road-world[data-active='2'] .three-world-copy .eyebrow{color:#163a3d;text-shadow:0 1px 3px #ffd387}}
+
+/* Background blending follows camera progress in both scroll directions. */
+.three-category-backdrops img{transition:none}
+
+/* Warm white arrives with the closing O while the road remains visible. */
+.journey[data-closing=true] .three-road-world{background:#f7f5ee}
+.three-category-backdrops,.three-world-ui{opacity:calc(1 - var(--ending-white,0))}
+/* Projection uses a stable image box and compositor transforms; no per-frame layout sizing. */
+.three-featured-product,.three-featured-product.is-focused{transform:translate3d(var(--product-x,0px),var(--product-y,0px),0) rotate(var(--balloon-tilt,0deg)) scale(var(--product-sx,1),var(--product-sy,1)) translate(-50%,-100%);transform-origin:0 0;transition:opacity .18s ease;will-change:transform}
+.three-featured-product:hover,.three-featured-product.is-focused:hover,.three-featured-product:focus-visible,.three-featured-product.is-focused:focus-visible{transform:translate3d(var(--product-x,0px),var(--product-y,0px),0) rotate(var(--balloon-tilt,0deg)) scale(var(--product-sx,1),var(--product-sy,1)) translate(-50%,-100%) scale(1.1)}
+
+.three-featured-product img{transform:scale(var(--image-sx,1),var(--image-sy,1));transform-origin:center bottom}

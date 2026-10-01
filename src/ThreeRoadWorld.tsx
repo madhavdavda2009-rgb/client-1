@@ -12,7 +12,7 @@ const journeyWorlds: JourneyWorld[] = [
   { ...categories.find(c => c.id === 'dinosaurs')!, products: categories.find(c => c.id === 'dinosaurs')!.products.slice(0, 3).map(id => productById[id]), label: 'DINOSAUR WORLD', description: 'Bring big imaginations to life with playful characters built for roaring celebrations.' },
   { ...categories.find(c => c.id === 'halloween')!, products: categories.find(c => c.id === 'halloween')!.products.slice(0, 3).map(id => productById[id]), label: 'HALLOWEEN COLLECTION', description: 'A little spooky, a lot of fun — expressive designs for nights worth remembering.' },
 ];
-const worldBackgrounds = ['/assets/scenery/supplied/chirstmas_bg.png', '/assets/scenery/supplied/dino_bg.png', '/assets/scenery/supplied/halloween_bg.png'];
+const worldBackgrounds = ['/assets/scenery/supplied/chirstmas_bg.webp', '/assets/scenery/supplied/dino_bg.webp', '/assets/scenery/supplied/halloween_bg.webp'];
 
 const clamp = (n: number, a = 0, b = 1) => Math.max(a, Math.min(b, n));
 // A short scroll-controlled pause; never grab input or run an automatic camera zoom.
@@ -89,16 +89,18 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
         shader.uniforms.gateWindow=gateWindow;
         shader.fragmentShader='uniform vec3 gateWindow;\n'+shader.fragmentShader;
         shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>
-          if(gl_FragCoord.y>gateWindow.y && distance(gl_FragCoord.xy,gateWindow.xy)>gateWindow.z) discard;`);
+          if(gateWindow.z>0.0 && gl_FragCoord.y>gateWindow.y && distance(gl_FragCoord.xy,gateWindow.xy)>gateWindow.z) discard;`);
       };
       material.customProgramCacheKey=()=> 'road-gate-opening-v1';
     };
     [...roadMaterials,shoulderMaterial].forEach(confineDistantRoad);
     const dashes = new THREE.Group(); for (let i = 0; i < 26; i += 1) { const t = i / 27 + .005; const p = roadCurve.getPointAt(t); const tangent = roadCurve.getTangentAt(t); const dash = new THREE.Mesh(new THREE.BoxGeometry(.12, .035, .85), new THREE.MeshBasicMaterial({ color: 0xfff7d8, transparent: true, opacity: .75 })); dash.position.copy(p); dash.position.y += .025; dash.rotation.y = Math.atan2(tangent.x, tangent.z); dashes.add(dash); } world.add(dashes); dashes.children.forEach(dash=>confineDistantRoad((dash as THREE.Mesh).material as THREE.Material));
     const productLinks = journeyWorlds.map((_, index) => [...host.querySelectorAll<HTMLAnchorElement>(`.three-featured-set:nth-child(${index + 1}) .three-featured-product`)]);
+    productLinks.flat().forEach(link=>{link.style.left=link.style.top='0px';link.style.width='200px';link.style.height='244px';link.style.transformOrigin='0 0'});
     // Fixed stations on one road: bunch first, scenic O farther along, then the next station.
     const stops = [.17, .48, .80].map(p => .045 + p * .91);
     const gates = [.28, .60, .91].map(p => .045 + p * .91);
+    const backgrounds=[...host.querySelectorAll<HTMLImageElement>('.three-category-backdrops img')];
     const portal = host.querySelector<SVGSVGElement>('.three-portal-o')!;
     const shadowCanvas = document.createElement('canvas'); shadowCanvas.width = shadowCanvas.height = 64;
     const shadowContext = shadowCanvas.getContext('2d')!;
@@ -123,7 +125,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
     const tick = (time: number) => {
       raf = requestAnimationFrame(tick);
       if (!visible || document.hidden || journey?.dataset.closingProgress==='1.0000' || (journey?.dataset.phase === 'hero' && host.dataset.gateX!==undefined && !dirty)) { last = time; return; }
-      const frameInterval = viewportWidth < 900 ? 1000 / 45 : 1000 / 60;
+      const frameInterval = 1000 / 60 - 1;
       if (time - last < frameInterval) return;
       const dt = Math.min((time - last) / 1000 || .016, .5); last = time;
       const raw = stationTravel(clamp(targetProgress.current));
@@ -144,7 +146,13 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
       if (worldIndex !== Number(host.dataset.active)) { host.dataset.active = String(worldIndex); setActive(worldIndex); }
       const segmentStart = [0, .345, .655][worldIndex], segmentEnd = [.345, .655, 1][worldIndex];
       const localPosition = clamp((p - segmentStart) / (segmentEnd - segmentStart)) * 3;
-      host.style.setProperty('--scene-scale', String(1 + localPosition / 3 * .08));
+      const background01=THREE.MathUtils.smoothstep(p,.30,.39),background12=THREE.MathUtils.smoothstep(p,.61,.70);
+      const weights=[1,background01,background12];
+      backgrounds.forEach((image,index)=>{
+        image.style.opacity=String(weights[index]);
+        const start=[0,.345,.655][index],end=[.345,.655,1][index];
+        image.style.transform=`scale(${1+clamp((p-start)/(end-start))*.08})`;
+      });
       const nextProduct = Math.min(2, Math.floor(localPosition));
       if (nextProduct !== Number(host.dataset.focusedProduct)) { host.dataset.focusedProduct = String(nextProduct); setFocusedProduct(nextProduct); }
       const nextFov = mobile ? 52 : compact ? 55 : 49;
@@ -165,15 +173,21 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
       // Keep the illustration raster size stable and move its compositor layer instead.
       portal.style.width = portal.style.height = '1024px';
       portal.style.transform = `translate3d(${(gateProjection.x + 1) * screenWidth / 2 - 512}px,${(1 - gateProjection.y) * screenHeight / 2 - 512}px,0) scale(${diameter / 1024})`;
-      portal.style.opacity = String(THREE.MathUtils.smoothstep(-gateView.z, .8, 4));
+      const gateEntry=worldIndex===0?1:THREE.MathUtils.smoothstep(p,[0,.345,.655][worldIndex],[0,.375,.685][worldIndex]);
+      portal.style.opacity = String(THREE.MathUtils.smoothstep(-gateView.z, .8, 4)*gateEntry);
       const gateX = (gateProjection.x + 1) * screenWidth / 2, gateY = (1 - gateProjection.y) * screenHeight / 2;
       const pixelRatio=renderer.getPixelRatio();
       gateWindow.value.set(gateX*pixelRatio,(screenHeight-gateY)*pixelRatio,Math.max(1,diameter*.15)*pixelRatio);
-      if(gateView.z>=-.8)gateWindow.value.z=1e6;
+
       host.dataset.gateX=gateX.toFixed(2);host.dataset.gateY=gateY.toFixed(2);
       const furthestCorner = Math.hypot(Math.max(Math.abs(gateX), Math.abs(screenWidth - gateX)), Math.max(Math.abs(gateY), Math.abs(screenHeight - gateY)));
       // Once the clear center covers the viewport there is no artwork left to paint.
       const gateOutsideViewport = diameter * .155 > furthestCorner;
+      const holeRadius=diameter*.15;
+      const holeOffscreen=gateX+holeRadius<0||gateX-holeRadius>screenWidth||gateY+holeRadius<0||gateY-holeRadius>screenHeight;
+      // A passed or off-screen gate must never clip the continuous foreground road.
+      if(gateView.z> -4 || gateOutsideViewport || holeOffscreen)gateWindow.value.z=-1;
+      host.dataset.roadMask=gateWindow.value.z>0?'gate':'none';
       portal.style.visibility = gateView.z < -.8 && !gateOutsideViewport ? 'visible' : 'hidden';
       host.dataset.gateDiameter = diameter.toFixed(1);
       host.dataset.gatePassed = String(gateView.z >= -.8);
@@ -197,8 +211,16 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
         const width = Math.abs(projectedEdge.x - projectedBase.x) * screenWidth / 2;
         const x = (projectedBase.x + 1) * screenWidth / 2;
         const y = (1 - projectedBase.y) * screenHeight / 2;
-        link.style.left = `${x}px`; link.style.right = 'auto'; link.style.top = `${y}px`;
-        link.style.width = `${width}px`; link.style.height = `${Math.abs(projectedTop.y - projectedBase.y) * screenHeight / 2}px`;
+        const height=Math.abs(projectedTop.y-projectedBase.y)*screenHeight/2;
+        link.style.setProperty('--product-x',`${x}px`);link.style.setProperty('--product-y',`${y}px`);
+        link.style.setProperty('--product-sx',String(width/200));link.style.setProperty('--product-sy',String(height/244));
+        const image=link.querySelector('img')!;
+        const aspect=image.naturalWidth/(image.naturalHeight||image.naturalWidth||1);
+        const baseImageWidth=Math.min(200,244*aspect);
+        const imageWidth=Math.min(width,height*aspect);
+        link.style.setProperty('--image-sx',String(imageWidth/(baseImageWidth*(width/200)||1)));
+        link.style.setProperty('--image-sy',String(imageWidth/(baseImageWidth*(height/244)||1)));
+
         link.style.opacity = String(opacity); link.style.pointerEvents = opacity > .5 ? 'auto' : 'none';
         link.style.visibility = opacity > .01 ? 'visible' : 'hidden';
         link.tabIndex = opacity > .5 ? 0 : -1;
@@ -209,7 +231,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
         shadow.visible = opacity > .01;
         host.dataset.productsVisible = String(opacity > .5);
       });
-      const mix01 = THREE.MathUtils.smoothstep(p, .32, .37), mix12 = THREE.MathUtils.smoothstep(p, .63, .68);
+      const mix01 = THREE.MathUtils.smoothstep(p, .30, .39), mix12 = THREE.MathUtils.smoothstep(p, .61, .70);
       blendedSky.copy(skyColors[0]).lerp(skyColors[1], mix01).lerp(skyColors[2], mix12);
       blendedRoad.copy(roadColors[0]).lerp(roadColors[1], mix01).lerp(roadColors[2], mix12);
       blendedEdge.copy(edgeColors[0]).lerp(edgeColors[1], mix01).lerp(edgeColors[2], mix12);
@@ -228,7 +250,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
   return <div className="three-road-world" ref={mount} data-ready={ready} data-active={active}>
     <div className="three-category-backdrops" aria-hidden="true">{worldBackgrounds.map((src,index)=><img key={src} src={src} alt="" className={active===index?'is-active':''} decoding="async"/>)}</div>
     <BrandO active={active}/>
-    <div className="three-featured-products" onPointerMove={event=>{const rect=event.currentTarget.getBoundingClientRect();event.currentTarget.parentElement?.style.setProperty('--portal-turn',`${((event.clientX-rect.left)/rect.width-.5)*3}deg`)}} onPointerLeave={event=>event.currentTarget.parentElement?.style.setProperty('--portal-turn','0deg')}>{journeyWorlds.map((item, index) => <div className={`three-featured-set${active === index ? ' is-active' : ''}`} aria-hidden={active !== index} key={item.id}>{item.products.map((product, productIndex) => <a href={`/products/${product.slug}`} className={`three-featured-product${focusedProduct === productIndex ? ' is-focused' : ''}`} key={product.id} tabIndex={active === index ? 0 : -1} aria-label={`View ${product.title}`}><picture><source media="(max-width: 600px)" srcSet={product.thumb} /><img src={product.image} alt={product.title} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" /></picture></a>)}</div>)}</div>
+    <div className="three-featured-products" onPointerMove={event=>{const rect=event.currentTarget.getBoundingClientRect();event.currentTarget.parentElement?.style.setProperty('--portal-turn',`${((event.clientX-rect.left)/rect.width-.5)*3}deg`)}} onPointerLeave={event=>event.currentTarget.parentElement?.style.setProperty('--portal-turn','0deg')}>{journeyWorlds.map((item, index) => <div className={`three-featured-set${active === index ? ' is-active' : ''}`} aria-hidden={active !== index} key={item.id}>{item.products.map((product, productIndex) => <a href={`/products/${product.slug}`} className={`three-featured-product${focusedProduct === productIndex ? ' is-focused' : ''}`} key={product.id} tabIndex={active === index ? 0 : -1} aria-label={`View ${product.title}`}><picture><source media="(max-width: 600px)" srcSet={product.thumb} /><img src={product.image} alt={product.title} loading="eager" decoding="async" /></picture></a>)}</div>)}</div>
     <div className="three-world-ui" aria-live="polite">
       {journeyWorlds.map((item, index) => <m.div key={item.id} className="three-world-copy" animate={{ opacity: active === index ? 1 : 0, y: active === index ? 0 : 14 }} transition={{ duration: .45 }} aria-hidden={active !== index}><span className="eyebrow">{item.label}</span><h2>{item.title}</h2><p>{item.description}</p><a className="three-world-cta" tabIndex={active === index ? 0 : -1} style={{ visibility: active === index ? "visible" : "hidden" }} href={`/categories/${item.id}`}>Explore collection <span aria-hidden="true">↗</span></a></m.div>)}
       <span className="three-world-progress">{String(active + 1).padStart(2, '0')} / 03</span><a className="three-world-browse" href="/products">Browse all 96 designs ↗</a>

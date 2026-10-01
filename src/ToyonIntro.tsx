@@ -57,6 +57,7 @@ export default function ToyonIntro(){
       }
       const closing=ease(range(progress,(totalLength-1)/totalLength,1));
       root.dataset.closing=String(closing>0);root.dataset.closingProgress=closing.toFixed(4);
+      root.style.setProperty('--ending-white',String(ease(range(closing,0,.5))));
       if(closing===0)closingOrigin=null;
       if(closing===0 && opening===1){root.dataset.phase='road';logo.style.opacity='0';logo.style.visibility='hidden';portal.style.opacity='1';portal.style.visibility='visible'}
       if(closing>0){

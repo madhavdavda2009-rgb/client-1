@@ -8,9 +8,9 @@ import logo from '../assets/brand/toyon-original.svg?url';
 import './site.css';
 
 const journeyBackgrounds: Record<string, string> = {
-  christmas: '/assets/scenery/supplied/chirstmas_bg.png',
-  dinosaurs: '/assets/scenery/supplied/dino_bg.png',
-  halloween: '/assets/scenery/supplied/halloween_bg.png',
+  christmas: '/assets/scenery/supplied/chirstmas_bg.webp',
+  dinosaurs: '/assets/scenery/supplied/dino_bg.webp',
+  halloween: '/assets/scenery/supplied/halloween_bg.webp',
 };
 const categoryBackground = (id: string) => journeyBackgrounds[id] || categoryById[id].background;
 

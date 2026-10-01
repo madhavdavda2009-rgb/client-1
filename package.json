@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "tsc --noEmit && vite build",
+    "build": "node scripts/generate-seo.mjs --prepare && tsc --noEmit && vite build --configLoader runner && node scripts/generate-seo.mjs --pages",
     "preview": "vite preview --host 127.0.0.1"
   },
   "dependencies": {
@@ -14,11 +14,13 @@
     "framer-motion": "^13.4.4",
     "gsap": "3.12.5",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "three": "^0.179.1"
   },
   "devDependencies": {
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
+    "@types/three": "^0.186.0",
     "typescript": "~5.9.2",
     "vite": "^7.1.0"
   }

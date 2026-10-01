@@ -7,6 +7,13 @@ import { company } from './site-content';
 import logo from '../assets/brand/toyon-original.svg?url';
 import './site.css';
 
+const journeyBackgrounds: Record<string, string> = {
+  christmas: '/assets/scenery/supplied/chirstmas_bg.png',
+  dinosaurs: '/assets/scenery/supplied/dino_bg.png',
+  halloween: '/assets/scenery/supplied/halloween_bg.png',
+};
+const categoryBackground = (id: string) => journeyBackgrounds[id] || categoryById[id].background;
+
 function Header() {
   const home=location.pathname==='/';
   const [open, setOpen] = useState(false);
@@ -14,7 +21,7 @@ function Header() {
   useEffect(() => { document.documentElement.dataset.ambientPaused = String(paused); window.dispatchEvent(new Event('toyon:motion')); }, [paused]);
   useEffect(() => { const close = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); }; window.addEventListener('keydown', close); return () => window.removeEventListener('keydown', close); }, []);
   return <header className={`site-header${home ? ' home-header' : ''}`}>{!home && <a href="/" className="brand-link" aria-label="Toy-On home"><img src={logo} alt="Toy-On" /></a>}
-    <div className="header-actions"><button className="motion-control" onClick={() => setPaused(!paused)} aria-pressed={paused}>{paused ? 'Resume motion' : 'Pause motion'}</button><button className="menu-toggle" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="site-menu">{open ? 'Close' : 'Menu'}</button></div>
+    <div className="header-actions"><button className="motion-control" onClick={() => setPaused(!paused)} aria-pressed={paused}>{paused ? 'Resume motion' : 'Pause motion'}</button><button className="menu-toggle" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="site-menu"><span className="menu-label">{open ? 'Close' : 'Menu'}</span><span className="menu-glyph" aria-hidden="true"><i/><i/></span></button></div>
     <AnimatePresence>{open && <m.nav initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}} transition={{duration:.18}} id="site-menu" className="site-menu" aria-label="Main navigation">{[['/', 'Home'], ['/products', 'Products'], ['/categories', 'Categories'], ['/about', 'About us'], ['/contact', 'Contact']].map(([href, label]) => <a key={href} href={href}>{label}<span aria-hidden="true">↗</span></a>)}</m.nav>}</AnimatePresence>
   </header>;
 }
@@ -25,7 +32,7 @@ function ProductGrid({ items }: { items: Product[] }) {
   return <div className="product-grid">{items.map(product => <a className="catalogue-product" href={`/products/${product.slug}`} key={product.id}><div className="catalogue-art"><img src={product.thumb} alt={product.title} width="240" height="240" loading="lazy" /></div><span className="eyebrow">{categoryById[product.category].title}</span><h2>{product.title}<span aria-hidden="true">↗</span></h2></a>)}</div>;
 }
 function CategoryRows() {
-  return <div className="category-rows">{categories.map((category, i) => <a className="category-row" href={`/categories/${category.id}`} key={category.id} style={{ '--category-sky': category.sky } as React.CSSProperties}><div className="category-preview"><img className="category-landscape" src={category.background} alt="" loading="lazy" /><img className="category-preview-product" src={productById[category.products[0]].thumb} alt="" loading="lazy" /></div><div><span className="eyebrow">{String(i + 1).padStart(2, '0')} / {category.products.length} designs</span><h2>{category.title}</h2><span className="text-link">Enter the collection ↗</span></div></a>)}</div>;
+  return <div className="category-rows">{categories.map((category, i) => <a className="category-row" href={`/categories/${category.id}`} key={category.id} style={{ '--category-sky': category.sky } as React.CSSProperties}><div className="category-preview"><img className="category-landscape" src={categoryBackground(category.id)} alt="" loading="lazy" /><img className="category-preview-product" src={productById[category.products[0]].thumb} alt="" loading="lazy" /></div><div><span className="eyebrow">{String(i + 1).padStart(2, '0')} / {category.products.length} designs</span><h2>{category.title}</h2><span className="text-link">Enter the collection ↗</span></div></a>)}</div>;
 }
 function ProductsPage() {
   const [query, setQuery] = useState('');
@@ -35,12 +42,12 @@ function ProductsPage() {
 }
 function CategoryPage({ id }: { id: string }) {
   const category = categoryById[id]; if (!category) return <NotFound />;
-  return <main className="content-page category-page" style={{ '--category-sky': category.sky } as React.CSSProperties}><a href="/categories" className="back-link">← All collections</a><div className="collection-heading"><div><span className="eyebrow">{category.products.length} product designs</span><h1>{category.title}</h1></div><img src={category.background} alt="" /></div><ProductGrid items={category.products.map(id => productById[id])} /></main>;
+  return <main className="content-page category-page" style={{ '--category-sky': category.sky } as React.CSSProperties}><a href="/categories" className="back-link">← All collections</a><div className="collection-heading"><div><span className="eyebrow">{category.products.length} product designs</span><h1>{category.title}</h1></div><img src={categoryBackground(category.id)} alt="" /></div><ProductGrid items={category.products.map(id => productById[id])} /></main>;
 }
 function ProductPage({ id }: { id: string }) {
   const product = productById[id]; if (!product) return <NotFound />;
   const category = categoryById[product.category];
-  return <main className="product-page"><a className="back-link" href={`/categories/${category.id}`}>← {category.title}</a><div className="product-story" style={{ '--category-sky': category.sky } as React.CSSProperties}><div className="detail-art"><img className="detail-background" src={category.background} alt="" /><img className="detail-product" src={product.image} alt={product.title} fetchPriority="high" /></div><div className="detail-copy"><a href={`/categories/${category.id}`} className="eyebrow">{category.title}</a><h1>{product.title}</h1><p>{product.description}</p><a className="text-link" href={`/contact?product=${encodeURIComponent(product.id)}`}>Enquire about this design ↗</a></div></div><section className="related-products"><span className="eyebrow">More from this world</span><ProductGrid items={category.products.filter(id => id !== product.id).slice(0, 4).map(id => productById[id])} /></section></main>;
+  return <main className="product-page"><a className="back-link" href={`/categories/${category.id}`}>← {category.title}</a><div className="product-story" style={{ '--category-sky': category.sky } as React.CSSProperties}><div className="detail-art"><img className="detail-background" src={categoryBackground(category.id)} alt="" /><img className="detail-product" src={product.image} alt={product.title} fetchPriority="high" /></div><div className="detail-copy"><a href={`/categories/${category.id}`} className="eyebrow">{category.title}</a><h1>{product.title}</h1><p>{product.description}</p><a className="text-link" href={`/contact?product=${encodeURIComponent(product.id)}`}>Enquire about this design ↗</a></div></div><section className="related-products"><span className="eyebrow">More from this world</span><ProductGrid items={category.products.filter(id => id !== product.id).slice(0, 4).map(id => productById[id])} /></section></main>;
 }
 function ContactPage() {
   const selected = productById[new URLSearchParams(location.search).get('product') || ''];
@@ -70,7 +77,13 @@ export default function App() {
   const path = decodeURIComponent(location.pathname).replace(/\/$/, '') || '/';
   const product = path.startsWith('/products/') ? productById[path.slice(10)] : undefined;
   const category = path.startsWith('/categories/') ? categoryById[path.slice(12)] : undefined;
-  useEffect(() => { const title = product?.title || category?.title || ({ '/': 'A world of shapes', '/products': 'Products', '/categories': 'Collections', '/about': 'About us', '/contact': 'Contact' } as Record<string, string>)[path] || 'Page not found'; document.title = `${title} — Toy-On`; }, [path, product, category]);
+  useEffect(() => {
+    const label = product?.title || category?.title || ({ '/': 'A world of shapes', '/products': 'All products', '/categories': 'Collections', '/about': 'About Toy-On', '/contact': 'Contact' } as Record<string, string>)[path] || 'Page not found';
+    const description = product?.description || (category ? `Explore ${category.products.length} designs in the Toy-On ${category.title} collection.` : ({ '/': `Explore Toy-On's collection of ${products.length} playful designs, from festive shapes to dinosaurs, vehicles and more.`, '/products': `Browse all ${products.length} Toy-On designs across ${categories.length} collections.`, '/categories': `Explore ${categories.length} Toy-On collections and find shapes for celebrations, characters, animals and more.`, '/about': 'Meet Toy-On and explore a colourful world of shapes and product designs.', '/contact': 'Prepare an enquiry about a Toy-On design. Review and send your message using your preferred contact channel.' } as Record<string, string>)[path] || 'Explore Toy-On designs.');
+    document.title = `${label} | Toy-On`;
+    document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', description);
+    document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', `https://toy-on.vercel.app${path}`);
+  }, [path, product, category]);
   let page;
   if (path === '/') page = <Home reduced={reduced} />;
   else if (path === '/products') page = <ProductsPage />;

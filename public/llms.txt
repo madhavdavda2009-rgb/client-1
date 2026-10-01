@@ -1,0 +1,13 @@
+# Toy-On
+
+Toy-On is a collection of 96 designs presented by Toyon Industry Pvt Ltd.
+
+- [Home](https://toy-on.vercel.app/)
+- [All products](https://toy-on.vercel.app/products)
+- [Collections](https://toy-on.vercel.app/categories)
+- [About](https://toy-on.vercel.app/about)
+- [Contact](https://toy-on.vercel.app/contact)
+
+Collections: [Christmas](https://toy-on.vercel.app/categories/christmas), [Animal faces](https://toy-on.vercel.app/categories/animal-faces), [Bird faces](https://toy-on.vercel.app/categories/bird-faces), [Dinosaurs](https://toy-on.vercel.app/categories/dinosaurs), [Fruit & vegetables](https://toy-on.vercel.app/categories/fruit-and-vegetables), [Vehicles](https://toy-on.vercel.app/categories/vehicles), [Headband shapes](https://toy-on.vercel.app/categories/headband-shapes), [Swords](https://toy-on.vercel.app/categories/swords), [Cartoon & masked faces](https://toy-on.vercel.app/categories/cartoon-and-masked-faces), [Halloween](https://toy-on.vercel.app/categories/halloween).
+
+Product pages contain visual descriptions of the supplied artwork. The contact form prepares a visitor-reviewed enquiry; it does not submit one automatically.

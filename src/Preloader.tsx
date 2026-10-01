@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import originalLogo from '../assets/brand/toyon-original.svg?url';
-import { categories, heroProducts } from './catalog';
-import { cloudUrl } from './CloudTransition';
+import { heroProducts } from './catalog';
 export default function Preloader() {
   const [progress, setProgress] = useState(0);
   const [done, setDone] = useState(false);
   useEffect(() => {
     let cancelled = false;
-    const urls = [originalLogo, cloudUrl, categories[0].background, '/assets/scenery/winter.webp', ...heroProducts.map(p => p.thumb)];
+    const urls = [originalLogo, '/assets/scenery/supplied/chirstmas_bg.png', ...heroProducts.map(p => p.thumb)];
     let loaded = 0;
     const jobs = urls.map(src => new Promise<void>(resolve => {
       const image = new Image(); image.src = src;

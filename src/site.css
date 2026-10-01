@@ -19,3 +19,29 @@
 html{font-family:'Outfit Variable',Outfit,Arial,sans-serif}
 .page-heading h1,.collection-heading h1,.detail-copy h1,.journey-ending h2,.category-row h2,.cluster-copy h2,.depth-caption h2{font-family:'Fredoka Variable','Outfit Variable',sans-serif;font-weight:520;letter-spacing:-.045em}
 .site-menu a,.catalogue-product h2,.product-category,.depth-category{font-family:'Outfit Variable',Outfit,Arial,sans-serif}
+
+/* A small-radius, stamped control system derived from the Toy-On mark. */
+.site-header{padding-inline:clamp(18px,5vw,80px);height:78px;pointer-events:none}
+.site-header>*{pointer-events:auto}
+.header-actions{gap:9px}
+.motion-control,.menu-toggle,.text-link,.empty-results button{display:inline-flex;align-items:center;justify-content:space-between;gap:20px;min-height:43px;padding:11px 15px;border:1px solid #1b494a;background:#fffaf0e8;color:#183e44;border-radius:2px;box-shadow:3px 4px 0 #1b494a55,inset 0 1px #fff;text-decoration:none;text-underline-offset:0;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(9px);transition:transform .2s,box-shadow .2s,background .2s}
+.motion-control:hover,.menu-toggle:hover,.text-link:hover,.empty-results button:hover{background:#fffdf7;transform:translate(2px,2px);box-shadow:1px 2px 0 #1b494a55,inset 0 1px #fff}
+.motion-control:active,.menu-toggle:active,.text-link:active,.empty-results button:active{transform:translate(3px,4px);box-shadow:none}
+.menu-toggle{min-width:99px}
+.menu-glyph{width:18px;height:14px;display:flex;flex-direction:column;justify-content:space-around}
+.menu-glyph i{display:block;width:100%;height:2px;background:currentColor;transform-origin:center;transition:transform .24s}
+.menu-toggle[aria-expanded=true] .menu-glyph i:first-child{transform:translateY(3.5px) rotate(45deg)}
+.menu-toggle[aria-expanded=true] .menu-glyph i:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+.site-menu{top:70px;right:clamp(18px,5vw,80px);width:min(440px,calc(100vw - 36px));padding:19px 24px 23px;background:#fffbf1f2;border:1px solid #1b494a;box-shadow:8px 10px 0 #1b494a44,0 24px 50px #173a3a26;backdrop-filter:blur(18px)}
+.site-menu a{font-family:'Fredoka Variable','Outfit Variable',sans-serif;font-weight:500;letter-spacing:-.035em;font-size:clamp(25px,3vw,38px);padding:13px 2px;transition:padding .2s,color .2s}
+.site-menu a:hover{padding-left:12px;color:#c75635}
+.site-menu a span{font-family:'Outfit Variable',sans-serif;font-size:15px;align-self:center}
+.page-heading h1,.collection-heading h1,.detail-copy h1,.journey-ending h2,.category-row h2,.site-menu a{font-family:'Outfit Variable',Outfit,Arial,sans-serif;font-weight:660;letter-spacing:-.055em}
+.detail-product,.about-art img{animation:none}
+.site-menu a:last-child{border-bottom:0}
+.journey-ending .ending-actions{gap:14px}
+.journey-ending .text-link{font-size:12px}
+.site-footer{background:#173e42}
+:where(a,button,input,select,textarea):focus-visible{outline:3px solid #e4643e;outline-offset:4px}
+@media(max-width:600px){.site-header{height:64px;padding-inline:5%}.motion-control{font-size:9px;padding:8px 9px;min-height:36px}.menu-toggle{min-width:84px;min-height:36px;padding:8px 10px;font-size:10px}.site-menu{right:5%;top:59px}.site-menu a{font-size:29px}.text-link{font-size:10px;min-height:39px;padding:9px 11px}}
+@media(prefers-reduced-motion:reduce){.motion-control,.menu-toggle,.text-link,.empty-results button,.menu-glyph i,.site-menu a{transition:none}}

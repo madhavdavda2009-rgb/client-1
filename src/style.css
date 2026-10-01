@@ -34,3 +34,64 @@
 .cluster-world>.atmospheric-gradient{position:absolute;inset:0;width:100%;height:100%;z-index:0}
 
 html{font-family:'Outfit Variable',Outfit,Arial,sans-serif}
+
+/* The landing keeps the original O portal, with a moving scenic field behind it. */
+.stage{background:#dceef0}
+.hero-life{background:radial-gradient(ellipse at 72% 20%,#fff9dc 0%,transparent 30%),linear-gradient(165deg,#c1e8eb 4%,#e7f4df 55%,#f1d89f 100%)}
+.hero-landscape{position:absolute;inset:0;overflow:hidden;perspective:950px;pointer-events:none}
+.hero-landscape span{position:absolute;display:block;will-change:transform}
+.hero-landscape-far{inset:auto -20% -26% -20%;height:75%;border-radius:50% 50% 0 0;background:linear-gradient(160deg,#badfc2,#8fcbb6);transform:rotateX(42deg) translateY(8%);animation:landscape-float 23s ease-in-out infinite alternate}
+.hero-landscape-mid{inset:auto -22% -48% 18%;height:83%;border-radius:50% 50% 0 0;background:linear-gradient(120deg,#f4d88e,#d5aa78);transform:rotateX(48deg) rotateZ(-8deg);box-shadow:0 -20px 60px #689d8a34;animation:landscape-float 28s ease-in-out infinite alternate-reverse}
+.hero-landscape-near{inset:auto 42% -62% -22%;height:87%;border-radius:50% 50% 0 0;background:linear-gradient(125deg,#96c5b9,#74acaa);transform:rotateX(55deg) rotateZ(12deg);box-shadow:0 -28px 60px #638e8c33;animation:landscape-float 20s ease-in-out infinite alternate}
+.hero-landscape-light{top:-33%;left:52%;width:55vw;height:55vw;border-radius:50%;background:#fffde4a0;filter:blur(65px);animation:landscape-glow 16s ease-in-out infinite alternate}
+.hero-intro{position:absolute;z-index:2;left:6%;bottom:9%;width:min(330px,35vw);color:#1b4847}
+.hero-intro .eyebrow{font-weight:700;letter-spacing:.18em}
+.hero-intro p{font-family:'Fredoka Variable','Outfit Variable',sans-serif;font-size:clamp(19px,2vw,30px);line-height:1.12;letter-spacing:-.03em;margin:9px 0 16px}
+.hero-intro-link{display:inline-flex;gap:16px;align-items:center;border-bottom:1px solid currentColor;padding-bottom:4px;text-decoration:none;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.hero-intro-link span{transition:transform .2s}.hero-intro-link:hover span{transform:translate(3px,-3px)}
+.scroll-hint{color:#173f42;font-weight:700;text-shadow:0 1px 8px #fff8}
+@keyframes landscape-float{to{translate:3% -2%}}
+@keyframes landscape-glow{to{translate:-12% 9%;opacity:.55}}
+@media(max-width:767px){.hero-landscape-far{height:64%;bottom:-19%}.hero-landscape-mid{height:66%;bottom:-42%}.hero-landscape-near{height:65%;bottom:-49%}.hero-landscape-light{width:110vw;height:110vw;top:-17%;left:30%}.hero-intro{left:7%;bottom:13%;width:62%;max-width:285px}.hero-intro p{font-size:clamp(18px,5vw,24px)}.hero-intro-link{font-size:10px}.scroll-hint{bottom:18px;font-size:10px}}
+@media(max-height:600px){.hero-intro{bottom:12%;width:45%}.hero-intro p{font-size:17px}}
+@media(prefers-reduced-motion:reduce){.hero-landscape span{animation:none}.hero-intro-link span{transition:none}}
+.hero-life{background:#b7ded5}
+.hero-landscape{perspective:none}
+.hero-landscape img{width:100%;height:100%;max-width:none;object-fit:cover;object-position:center 58%;animation:hero-background-drift 28s ease-in-out infinite alternate;transform-origin:center center}
+.hero-landscape::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#eaf4deaa 0%,transparent 67%),linear-gradient(0deg,#e4e9c260,transparent 40%)}
+@keyframes hero-background-drift{to{transform:scale(1.045) translateX(-.8%)}}
+@media(max-width:767px){.hero-landscape img{object-position:54% center}.hero-landscape::after{background:linear-gradient(0deg,#eaf4decc,transparent 60%)}.hero-intro{background:#fff8e8d8;padding:12px 14px;border-left:3px solid #183e44}}
+@media(prefers-reduced-motion:reduce){.hero-landscape img{animation:none}}
+.hero-landscape::after{content:none}
+.hero-intro p{font-family:'Outfit Variable',Outfit,Arial,sans-serif;font-weight:600;letter-spacing:-.045em}
+.hero-skip-link{position:absolute;z-index:3;left:6%;bottom:9%;display:inline-flex;align-items:center;gap:18px;padding:13px 16px;border:1px solid #1c484a;background:#fff9edee;color:#173f43;box-shadow:3px 4px 0 #1c484a55;text-decoration:none;text-transform:uppercase;font:700 11px 'Outfit Variable',Outfit,Arial,sans-serif;letter-spacing:.09em;transition:transform .2s,box-shadow .2s}
+.hero-skip-link:hover{transform:translate(2px,2px);box-shadow:1px 2px 0 #1c484a55}
+@media(max-width:767px){.hero-skip-link{left:7%;bottom:12%;padding:12px 14px}}
+
+/* The opening is deliberately quiet so the supplied mark leads the page. */
+.journey[data-opening-active=true] .stage{position:sticky;inset:auto;top:0}
+.stage{background:#f7f5ee}
+.hero-life{background:#f7f5ee}
+.hero-carousel{position:absolute;top:49%;left:0;width:100%;height:27%;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);transition:opacity .35s ease}
+.hero-carousel-track{display:flex;width:max-content;height:100%;animation:hero-carousel-move 36s linear infinite}
+.hero-carousel-group{display:flex;align-items:center;gap:clamp(24px,4vw,64px);padding-right:clamp(24px,4vw,64px)}
+.hero-carousel-product{display:flex;align-items:center;justify-content:center;width:clamp(115px,14vw,190px);height:100%;flex:none;transition:transform .25s ease}
+.hero-carousel-product img{width:100%;height:95%;object-fit:contain;filter:drop-shadow(0 10px 8px #173c3825)}
+.hero-carousel-product:hover,.hero-carousel-product:focus-visible{transform:scale(1.12)}
+.hero-carousel:hover .hero-carousel-track,.hero-carousel:focus-within .hero-carousel-track{animation-play-state:paused}
+@keyframes hero-carousel-move{to{transform:translateX(-50%)}}
+.hero-skip-link{left:50%;bottom:14%;transform:translateX(-50%);white-space:nowrap;background:#f7f5ee;box-shadow:none}
+.hero-skip-link:hover{transform:translate(-50%,-2px);box-shadow:0 4px 0 #1c484a24}
+.scroll-hint{bottom:max(20px,env(safe-area-inset-bottom));font-family:'Outfit Variable',Outfit,Arial,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.18em}
+.scroll-hint span{font-size:18px;margin-top:3px}
+@media(max-width:767px){.hero-carousel{top:46%;height:24%}.hero-carousel-product{width:clamp(104px,34vw,155px)}.hero-skip-link{left:50%;bottom:12%;transform:translateX(-50%);padding:11px 13px}.hero-skip-link:hover{transform:translate(-50%,-2px)}}
+@media(prefers-reduced-motion:reduce){.hero-carousel-track{animation:none}.hero-carousel-product{transition:none}}
+
+/* No white header haze over supplied category artwork. */
+.site-header::before{display:none}
+.journey[data-closing=true] .logo{z-index:4;mix-blend-mode:multiply}
+.journey[data-closing=true] .stage{background:#f7f5ee}
+.journey:not([data-phase=hero]) .hero-life *{animation-play-state:paused}
+
+.logo [data-logo-paper]{display:none}
+.journey[data-closing=true] .logo{mix-blend-mode:normal}

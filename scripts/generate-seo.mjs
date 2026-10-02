@@ -9,13 +9,13 @@ if (!match) throw new Error('Could not read the approved product catalogue');
 const { products, categories } = JSON.parse(match[1]);
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 const routes = [
-  { path: '/', title: 'Toy-On | A world of shapes', description: `Explore Toy-On's collection of ${products.length} playful designs, from festive shapes to dinosaurs, vehicles and more.` },
-  { path: '/products', title: 'All products | Toy-On', description: `Browse all ${products.length} Toy-On designs across ${categories.length} collections.` },
-  { path: '/categories', title: 'Collections | Toy-On', description: `Explore ${categories.length} Toy-On collections and find shapes for celebrations, characters, animals and more.` },
-  { path: '/about', title: 'About Toy-On | Toyon Industry Pvt Ltd', description: 'Meet Toy-On and explore a colourful world of shapes and product designs.' },
-  { path: '/contact', title: 'Contact Toy-On', description: 'Prepare an enquiry about a Toy-On design. Review and send your message using your preferred contact channel.' },
-  ...categories.map(category => ({ path: `/categories/${category.id}`, title: `${category.title} collection | Toy-On`, description: `Explore ${category.products.length} designs in the Toy-On ${category.title} collection.`, image: category.background })),
-  ...products.map(product => ({ path: `/products/${product.slug}`, title: `${product.title} | Toy-On`, description: product.description, image: product.image })),
+  { path: '/', title: 'Products for Manufacturers & Business Buyers | Toy-On', description: `Explore ${products.length} Toy-On product designs for manufacturers and business buyers, with safety, cleanliness and thoughtful material choices in mind.` },
+  { path: '/products', title: 'Products | Toy-On', description: `Browse ${products.length} Toy-On product designs across ${categories.length} themed collections for manufacturers and business buyers.` },
+  { path: '/categories', title: 'Product Collections | Toy-On', description: `Explore ${categories.length} themed Toy-On product collections, including festive designs, animals and characters.` },
+  { path: '/about', title: 'About Toyon Industry | Toy-On', description: 'Meet Toyon Industry Pvt Ltd: products for business buyers, with safety-minded materials and clean handling as priorities.' },
+  { path: '/contact', title: 'Business Enquiries | Toy-On', description: 'Prepare a product enquiry with design choices, quantities, intended use and material or handling questions. Review and send it through your preferred contact channel.' },
+  ...categories.map(category => ({ path: `/categories/${category.id}`, title: `${category.title} collection | Toy-On`, description: `Explore ${category.products.length} product designs in the Toy-On ${category.title} collection for business enquiries.`, image: category.background })),
+  ...products.map(product => ({ path: `/products/${product.slug}`, title: `${product.title} | Toy-On`, description: `${product.description} Part of the Toy-On foil balloon range for business enquiries.`, image: product.image })),
 ];
 
 if (process.argv.includes('--prepare')) {
@@ -23,7 +23,7 @@ if (process.argv.includes('--prepare')) {
   const urls = routes.map(route => `  <url><loc>${escape(base + route.path)}</loc></url>`).join('\n');
   await writeFile(new URL('sitemap.xml', publicDir), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
   await writeFile(new URL('robots.txt', publicDir), `User-agent: *\nAllow: /\nSitemap: ${base}/sitemap.xml\n`);
-  await writeFile(new URL('llms.txt', publicDir), `# Toy-On\n\nToy-On is a collection of ${products.length} designs presented by Toyon Industry Pvt Ltd.\n\n- [Home](${base}/)\n- [All products](${base}/products)\n- [Collections](${base}/categories)\n- [About](${base}/about)\n- [Contact](${base}/contact)\n\nCollections: ${categories.map(category => `[${category.title}](${base}/categories/${category.id})`).join(', ')}.\n\nProduct pages contain visual descriptions of the supplied artwork. The contact form prepares a visitor-reviewed enquiry; it does not submit one automatically.\n`);
+  await writeFile(new URL('llms.txt', publicDir), `# Toy-On\n\nToy-On currently showcases ${products.length} foil balloon designs presented by Toyon Industry Pvt Ltd for manufacturers and business buyers. Safety-minded materials, cleanliness and careful handling are stated priorities. Toy drones, promotional toys and keychains are future plans and are not in the current catalogue.\n\n- [Home](${base}/)\n- [All products](${base}/products)\n- [Collections](${base}/categories)\n- [About](${base}/about)\n- [Contact](${base}/contact)\n\nCollections: ${categories.map(category => `[${category.title}](${base}/categories/${category.id})`).join(', ')}.\n\nProduct pages contain visual descriptions of the supplied artwork. The contact form prepares a visitor-reviewed enquiry; it does not submit one automatically.\n`);
 }
 
 if (process.argv.includes('--pages')) {

@@ -1,0 +1,38 @@
+
+.hero-range-heading{position:absolute;z-index:2;left:6%;right:6%;top:41%;text-align:center;color:#000}
+.hero-range-heading h1{font-family:var(--font-display);font-size:clamp(22px,2.4vw,32px);font-weight:500;line-height:1.1;letter-spacing:-.035em;margin:0 0 9px}
+.hero-range-heading p{font-size:12px;line-height:1.5;margin:0}
+.business-context{display:grid;grid-template-columns:1.1fr 1fr;gap:9%;padding:64px 0 0;margin-top:64px;border-top:1px solid #0003}
+.business-context h2,.brand-priorities h2,.future-ranges h2,.enquiry-guidance h2,.related-heading{font-family:var(--font-display);font-weight:500;letter-spacing:-.03em;line-height:1.15;font-size:clamp(28px,3.1vw,42px);margin:0 0 20px}
+.business-context p,.brand-priorities p,.future-ranges p,.enquiry-guidance p,.collection-introduction{font-size:15px;line-height:1.75;max-width:47ch;margin:0 0 22px}
+.context-details>div+div{margin-top:32px}.context-details h3,.brand-priorities h3{font-family:var(--font-display);font-size:20px;font-weight:500;letter-spacing:-.02em;line-height:1.3;margin:0 0 12px}
+.business-cta{display:inline-flex;align-items:center;justify-content:space-between;gap:28px;min-height:50px;padding:13px 20px;border:1px solid #000;text-decoration:none;font-size:13px;font-weight:600;line-height:1.4;max-width:100%}
+.home-business{padding:64px 6%;background:#f7f5ee}.home-business .business-context{margin:0;padding:0;border:0}
+.brand-priorities{margin:56px 0 64px;padding-top:44px;border-top:1px solid #0003}.brand-priorities>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;margin-top:32px}
+.future-ranges{display:flex;align-items:center;justify-content:space-between;gap:48px;padding-top:44px;border-top:1px solid #0003}.future-ranges>div{max-width:600px}.future-ranges p{margin-bottom:0}
+.enquiry-guidance{margin-top:34px}.enquiry-guidance h2{font-size:25px;margin-bottom:14px}.enquiry-guidance ul{padding-left:20px;margin:0 0 22px;font-size:14px;line-height:1.85}.enquiry-guidance p{font-size:14px}
+.collection-introduction{margin:20px 0 0}.design-context{padding-top:20px;border-top:1px solid #0002}.related-heading{font-size:28px;margin-bottom:32px}
+.footer-copy p{margin:0}.footer-copy p+p{font-size:11px;margin-top:7px;max-width:36ch}
+@media(max-width:900px){.business-context{gap:6%}.brand-priorities>div{gap:24px}.future-ranges{align-items:flex-start;flex-direction:column;gap:24px}}
+@media(max-width:600px){.hero-range-heading{top:38%}.hero-range-heading h1{font-size:24px;margin-bottom:7px}.hero-range-heading p{font-size:11px}.business-context{display:block;margin-top:44px;padding-top:36px}.context-details{margin-top:34px}.business-context h2,.brand-priorities h2,.future-ranges h2{font-size:29px}.business-context p,.brand-priorities p,.future-ranges p,.collection-introduction{font-size:14px}.home-business{padding:44px 7%}.brand-priorities{margin:36px 0 44px;padding-top:32px}.brand-priorities>div{display:block}.brand-priorities article+article{margin-top:26px}.future-ranges{padding-top:32px}.business-cta{min-height:48px;font-size:12px;padding:12px 16px}.related-heading{font-size:24px}.footer-copy{width:100%}}
+@media(max-height:600px){.hero-range-heading{top:37%}.hero-range-heading h1{font-size:19px}.hero-range-heading p{font-size:10px}}
+
+/* Reserve a measured gap below the original logo's company-name line. */
+.hero-range-heading{top:calc(29% + min(12.96vw,16.2vh,116px) + 18px)}
+.hero-carousel{top:calc(29% + min(12.96vw,16.2vh,116px) + 94px);height:25%}
+@media(max-width:600px){.hero-range-heading{top:38%}.hero-carousel{top:46%;height:24%}}
+@media(max-height:600px){.hero-range-heading{top:calc(29% + min(12.96vw,16.2vh,116px) + 12px)}}
+#root .journey-ending h2{max-width:8.5ch;font-size:clamp(42px,5.8vw,76px)}
+
+/* A composed, scattered opening: six fixed products surround the central brand. */
+.hero-title{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.hero-balloon-field{position:absolute;inset:0}
+.hero-placed-balloon{position:absolute;display:block;width:clamp(120px,13vw,190px);height:clamp(140px,23vh,215px);transform:translate(-50%,-50%) rotate(var(--tilt,0deg));transition:transform .25s ease}
+.hero-placed-balloon img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 8px #0001)}
+.hero-placed-balloon:hover,.hero-placed-balloon:focus-visible{transform:translate(-50%,-50%) rotate(var(--tilt,0deg)) scale(1.08);z-index:4}
+.balloon-1{left:15%;top:22%;--tilt:-12deg}.balloon-2{left:85%;top:21%;--tilt:9deg}.balloon-3{left:10%;top:58%;--tilt:7deg}.balloon-4{left:89%;top:59%;--tilt:-10deg}.balloon-5{left:31%;top:79%;--tilt:-7deg}.balloon-6{left:70%;top:81%;--tilt:12deg}
+@media(max-width:900px){.hero-placed-balloon{width:130px;height:150px}.balloon-1{left:15%;top:23%}.balloon-2{left:84%;top:22%}.balloon-3{left:12%;top:64%}.balloon-4{left:87%;top:64%}.balloon-5{left:33%;top:82%}.balloon-6{left:70%;top:82%}}
+@media(max-width:600px){.hero-placed-balloon{width:clamp(88px,26vw,112px);height:clamp(102px,16vh,135px)}.balloon-1{left:19%;top:24%;--tilt:-10deg}.balloon-2{left:81%;top:23%}.balloon-3{left:16%;top:65%}.balloon-4{left:83%;top:65%}.balloon-5{left:32%;top:81%}.balloon-6{left:71%;top:82%}}
+@media(max-height:600px) and (min-width:601px){.hero-placed-balloon{width:100px;height:110px}.balloon-5,.balloon-6{top:79%}}
+@media(prefers-reduced-motion:reduce){.hero-placed-balloon{transition:none}}
+@media(max-width:350px){.balloon-3{left:19%}.balloon-4{left:80%}}

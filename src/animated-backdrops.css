@@ -1,0 +1,29 @@
+/* Pure CSS light fields replace only the category backdrop rasters. */
+.animated-category-backdrop{position:absolute;inset:0;overflow:hidden;opacity:0;transition:opacity 1.25s cubic-bezier(.65,0,.35,1);isolation:isolate;--mesh-play:paused}
+.animated-category-backdrop:first-child{opacity:1}
+.mesh-light{position:absolute;inset:-18%;display:block;pointer-events:none;will-change:var(--mesh-change,auto);animation-timing-function:ease-in-out;animation-iteration-count:infinite;animation-direction:alternate;animation-play-state:var(--mesh-play);backface-visibility:hidden}
+.mesh-a{animation-name:mesh-drift-a;animation-duration:17.3s;animation-delay:-5.6s}
+.mesh-b{animation-name:mesh-drift-b;animation-duration:23.7s;animation-delay:-13.2s}
+.mesh-c{animation-name:mesh-drift-c;animation-duration:19.1s;animation-delay:-8.4s}
+.mesh-d{animation-name:mesh-drift-d;animation-duration:14.9s;animation-delay:-3.1s}
+.palette-christmas{background:linear-gradient(180deg,#59bdf5 0%,#a8e1f7 40%,#eaf8fa 70%,#fff5db 100%)}
+.palette-christmas .mesh-a{background:radial-gradient(ellipse 65% 48% at 48% 47%,#eaf8fa 0%,#eaf8fa99 36%,#eaf8fa00 75%)}
+.palette-christmas .mesh-b{background:radial-gradient(ellipse 56% 44% at 12% 78%,#fff5db 0%,#fff5dbbb 35%,#fff5db00 80%)}
+.palette-christmas .mesh-c{background:radial-gradient(ellipse 58% 48% at 87% 84%,#ffd5c5c9 0%,#ffd5c570 40%,#ffd5c500 80%)}
+.palette-christmas .mesh-d{background:radial-gradient(ellipse 68% 45% at 62% 20%,#59bdf5b0 0%,#a8e1f760 38%,#a8e1f700 80%)}
+.palette-dinosaurs{background:linear-gradient(155deg,#55c9b6 0%,#91d89b 35%,#e7efa7 55%,#ffd66b 76%,#ff9a50 100%)}
+.palette-dinosaurs .mesh-a{background:radial-gradient(ellipse 64% 53% at 45% 50%,#e7efa7 0%,#e7efa799 38%,#e7efa700 78%)}
+.palette-dinosaurs .mesh-b{background:radial-gradient(ellipse 67% 47% at 36% 20%,#55c9b6b0 0%,#91d89b80 42%,#91d89b00 82%)}
+.palette-dinosaurs .mesh-c{background:radial-gradient(ellipse 58% 52% at 87% 82%,#ff9a50 0%,#ff9a5099 35%,#ff9a5000 82%)}
+.palette-dinosaurs .mesh-d{background:radial-gradient(ellipse 57% 43% at 64% 63%,#ffd66b 0%,#ffd66b77 42%,#ffd66b00 80%)}
+.palette-halloween{background:linear-gradient(180deg,#21113f 0%,#542063 29%,#9b346b 50%,#e54c32 75%,#ff9d2e 100%)}
+.palette-halloween .mesh-a{background:radial-gradient(ellipse 69% 52% at 48% 47%,#9b346baa 0%,#9b346b60 40%,#9b346b00 80%)}
+.palette-halloween .mesh-b{background:radial-gradient(ellipse 62% 40% at 67% 20%,#542063c0 0%,#54206377 40%,#54206300 80%)}
+.palette-halloween .mesh-c{background:radial-gradient(ellipse 56% 43% at 48% 79%,#ff9d2e 0%,#ff9d2eb0 35%,#ff9d2e00 80%)}
+.palette-halloween .mesh-d{background:radial-gradient(ellipse 60% 45% at 79% 65%,#e54c32 0%,#e54c3280 40%,#e54c3200 82%)}
+@keyframes mesh-drift-a{0%{transform:translate3d(-4%,-3%,0) scale(1.02)}48%{transform:translate3d(3%,4%,0) scale(1.08)}100%{transform:translate3d(6%,-2%,0) scale(1.03)}}
+@keyframes mesh-drift-b{0%{transform:translate3d(5%,-4%,0) scale(1.04)}57%{transform:translate3d(-3%,2%,0) scale(1.01)}100%{transform:translate3d(-6%,5%,0) scale(1.07)}}
+@keyframes mesh-drift-c{0%{transform:translate3d(-3%,3%,0) scale(1)}43%{transform:translate3d(3%,-2%,0) scale(1.1)}100%{transform:translate3d(5%,-5%,0) scale(1.04)}}
+@keyframes mesh-drift-d{0%{transform:translate3d(4%,3%,0) scale(1.06)}61%{transform:translate3d(-2%,-4%,0) scale(1.02)}100%{transform:translate3d(-5%,2%,0) scale(1.08)}}
+.journey[data-phase=hero] .mesh-light,.journey[data-visible=false] .mesh-light,.journey[data-closing=true] .mesh-light{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.mesh-light{animation:none;transform:none;will-change:auto}.animated-category-backdrop{transition:none}}

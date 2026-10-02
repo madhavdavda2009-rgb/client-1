@@ -1,0 +1,15 @@
+.site-menu a{position:relative}.menu-shared-line{position:absolute;left:0;right:0;bottom:0;height:1px;background:#000;pointer-events:none}
+.site-menu a:hover{padding-left:2px}.menu-glyph i{transition:none}
+.catalogue-product:hover img{transform:none}.category-row:hover .category-preview-product{transform:none}
+.motion-product-visual{width:100%;height:100%;display:flex;align-items:end;justify-content:center}
+.three-featured-product:hover picture{transform:none!important}
+.scroll-hint .scroll-arrow,.journey-scroll-cue .scroll-arrow{animation:none}
+.motion-link-icon{display:inline-block}
+@media(prefers-reduced-motion:reduce){.motion-product-visual{transform:none!important}}
+
+.hero-placed-balloon:hover,.hero-placed-balloon:focus-visible{transform:translate(-50%,-50%) rotate(var(--tilt,0deg))}
+.detail-product{animation:none}
+
+.catalogue-art img,.category-preview-product{transition:none}.about-art img{animation:none}
+
+.journey .scroll-hint{display:flex;flex-direction:column;align-items:center;gap:10px;bottom:max(24px,env(safe-area-inset-bottom));font-size:12px;letter-spacing:.06em;line-height:1.5}.journey .scroll-hint span{margin:0;font-size:12px}.journey .scroll-hint .scroll-arrow,.journey .journey-scroll-cue .scroll-arrow{display:flex;justify-content:center;line-height:1}.scroll-arrow svg{display:block}

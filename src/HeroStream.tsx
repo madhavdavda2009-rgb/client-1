@@ -1,14 +1,8 @@
+import { thumbnailSet,heroSizes,recoverImage } from './assets';
+import { m, useReducedMotion } from 'framer-motion';
+import { uiSpring } from './MotionUI';
 import { heroProducts } from './catalog';
-
-export default function HeroStream() {
-  return <div className="hero-life">
-    <div className="hero-carousel" aria-label="A selection of Toy-On balloon designs">
-      <div className="hero-carousel-track">
-        {[0, 1].map(copy => <div className="hero-carousel-group" aria-hidden={copy === 1} key={copy}>
-          {heroProducts.map(product => <a href={`/products/${product.slug}`} className="hero-carousel-product" key={`${copy}-${product.id}`} tabIndex={copy ? -1 : 0} aria-label={`View ${product.title}`}><img src={product.thumb} alt={product.title} decoding="async" loading={copy ? 'lazy' : 'eager'} /></a>)}
-        </div>)}
-      </div>
-    </div>
-    <a href="/products" className="hero-skip-link">Skip home page <span aria-hidden="true">↗</span></a>
-  </div>;
+export default function HeroStream(){
+  const reduced=useReducedMotion();
+  return <div className="hero-life"><h1 className="hero-title">Toy-On Products</h1><div className="hero-balloon-field" aria-label="Explore Toy-On product designs">{heroProducts.slice(0,6).map((product,index)=><a key={product.id} className={`hero-placed-balloon balloon-${index+1}`} href={`/products/${product.slug}`} aria-label={`View ${product.title}`}><m.img initial={reduced?false:{opacity:0,scale:.96}} animate={{opacity:1,scale:1}} transition={{...uiSpring,delay:index*.055}} whileHover={reduced?undefined:{scale:1.035,y:-3}} whileTap={reduced?undefined:{scale:.98}} src={product.thumb} srcSet={thumbnailSet(product)} sizes={heroSizes} onError={event=>recoverImage(event,product.image)} alt={product.title} width="240" height="240" loading="eager" decoding="async"/></a>)}</div></div>;
 }

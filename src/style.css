@@ -95,3 +95,19 @@ html{font-family:'Outfit Variable',Outfit,Arial,sans-serif}
 
 .logo [data-logo-paper]{display:none}
 .journey[data-closing=true] .logo{mix-blend-mode:normal}
+
+/* Explicit scroll guidance stays outside the products and navigation controls. */
+.scroll-hint .scroll-desktop,.scroll-hint .scroll-touch{font-size:inherit;margin:0;animation:none}
+.scroll-touch{display:none!important}
+.journey-scroll-cue{position:absolute;z-index:7;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translateX(-50%);margin:0;pointer-events:none;white-space:nowrap;font-size:11px;font-weight:650;letter-spacing:.08em;color:#173f43;text-shadow:0 1px 3px #fffdf7,0 0 8px #fffdf7;opacity:0;visibility:hidden}
+.journey-scroll-cue>span:not(.scroll-arrow){display:none}
+.journey[data-scroll-cue=enter] .cue-enter,.journey[data-scroll-cue=next] .cue-next,.journey[data-scroll-cue=finish] .cue-finish{display:inline}
+.journey-scroll-cue .scroll-arrow{display:inline-block;margin-left:8px;font-size:17px;animation:nudge 1.8s ease-in-out infinite}
+@media(max-width:900px){.journey-scroll-cue{top:82px;bottom:auto;font-size:11px}}
+@media(pointer:coarse){.scroll-desktop{display:none!important}.scroll-touch{display:inline!important}}
+@media(prefers-reduced-motion:reduce){.journey-scroll-cue .scroll-arrow{animation:none}}
+
+/* Keep each journey instruction beside its collection action. */
+.three-world-copy .collection-scroll-cue{display:block;margin:14px 0 0;font-size:12px;line-height:1.4;font-weight:500;letter-spacing:.02em;color:inherit;opacity:.85;text-shadow:0 1px 3px #fffdf7;max-width:none}
+.journey-scroll-cue{top:auto;bottom:max(28px,env(safe-area-inset-bottom))}
+@media(max-width:900px){.three-world-copy .collection-scroll-cue{display:block;font-size:11px;margin:10px 0 0}.journey-scroll-cue{top:auto;bottom:28px}}

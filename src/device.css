@@ -1,0 +1,12 @@
+.site-header{padding-top:max(14px,env(safe-area-inset-top));padding-left:max(5%,env(safe-area-inset-left));padding-right:max(5%,env(safe-area-inset-right))}
+.site-menu{max-height:calc(100dvh - 100px - env(safe-area-inset-bottom));overflow-y:auto}
+#root .menu-toggle,#root .three-world-browse,.back-link{min-height:44px}.brand-link{min-height:44px;display:flex;align-items:center}
+.fallback-intro{position:relative;isolation:isolate;min-height:70svh;display:grid;place-items:center;padding:100px 7% 64px}.fallback-intro>.home-mesh{z-index:-1}.fallback-intro>img{width:min(500px,85vw);height:auto;mix-blend-mode:multiply}
+.fallback-world{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);align-items:center;gap:6%;padding:64px 7%;overflow:hidden}
+.fallback-scene{position:relative;aspect-ratio:1;max-width:650px}.fallback-scene .three-portal-o{position:absolute!important;inset:0!important;transform:none!important;visibility:visible!important;opacity:1!important;width:100%!important;height:100%!important}
+.fallback-products{position:absolute;inset:40% 9% 0;display:flex;align-items:center}.fallback-products>a{flex:1;min-width:0}.fallback-products img{width:100%;height:auto;object-fit:contain}.fallback-copy h2{font-size:clamp(32px,5vw,64px);line-height:1.1;margin:12px 0 24px}.fallback-world.palette-halloween{--text-color:#fff}.fallback-world .text-link{--text-color:#000}
+@media(max-width:600px){.site-header{padding-top:max(8px,env(safe-area-inset-top))}.fallback-world{grid-template-columns:1fr;padding:40px 7%;gap:24px}.fallback-scene{width:100%;max-width:450px;margin:auto}.fallback-copy{padding-bottom:12px}}
+
+html[data-tab-visible=false] .mesh-light,html[data-tab-visible=false] .home-mesh-light{animation-play-state:paused!important}
+.fallback-scene .three-portal-world{opacity:0}.fallback-scene .three-portal-world.is-active{opacity:1}
+.fallback-world.palette-christmas{background:linear-gradient(180deg,#59bdf5,#eaf8fa 65%,#fff5db)}.fallback-world.palette-dinosaurs{background:linear-gradient(155deg,#55c9b6,#e7efa7 55%,#ff9a50)}.fallback-world.palette-halloween{background:linear-gradient(180deg,#21113f,#9b346b 50%,#ff9d2e)}

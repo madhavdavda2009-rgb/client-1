@@ -1,0 +1,55 @@
+/* One locally bundled type system for the full Toy-On website. */
+:root{--font-body:'Manrope Variable',Manrope,Arial,sans-serif;--font-display:'Space Grotesk Variable','Manrope Variable',Arial,sans-serif;--type-ink:#183e44}
+html{font-family:var(--font-body);font-size:16px;line-height:1.6;scrollbar-width:none;-ms-overflow-style:none;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;width:0;height:0}
+button,input,select,textarea{font-family:var(--font-body)}
+.page-heading h1,.collection-heading h1,.detail-copy h1,.journey-ending h2,.category-row h2,.journey .three-world-copy h2,.catalogue-product h2,.site-menu a{font-family:var(--font-display);font-weight:600;letter-spacing:-.035em;line-height:1.07}
+.page-heading h1,.collection-heading h1{font-size:clamp(44px,6.2vw,88px);margin:16px 0 24px}
+.page-heading p,.detail-copy p{font-size:16px;line-height:1.75;letter-spacing:0}
+.eyebrow{font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.1em;line-height:1.5}
+.journey .three-world-copy .eyebrow{font-size:10px;letter-spacing:.11em;font-weight:600}
+.journey .three-world-copy h2{font-size:clamp(36px,3.8vw,54px);letter-spacing:-.035em;line-height:1.08;margin:10px 0 16px}
+.journey .three-world-copy p{font-family:var(--font-body);font-size:14px;line-height:1.65;letter-spacing:0;margin:0 0 22px;max-width:30ch}
+.journey .three-world-cta,.journey .three-world-browse,.motion-control,.menu-toggle,.text-link,.scroll-hint,.journey-scroll-cue{font-family:var(--font-body);font-weight:600;letter-spacing:.015em;text-transform:none}
+.journey .three-world-cta{font-size:12px;line-height:1.4;padding:12px 16px;gap:22px;min-height:44px}
+.journey .three-world-browse{font-size:11px;line-height:1.4;padding:11px 14px}
+.motion-control,.menu-toggle{font-size:11px;line-height:1.4;letter-spacing:.025em}
+.journey .three-world-copy .collection-scroll-cue{font-family:var(--font-body);font-size:11px;line-height:1.5;letter-spacing:0;margin:14px 0 0;font-weight:500;opacity:.8}
+.scroll-hint{font-size:12px;line-height:1.6;letter-spacing:.025em}
+.site-menu{padding:15px 20px}.site-menu a{font-size:24px;line-height:1.25;padding:12px 0;letter-spacing:-.02em}
+.content-page,.product-page{padding-top:120px}.page-heading{margin-bottom:44px}.collection-heading{margin-bottom:48px}
+.product-grid{gap:48px 30px}.catalogue-art{margin-bottom:16px}.catalogue-product h2{font-size:18px;margin:8px 0 0;line-height:1.3;letter-spacing:-.015em;font-weight:500}
+.catalogue-product .eyebrow{font-size:10px;font-weight:500;letter-spacing:.04em}
+.category-row{padding:32px 0}.category-row h2{font-size:clamp(32px,3.7vw,52px);margin:12px 0 24px}.category-row .eyebrow{letter-spacing:.06em}
+.site-footer p,.site-footer nav{font-family:var(--font-body);line-height:1.6;letter-spacing:0}
+@media(max-width:900px){.product-grid{gap:36px 24px}.journey .three-world-copy h2{font-size:38px}.journey .three-world-copy p{font-size:13px}.journey .three-world-copy .collection-scroll-cue{margin-top:12px}}
+@media(max-width:600px){.content-page,.product-page{padding:104px 7% 56px}.page-heading{margin-bottom:32px}.page-heading h1,.collection-heading h1{font-size:44px;line-height:1.08;margin:14px 0 20px;letter-spacing:-.035em}.page-heading p,.detail-copy p{font-size:14px;line-height:1.7}.product-grid{gap:32px 18px}.catalogue-product h2{font-size:16px;line-height:1.25}.catalogue-product .eyebrow{font-size:9px}.collection-heading{margin-bottom:32px}.journey .three-world-copy,.journey .three-world-copy:nth-child(2){width:88%;bottom:9%}.journey .three-world-copy h2{font-size:34px;line-height:1.1;margin:8px 0 12px}.journey .three-world-copy .eyebrow{font-size:10px;letter-spacing:.08em}.journey .three-world-cta{font-size:11px;padding:10px 14px;min-height:40px;gap:24px}.journey .three-world-browse{font-size:10px;padding:10px 12px}.journey .three-world-copy .collection-scroll-cue{font-size:11px;margin-top:10px}.motion-control,.menu-toggle{font-size:10px}.site-menu a{font-size:21px}.scroll-hint{font-size:11px}.category-row h2{font-size:34px}.category-preview{margin-bottom:20px}.detail-copy h1{font-size:40px}}
+@media(max-width:350px){.journey .three-world-copy h2{font-size:30px}.page-heading h1,.collection-heading h1{font-size:38px}.journey .three-world-browse{font-size:9px}.product-grid{gap:28px 14px}}
+
+/* Text uses only black and white; artwork retains the supplied brand colors. */
+html,body{color:#000}
+#root :where(h1,h2,h3,h4,p,a,span,label,input,select,textarea,button){color:inherit;text-shadow:none}
+#root .site-header,#root .site-menu,#root .three-world-ui,#root .scroll-hint,#root .journey-scroll-cue{color:#000}
+#root .three-world-cta,#root .three-world-browse{color:#000;border-color:#000}
+#root .site-footer{color:#fff}
+#root .three-road-world[data-active='2'] .three-world-copy{color:#fff}
+@media(max-width:900px){#root .three-road-world[data-active='2'] .three-world-copy{color:#000}}
+
+/* Primary actions and their supporting copy share a clear vertical rhythm. */
+.journey .three-world-copy h2{margin:12px 0 18px}
+.journey .three-world-copy p:not(.collection-scroll-cue){margin-bottom:24px}
+.journey .three-world-cta{justify-content:space-between;min-width:230px;max-width:100%;min-height:52px;padding:14px 22px;font-size:14px;line-height:1.4;gap:28px}
+.journey .three-world-copy .collection-scroll-cue{margin-top:16px}
+#root .text-link{display:inline-flex;align-items:center;min-height:44px;font-size:15px;line-height:1.5}
+#root .site-menu a{min-height:48px;align-items:center}
+.category-row>div:last-child{padding:12px 0}.category-row h2{margin-top:14px;margin-bottom:26px}
+.detail-copy h1{margin:16px 0 24px}.detail-copy .text-link{margin-top:24px}
+@media(max-width:900px){.journey .three-world-copy h2{margin:10px 0 16px}.journey .three-world-cta{min-height:48px;min-width:220px;font-size:13px;padding:12px 20px}}
+@media(max-width:600px){.journey .three-world-copy,.journey .three-world-copy:nth-child(2){bottom:10%;width:88%}.journey .three-world-copy h2{margin:9px 0 16px}.journey .three-world-cta{min-width:218px;min-height:48px;font-size:13px;padding:12px 18px}.journey .three-world-copy .collection-scroll-cue{margin-top:12px}.category-row>div:last-child{padding:0}.category-row h2{margin:12px 0 22px}.page-heading p{margin-bottom:0}}
+@media(max-width:350px){.journey .three-world-cta{min-width:205px;font-size:12px}.journey .three-world-copy h2{margin-bottom:14px}}
+
+#root :where(h1,h2,h3,h4,p,a,span,label,input,select,textarea,button){color:var(--text-color,#000)}
+#root .site-footer{--text-color:#fff}
+#root .three-road-world[data-active='2'] .three-world-copy{--text-color:#fff}
+#root .three-world-cta,#root .three-world-browse{--text-color:#000}
+@media(max-width:900px){#root .three-road-world[data-active='2'] .three-world-copy{--text-color:#000}}

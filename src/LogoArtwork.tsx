@@ -1,3 +1,6 @@
+import { artworkSrc } from './assets';
+import { m, useReducedMotion } from 'framer-motion';
+import { softSpring } from './MotionUI';
 import suppliedLogo from '../assets/brand/toyon-original.svg?raw';
 import originalLogo from '../assets/brand/toyon-original.svg?url';
 // Original user-supplied SVG paths, unchanged; only the coordinate system is normalized.
@@ -7,13 +10,14 @@ const gateArtwork=[
   {src:'/assets/scenery/supplied/dino_o.webp',cx:653,cy:595,rx:547,ry:544,hx:655,hy:612,hrx:183,hry:196},
   {src:'/assets/scenery/supplied/halloween_o.webp',cx:649,cy:589,rx:546,ry:540,hx:645,hy:606,hrx:189,hry:199},
 ];
-export function BrandO({ active }: { active:number }) {
+export function BrandO({ active, requested=3 }: { active:number;requested?:number }) {
   return <svg className="three-portal-o" viewBox="100 45 1100 1100" aria-hidden="true">
     <defs>{gateArtwork.map((art,index)=><mask key={art.src} id={`supplied-o-${index}`} maskUnits="userSpaceOnUse" x="100" y="45" width="1100" height="1100"><ellipse cx={art.cx} cy={art.cy} rx={art.rx} ry={art.ry} fill="white"/><ellipse cx={art.hx} cy={art.hy} rx={art.hrx} ry={art.hry} fill="black"/></mask>)}</defs>
-    {gateArtwork.map((art,index)=><g key={art.src} className={`three-portal-world${index===active?' is-active':''}`}><image href={art.src} x="0" y="0" width="1298" height="1212" mask={`url(#supplied-o-${index})`}/></g>)}
+    {gateArtwork.map((art,index)=><g key={art.src} className={`three-portal-world${index===active?' is-active':''}`}><image href={index<requested?artworkSrc(index):undefined} x="0" y="0" width="1298" height="1212" mask={`url(#supplied-o-${index})`}/></g>)}
   </svg>;
 }
 export default function LogoArtwork() {
-  return <svg className="logo" aria-label="Toyon Industry Pvt Ltd" role="img"><g data-logo-art><g transform="scale(1.2279355334)" dangerouslySetInnerHTML={{ __html: artwork }} /></g></svg>;
+  const reduced=useReducedMotion();
+  return <svg className="logo" aria-label="Toyon Industry Pvt Ltd" role="img"><g data-logo-art><m.g initial={reduced?false:{opacity:0,scale:.96}} animate={{opacity:1,scale:1}} transition={softSpring}><g transform="scale(1.2279355334)" dangerouslySetInnerHTML={{ __html: artwork }} /></m.g></g></svg>;
 }
 export { originalLogo };

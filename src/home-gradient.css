@@ -1,0 +1,19 @@
+.home-mesh{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#f8f6ef;opacity:var(--home-mesh-opacity,1);isolation:isolate}
+.home-mesh-field{position:absolute;inset:-18%;transform:scale(var(--home-mesh-pull,1));transform-origin:50% 48%;will-change:transform}
+.home-mesh-parallax,.home-mesh-light{position:absolute;inset:0;will-change:transform;backface-visibility:hidden}
+.home-mesh-light{animation:home-light-drift 18s ease-in-out infinite alternate;animation-play-state:var(--home-mesh-play,running)}
+.home-light-blue{background:radial-gradient(ellipse 58% 52% at 16% 20%,#55bff4a8 0%,#55bff455 35%,#55bff400 78%);animation-duration:18s;animation-delay:-6s}
+.home-light-green{background:radial-gradient(ellipse 61% 60% at 20% 57%,#66d1be8a 0%,#9edb9b66 36%,#9edb9b00 78%);animation-duration:22s;animation-delay:-11s;animation-name:home-light-counter}
+.home-light-warm{background:radial-gradient(ellipse 60% 56% at 53% 68%,#ffe28a8a 0%,#fff9f1aa 42%,#fff9f100 82%);animation-duration:26s;animation-delay:-8s}
+.home-light-pink{background:radial-gradient(ellipse 59% 55% at 86% 84%,#ffb07888 0%,#f29aae66 40%,#f29aae00 82%);animation-duration:31s;animation-delay:-16s;animation-name:home-light-counter}
+.home-light-lavender{background:radial-gradient(ellipse 52% 49% at 87% 18%,#b989d650 0%,#b989d628 40%,#b989d600 82%);animation-duration:35s;animation-delay:-19s}
+.home-mesh-calm{position:absolute;inset:0;background:radial-gradient(ellipse 43% 34% at 50% 48%,#fff9f1dd 0%,#f8f6ef80 45%,#f8f6ef00 100%)}
+.journey .hero-life{background:transparent}
+.journey[data-visible=false] .home-mesh-light,.journey[data-phase=road] .home-mesh-light,.journey[data-closing=true] .home-mesh-light{animation-play-state:paused}
+.reduced-home{position:relative;isolation:isolate}.reduced-home>.home-mesh{z-index:-1}
+@keyframes home-light-drift{0%{transform:translate3d(calc(-4% * var(--home-motion,1)),calc(-3% * var(--home-motion,1)),0) scale(1.02)}47%{transform:translate3d(calc(3% * var(--home-motion,1)),calc(4% * var(--home-motion,1)),0) scale(1.09)}100%{transform:translate3d(calc(5% * var(--home-motion,1)),calc(-2% * var(--home-motion,1)),0) scale(1.04)}}
+@keyframes home-light-counter{0%{transform:translate3d(calc(4% * var(--home-motion,1)),calc(3% * var(--home-motion,1)),0) scale(1.05)}59%{transform:translate3d(calc(-3% * var(--home-motion,1)),calc(-2% * var(--home-motion,1)),0) scale(1.01)}100%{transform:translate3d(calc(-5% * var(--home-motion,1)),calc(4% * var(--home-motion,1)),0) scale(1.09)}}
+@media(prefers-reduced-motion:reduce){.home-mesh-light{animation:none;transform:none}.home-mesh-field,.home-mesh-parallax,.home-mesh-light{will-change:auto;transform:none}}
+
+@media(hover:none),(pointer:coarse){.home-mesh-parallax{will-change:auto}}
+.journey[data-phase=road] :is(.home-mesh-field,.home-mesh-parallax,.home-mesh-light),.journey[data-visible=false] :is(.home-mesh-field,.home-mesh-parallax,.home-mesh-light){will-change:auto}

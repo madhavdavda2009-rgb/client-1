@@ -10,3 +10,13 @@
 html[data-tab-visible=false] .mesh-light,html[data-tab-visible=false] .home-mesh-light{animation-play-state:paused!important}
 .fallback-scene .three-portal-world{opacity:0}.fallback-scene .three-portal-world.is-active{opacity:1}
 .fallback-world.palette-christmas{background:linear-gradient(180deg,#59bdf5,#eaf8fa 65%,#fff5db)}.fallback-world.palette-dinosaurs{background:linear-gradient(155deg,#55c9b6,#e7efa7 55%,#ff9a50)}.fallback-world.palette-halloween{background:linear-gradient(180deg,#21113f,#9b346b 50%,#ff9d2e)}
+
+/* Prepared alpha artwork avoids re-rasterizing three live SVG masks during travel. */
+.three-portal-o{contain:layout style;overflow:hidden;will-change:transform;transform-origin:center}
+.three-portal-world{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:contain;pointer-events:none}
+.animated-category-backdrop{transition:opacity 1.25s cubic-bezier(.65,0,.35,1),visibility 0s 1.25s}
+.animated-category-backdrop[data-present=false]{visibility:hidden}
+.animated-category-backdrop[data-present=true]{visibility:visible;transition:opacity 1.25s cubic-bezier(.65,0,.35,1),visibility 0s}
+.journey[data-phase=road] .home-mesh,.journey[data-phase=closing] .home-mesh,.journey[data-phase=road] .hero-life,.journey[data-phase=closing] .hero-life{display:none}
+/* Live canvas filtering multiplies the cost of every GPU frame on phones. The raised shoulder and road-clipped product shadows remain. */
+@media(hover:none),(pointer:coarse){.three-road-world canvas{filter:none}.journey .stage{height:100svh}}

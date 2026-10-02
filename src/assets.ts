@@ -9,7 +9,7 @@ export const thumbnailSet=(product:Product)=>`${product.thumb} 240w, ${product.i
 export const detailSet=(product:Product)=>`${product.image.replace('.webp','-detail-480.webp')} ${Math.min(480,productDimensions(product).width)}w, ${product.image} ${productDimensions(product).width}w`;
 export const heroSizes='(max-width:600px) 112px, (max-width:900px) 130px, 190px';
 export const catalogueSizes='(max-width:600px) calc((86vw - 18px)/2), (max-width:900px) calc((88vw - 50px)/3), min(24vw, 300px)';
-export function artworkSrc(index:number){return innerWidth<620&&devicePixelRatio<=2?worldArtwork[index].replace('.webp','-1024.webp'):worldArtwork[index]}
+export function artworkSrc(index:number){return worldArtwork[index].replace('_o.webp',innerWidth<620&&devicePixelRatio<=2?'_portal-768.webp':'_portal-1024.webp')}
 const cache=new Map<string,Promise<boolean>>();
 export function preloadImage(src:string,srcset?:string,sizes?:string){
   const key=srcset?`${srcset}|${sizes}`:src;const existing=cache.get(key);if(existing)return existing;

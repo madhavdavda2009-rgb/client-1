@@ -92,7 +92,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
     Object.assign(roadMaterials[0], { stencilWrite: true, stencilRef: 1, stencilFunc: THREE.AlwaysStencilFunc, stencilZPass: THREE.ReplaceStencilOp });
     const road = new THREE.Mesh(roadRibbon(2.4), roadMaterials); world.add(road);
     const shoulderMaterial = new THREE.MeshStandardMaterial({ color: 0x655443, roughness: 1, side: THREE.DoubleSide });
-    const shoulder = new THREE.Mesh(roadRibbon(2.65), [shoulderMaterial,shoulderMaterial,shoulderMaterial]); shoulder.position.y = -.28; world.add(shoulder);
+    const shoulderGeometry=roadRibbon(2.65);shoulderGeometry.clearGroups();const shoulder = new THREE.Mesh(shoulderGeometry, shoulderMaterial); shoulder.position.y = -.28; world.add(shoulder);
     // Clip only distant fragments outside the O opening, leaving the foreground road above it.
     const gateWindow={value:new THREE.Vector3(0,0,1e6)};
     const confineDistantRoad=(material:THREE.Material)=>{
@@ -115,7 +115,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
     const stops = [.17, .48, .80].map(p => .045 + p * .91);
     const gates = [.28, .60, .91].map(p => .045 + p * .91);
     const backgrounds=[...host.querySelectorAll<HTMLDivElement>('.animated-category-backdrop')];
-    const portal = host.querySelector<SVGSVGElement>('.three-portal-o')!;
+    const portal = host.querySelector<HTMLElement>('.three-portal-o')!;
     portal.style.left=portal.style.top='0px';portal.style.width=portal.style.height='1024px';
     const shadowCanvas = document.createElement('canvas'); shadowCanvas.width = shadowCanvas.height = 64;
     const shadowContext = shadowCanvas.getContext('2d')!;
@@ -135,7 +135,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
     let viewportWidth=1,viewportHeight=1,dirty=true,settledFrames=0,renderCount=0;
     const previousCamera=new THREE.Vector3(),previousAim=new THREE.Vector3();
     const refreshProducts=()=>{dirty=true;wake.current()};productImages.flat().forEach(image=>image.addEventListener('load',refreshProducts));
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)'); reduced.current = media.matches; const onReduced = () => { reduced.current = media.matches;dirty=true;wake.current(); }; media.addEventListener('change', onReduced); let narrowRoad = false; const resize = () => { const w = host.clientWidth || 1; const h = host.clientHeight || 1;viewportWidth=w;viewportHeight=h;dirty=true; const nextNarrow = w < 620; if (nextNarrow !== narrowRoad) { road.geometry.dispose(); shoulder.geometry.dispose(); road.geometry = roadRibbon(nextNarrow ? 1.7 : 2.4); shoulder.geometry = roadRibbon(nextNarrow ? 1.9 : 2.65); narrowRoad = nextNarrow; } camera.aspect = w / h; camera.fov = w < 620 ? 62 : w < 900 ? 55 : 49; camera.updateProjectionMatrix(); renderer.setPixelRatio(quality.pixelRatio(w));host.dataset.quality=quality.tier; renderer.setSize(w, h, false);wake.current(); }; let resizeRaf=0;const observer = new ResizeObserver(()=>{cancelAnimationFrame(resizeRaf);resizeRaf=requestAnimationFrame(resize)}); observer.observe(host); resize();
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)'); reduced.current = media.matches; const onReduced = () => { reduced.current = media.matches;dirty=true;wake.current(); }; media.addEventListener('change', onReduced); let narrowRoad = false; const resize = () => { const w = host.clientWidth || 1; const h = host.clientHeight || 1;viewportWidth=w;viewportHeight=h;dirty=true; const nextNarrow = w < 620; if (nextNarrow !== narrowRoad) { road.geometry.dispose(); shoulder.geometry.dispose(); road.geometry = roadRibbon(nextNarrow ? 1.7 : 2.4); shoulder.geometry = roadRibbon(nextNarrow ? 1.9 : 2.65);shoulder.geometry.clearGroups(); narrowRoad = nextNarrow; } camera.aspect = w / h; camera.fov = w < 620 ? 52 : w < 900 ? 55 : 49; camera.updateProjectionMatrix(); renderer.setPixelRatio(quality.pixelRatio(w));host.dataset.quality=quality.tier; renderer.setSize(w, h, false);wake.current(); }; let resizeRaf=0;const observer = new ResizeObserver(()=>{cancelAnimationFrame(resizeRaf);resizeRaf=requestAnimationFrame(resize)}); observer.observe(host); resize();
     let raf = 0; let last = 0; let visible = true; const journey = host.closest<HTMLElement>('.journey'); const intersection = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting;if(visible)wake.current(); }); intersection.observe(journey ?? host);
     const skyColors = [0xf7efdc, 0xf1f2d8, 0xf2e8df].map(color => new THREE.Color(color));
     const roadColors = [0xd8ba85, 0xc4ad78, 0xc99b79].map(value => new THREE.Color(value));
@@ -236,19 +236,16 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
         const x = (projectedBase.x + 1) * screenWidth / 2;
         const y = (1 - projectedBase.y) * screenHeight / 2;
         const height=Math.abs(projectedTop.y-projectedBase.y)*screenHeight/2;
-        link.style.setProperty('--product-x',`${x}px`);link.style.setProperty('--product-y',`${y}px`);
-        link.style.setProperty('--product-sx',String(width/200));link.style.setProperty('--product-sy',String(height/244));
+        link.style.transform=`translate3d(${x}px,${y}px,0) rotate(${[-8,1,8][slot]}deg) scale(${width/200},${height/244}) translate(-50%,-100%)`;
         const image=productImages[worldIndex][slot];
         const aspect=(image?.naturalWidth||1)/(image?.naturalHeight||image?.naturalWidth||1);
         const baseImageWidth=Math.min(200,244*aspect);
         const imageWidth=Math.min(width,height*aspect);
-        link.style.setProperty('--image-sx',String(imageWidth/(baseImageWidth*(width/200)||1)));
-        link.style.setProperty('--image-sy',String(imageWidth/(baseImageWidth*(height/244)||1)));
+        image.style.transform=`scale(${imageWidth/(baseImageWidth*(width/200)||1)},${imageWidth/(baseImageWidth*(height/244)||1)})`;
 
         link.style.opacity = String(opacity); link.style.pointerEvents = opacity > .5 ? 'auto' : 'none';
         link.style.visibility = opacity > .01 ? 'visible' : 'hidden';
         link.tabIndex = opacity > .5 ? 0 : -1;
-        link.style.setProperty('--balloon-tilt',`${[-8,1,8][slot]}deg`);
         const shadow = productShadows[slot]; shadow.position.copy(base); shadow.position.y = stop.y + .07;
         shadow.rotation.z = -Math.atan2(stopTangent.x, stopTangent.z);
         shadow.scale.set(physicalWidth * 1.2, physicalWidth * .55, 1);
@@ -272,12 +269,12 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
     const visibility=()=>{if(!document.hidden)wake.current()};document.addEventListener('visibilitychange',visibility);
     let disposed=false;
     renderer.compileAsync(scene,camera).then(()=>{if(!disposed){compiled=true;wake.current();setReady(true)}},()=>{if(!disposed)setContextLost(true)});
-    return () => { disposed=true;wake.current=()=>{};productImages.flat().forEach(image=>image.removeEventListener('load',refreshProducts));cancelAnimationFrame(raf);cancelAnimationFrame(resizeRaf);document.removeEventListener('visibilitychange',visibility);renderer.domElement.removeEventListener('webglcontextlost',loseContext);observer.disconnect(); intersection.disconnect(); media.removeEventListener('change', onReduced); const geometries = new Set<THREE.BufferGeometry>(); const materials = new Set<THREE.Material>(); scene.traverse(object => { if (object instanceof THREE.Mesh) { geometries.add(object.geometry); (Array.isArray(object.material) ? object.material : [object.material]).forEach(material => materials.add(material)); } }); geometries.forEach(geometry => geometry.dispose()); materials.forEach(material => material.dispose()); shadowTexture.dispose(); dashes.dispose();renderer.dispose();renderer.domElement.remove(); };
+    return () => { disposed=true;wake.current=()=>{};productImages.flat().forEach(image=>image.removeEventListener('load',refreshProducts));cancelAnimationFrame(raf);cancelAnimationFrame(resizeRaf);document.removeEventListener('visibilitychange',visibility);renderer.domElement.removeEventListener('webglcontextlost',loseContext);observer.disconnect(); intersection.disconnect(); media.removeEventListener('change', onReduced); const geometries = new Set<THREE.BufferGeometry>(); const materials = new Set<THREE.Material>(); scene.traverse(object => { if (object instanceof THREE.Mesh) { geometries.add(object.geometry); (Array.isArray(object.material) ? object.material : [object.material]).forEach(material => materials.add(material)); } }); geometries.forEach(geometry => geometry.dispose()); materials.forEach(material => material.dispose()); shadowTexture.dispose(); dashes.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove(); };
   }, []);
 
   const world = journeyWorlds[active];
   return <div className="three-road-world" ref={mount} data-ready={ready} data-active={active}>
-    <div className="three-category-backdrops" aria-hidden="true">{backdropPalettes.map(palette=><div key={palette} className={`animated-category-backdrop palette-${palette}`}><span className="mesh-light mesh-a"/><span className="mesh-light mesh-b"/><span className="mesh-light mesh-c"/><span className="mesh-light mesh-d"/></div>)}</div>
+    <div className="three-category-backdrops" aria-hidden="true">{backdropPalettes.map(palette=><div key={palette} className={`animated-category-backdrop palette-${palette}`} data-present={backdropPalettes[active]===palette}><span className="mesh-light mesh-a"/><span className="mesh-light mesh-b"/><span className="mesh-light mesh-c"/><span className="mesh-light mesh-d"/></div>)}</div>
     <BrandO active={active} requested={requested}/>
     <div className="three-featured-products">{journeyWorlds.map((item, index) => <div className={`three-featured-set${active === index ? ' is-active' : ''}`} aria-hidden={active !== index} key={item.id}>{item.products.map((product, productIndex) => <a href={`/products/${product.slug}`} className="three-featured-product" key={product.id} tabIndex={active === index ? 0 : -1} aria-label={`View ${product.title}`}><m.div className="motion-product-visual" initial={{opacity:0,scale:.94,y:12}} animate={visibleBunch===index?{opacity:1,scale:1,y:0}:{opacity:0,scale:.94,y:12}} transition={{...softSpring,delay:visibleBunch===index?productIndex*.07:0}} whileHover={{scale:1.03,y:-3}} whileTap={{scale:.98}}><picture><source media="(max-width: 600px)" srcSet={index<requested?thumbnailSet(product):undefined} sizes="200px"/><img src={index<requested?product.image:undefined} srcSet={index<requested?detailSet(product):undefined} sizes="350px" onError={event=>recoverImage(event,product.image)} alt={product.title} loading="eager" decoding="async" /></picture></m.div></a>)}</div>)}</div>
     <div className="three-world-ui" aria-live="polite">

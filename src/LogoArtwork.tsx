@@ -11,10 +11,7 @@ const gateArtwork=[
   {src:'/assets/scenery/supplied/halloween_o.webp',cx:649,cy:589,rx:546,ry:540,hx:645,hy:606,hrx:189,hry:199},
 ];
 export function BrandO({ active, requested=3 }: { active:number;requested?:number }) {
-  return <svg className="three-portal-o" viewBox="100 45 1100 1100" aria-hidden="true">
-    <defs>{gateArtwork.map((art,index)=><mask key={art.src} id={`supplied-o-${index}`} maskUnits="userSpaceOnUse" x="100" y="45" width="1100" height="1100"><ellipse cx={art.cx} cy={art.cy} rx={art.rx} ry={art.ry} fill="white"/><ellipse cx={art.hx} cy={art.hy} rx={art.hrx} ry={art.hry} fill="black"/></mask>)}</defs>
-    {gateArtwork.map((art,index)=><g key={art.src} className={`three-portal-world${index===active?' is-active':''}`}><image href={index<requested?artworkSrc(index):undefined} x="0" y="0" width="1298" height="1212" mask={`url(#supplied-o-${index})`}/></g>)}
-  </svg>;
+  return <div className="three-portal-o" aria-hidden="true">{gateArtwork.map((art,index)=><img key={art.src} className={`three-portal-world${index===active?' is-active':''}`} src={index<requested?artworkSrc(index):undefined} width="1024" height="1024" decoding="async" alt=""/>)}</div>;
 }
 export default function LogoArtwork() {
   const reduced=useReducedMotion();

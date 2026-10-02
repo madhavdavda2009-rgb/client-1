@@ -12,7 +12,7 @@ export default function Preloader(){
     const tasks:Promise<unknown>[]=[preloadImage(originalLogo),...heroProducts.slice(0,6).map(p=>preloadImage(p.thumb,thumbnailSet(p),heroSizes)),prepareWorld(0),document.fonts.ready];
     const scene=new Promise<void>(resolve=>{const check=()=>{if(cancelled)return;const w=document.querySelector<HTMLElement>('.three-road-world');if(w?.dataset.ready==='true'&&w.dataset.gateX)resolve();else poll=window.setTimeout(check,80)};check()});tasks.push(scene);
     const fallback=window.setTimeout(finish,15000);
-    Promise.all(tasks.map(task=>Promise.resolve(task).then(result=>{if(!cancelled){if(result===false)document.documentElement.dataset.preloadFailed='true';setProgress(++loaded/tasks.length)}}))).then(()=>{clearTimeout(fallback);finish()});
+    Promise.all(tasks.map(task=>Promise.resolve(task).then(result=>{if(!cancelled){if(result===false||Array.isArray(result)&&result.includes(false))document.documentElement.dataset.preloadFailed='true';setProgress(++loaded/tasks.length)}}))).then(()=>{clearTimeout(fallback);finish()});
     return()=>{cancelled=true;clearTimeout(fallback);clearTimeout(poll);unlock()};
   },[]);
   return <div className={`brand-preloader${done?' is-ready':''}`} aria-hidden={done} aria-label="Loading Toy-On"><img src={originalLogo} alt="Toy-On" width="500" height="354" fetchPriority="high"/><div className="loading-line"><span style={{transform:`scaleX(${progress})`}}/></div></div>;

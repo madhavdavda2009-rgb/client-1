@@ -12,9 +12,9 @@ import { useRequestedWorlds,prepareWorld,thumbnailSet,detailSet,recoverImage } f
 type JourneyWorld = Omit<Category, 'products'> & { products: Product[]; description: string; label: string };
 
 const journeyWorlds: JourneyWorld[] = [
-  { ...categories.find(c => c.id === 'christmas')!, products: categories.find(c => c.id === 'christmas')!.products.slice(0, 3).map(id => productById[id]), label: 'FESTIVE COLLECTION', description: 'Warm, sparkling shapes made for the moments that gather everyone together.' },
-  { ...categories.find(c => c.id === 'dinosaurs')!, products: categories.find(c => c.id === 'dinosaurs')!.products.slice(0, 3).map(id => productById[id]), label: 'DINOSAUR WORLD', description: 'Bring big imaginations to life with playful characters built for roaring celebrations.' },
-  { ...categories.find(c => c.id === 'halloween')!, products: categories.find(c => c.id === 'halloween')!.products.slice(0, 3).map(id => productById[id]), label: 'HALLOWEEN COLLECTION', description: 'A little spooky, a lot of fun — expressive designs for nights worth remembering.' },
+  { ...categories.find(c => c.id === 'christmas')!, products: categories.find(c => c.id === 'christmas')!.products.map(id => productById[id]), label: 'FESTIVE COLLECTION', description: 'Warm, sparkling shapes made for the moments that gather everyone together.' },
+  { ...categories.find(c => c.id === 'dinosaurs')!, products: categories.find(c => c.id === 'dinosaurs')!.products.map(id => productById[id]), label: 'DINOSAUR WORLD', description: 'Bring big imaginations to life with playful characters built for roaring celebrations.' },
+  { ...categories.find(c => c.id === 'halloween')!, products: categories.find(c => c.id === 'halloween')!.products.map(id => productById[id]), label: 'HALLOWEEN COLLECTION', description: 'A little spooky, a lot of fun — expressive designs for nights worth remembering.' },
 ];
 const backdropPalettes = ['christmas', 'dinosaurs', 'halloween'];
 
@@ -66,14 +66,14 @@ function roadRibbon(width = 5.8) {
 }
 
 export default function ThreeRoadWorld({ progress }: { progress: MotionValue<number> }) {
-  const requested=useRequestedWorlds();const wake=useRef(()=>{});
+  const requested=useRequestedWorlds();const wake=useRef(()=>{});const [extrasEnabled,setExtrasEnabled]=useState(false);
   const [contextLost,setContextLost]=useState(false);
   if(contextLost)throw new Error('WebGL context unavailable');
   const [visibleBunch,setVisibleBunch]=useState<number|null>(null);
   const lastBunch=useRef<number|null>(null);
   const mount = useRef<HTMLDivElement>(null); const targetProgress = useRef(0); const reduced = useRef(false);
   const [active, setActive] = useState(0); const [ready, setReady] = useState(false);
-  useMotionValueEvent(progress, 'change', value => { targetProgress.current = clamp(value);prepareWorld(value>.40?2:value>.05?1:0);wake.current(); });
+  useMotionValueEvent(progress, 'change', value => { targetProgress.current = clamp(value);if(value>.015&&!extrasEnabled)setExtrasEnabled(true);prepareWorld(value>.40?2:value>.05?1:0);wake.current(); });
 
   useEffect(() => {
     const host = mount.current; if (!host) return;
@@ -110,7 +110,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
     for(let i=0;i<26;i++){const t=i/27+.005,p=roadCurve.getPointAt(t),tangent=roadCurve.getTangentAt(t);dashPose.position.copy(p);dashPose.position.y+=.025;dashPose.rotation.y=Math.atan2(tangent.x,tangent.z);dashPose.updateMatrix();dashes.setMatrixAt(i,dashPose.matrix)}
     dashes.instanceMatrix.needsUpdate=true;dashes.computeBoundingSphere();world.add(dashes);
     const productLinks = journeyWorlds.map((_, index) => [...host.querySelectorAll<HTMLAnchorElement>(`.three-featured-set:nth-child(${index + 1}) .three-featured-product`)]);
-    productLinks.flat().forEach(link=>{link.style.left=link.style.top='0px';link.style.width='200px';link.style.height='244px';link.style.transformOrigin='0 0'});
+    productLinks.flat().forEach(link=>{link.style.left=link.style.top='0px';link.style.width='200px';link.style.height='244px';link.style.transformOrigin='0 0';link.style.visibility='hidden';link.style.willChange='auto'});
     // Fixed stations on one road: bunch first, scenic O farther along, then the next station.
     const stops = [.17, .48, .80].map(p => .045 + p * .91);
     const gates = [.28, .60, .91].map(p => .045 + p * .91);
@@ -129,12 +129,19 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
     const current=new THREE.Vector3(),tangent=new THREE.Vector3(),side=new THREE.Vector3(),desiredCamera=new THREE.Vector3(),aim=new THREE.Vector3(),roadEnd=new THREE.Vector3(),gateView=new THREE.Vector3(),gateProjection=new THREE.Vector3(),gateTop=new THREE.Vector3(),base=new THREE.Vector3(),bunchView=new THREE.Vector3();
     const fixedGates=gates.map(t=>{const point=roadCurve.getPointAt(t);point.y+=1.1;return point});
     const fixedStops=stops.map(t=>{const point=roadCurve.getPointAt(t),direction=roadCurve.getTangentAt(t).normalize();return {point,direction,side:new THREE.Vector3().crossVectors(direction,new THREE.Vector3(0,1,0)).normalize()}});
+    const extraPositions=[[.09,.12,.225,.265,.315],[.385,.415,.53,.57,.63],[.715]];
+    const extraLinks=journeyWorlds.map((_,index)=>[...host.querySelectorAll<HTMLAnchorElement>(`.three-extra-set:nth-child(${index+1}) .three-extra-product`)]);
+    const extraImages=extraLinks.map(links=>links.map(link=>link.querySelector('img')!));
+    const extraStops=extraPositions.map(positions=>positions.map((p,i)=>{const point=roadCurve.getPointAt(.045+p*.91),direction=roadCurve.getTangentAt(.045+p*.91).normalize(),side=new THREE.Vector3().crossVectors(direction,new THREE.Vector3(0,1,0)).normalize();return {point,direction,side,sign:i%2?-1:1}}));
+    extraLinks.flat().forEach(link=>{link.style.left=link.style.top='0px';link.style.width='200px';link.style.height='244px';link.style.transformOrigin='0 0';link.style.visibility='hidden';link.style.willChange='auto';link.tabIndex=-1});
+    const extraShadows=new THREE.InstancedMesh(shadowGeometry,shadowMaterial,5),shadowPose=new THREE.Object3D();extraShadows.frustumCulled=false;extraShadows.renderOrder=3;scene.add(extraShadows);
+    const allImages=[...extraImages.flat()];
     const productImages=productLinks.map(group=>group.map(link=>link.querySelector('img')!));
     const projectedBase = new THREE.Vector3(), projectedTop = new THREE.Vector3(), projectedEdge = new THREE.Vector3();
     const cameraAim = roadCurve.getPointAt(stops[0]); cameraAim.y += 1.1;
     let viewportWidth=1,viewportHeight=1,dirty=true,settledFrames=0,renderCount=0;
     const previousCamera=new THREE.Vector3(),previousAim=new THREE.Vector3();
-    const refreshProducts=()=>{dirty=true;wake.current()};productImages.flat().forEach(image=>image.addEventListener('load',refreshProducts));
+    const refreshProducts=()=>{dirty=true;wake.current()};allImages.push(...productImages.flat());allImages.forEach(image=>image.addEventListener('load',refreshProducts));
     const media = window.matchMedia('(prefers-reduced-motion: reduce)'); reduced.current = media.matches; const onReduced = () => { reduced.current = media.matches;dirty=true;wake.current(); }; media.addEventListener('change', onReduced); let narrowRoad = false; const resize = () => { const w = host.clientWidth || 1; const h = host.clientHeight || 1;viewportWidth=w;viewportHeight=h;dirty=true; const nextNarrow = w < 620; if (nextNarrow !== narrowRoad) { road.geometry.dispose(); shoulder.geometry.dispose(); road.geometry = roadRibbon(nextNarrow ? 1.7 : 2.4); shoulder.geometry = roadRibbon(nextNarrow ? 1.9 : 2.65);shoulder.geometry.clearGroups(); narrowRoad = nextNarrow; } camera.aspect = w / h; camera.fov = w < 620 ? 52 : w < 900 ? 55 : 49; camera.updateProjectionMatrix(); renderer.setPixelRatio(quality.pixelRatio(w));host.dataset.quality=quality.tier; renderer.setSize(w, h, false);wake.current(); }; let resizeRaf=0;const observer = new ResizeObserver(()=>{cancelAnimationFrame(resizeRaf);resizeRaf=requestAnimationFrame(resize)}); observer.observe(host); resize();
     let raf = 0; let last = 0; let visible = true; const journey = host.closest<HTMLElement>('.journey'); const intersection = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting;if(visible)wake.current(); }); intersection.observe(journey ?? host);
     const skyColors = [0xf7efdc, 0xf1f2d8, 0xf2e8df].map(color => new THREE.Color(color));
@@ -165,7 +172,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
       cameraAim.lerp(aim, reduced.current ? 1 : 1-Math.exp(-dt*7));
       camera.lookAt(cameraAim);
       // The complete ribbon remains connected through all three category stops.
-      if (worldIndex !== Number(host.dataset.active)) { host.dataset.active = String(worldIndex); setActive(worldIndex); }
+      if (worldIndex !== Number(host.dataset.active)) { host.dataset.active = String(worldIndex); setActive(worldIndex);extraLinks.forEach((links,index)=>{if(index!==worldIndex)links.forEach(link=>{link.style.visibility='hidden';link.style.willChange='auto';link.style.pointerEvents='none';link.tabIndex=-1})}); }
       const segmentStart = [0, .345, .655][worldIndex], segmentEnd = [.345, .655, 1][worldIndex];
       const localPosition = clamp((p - segmentStart) / (segmentEnd - segmentStart)) * 3;
       const background01=THREE.MathUtils.smoothstep(p,.30,.39),background12=THREE.MathUtils.smoothstep(p,.61,.70);
@@ -220,8 +227,9 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
       const physicalWidth = mobile ? 1.3 : 2.25;
       const bunchDepth=-bunchView.copy(stop).applyMatrix4(camera.matrixWorldInverse).z;
       const bunchWidth = physicalWidth * screenHeight / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * Math.max(.1, bunchDepth));
-      const reveal = THREE.MathUtils.smoothstep(bunchWidth, mobile ? 55 : 90, mobile ? 85 : 140);
-      const leave = 1 - THREE.MathUtils.smoothstep(bunchWidth, mobile ? 130 : 260, mobile ? 175 : 350);
+      const revealScale=Math.min(1,screenHeight/700);
+      const reveal = THREE.MathUtils.smoothstep(bunchWidth, (mobile ? 55 : 90)*revealScale, (mobile ? 85 : 140)*revealScale);
+      const leave = 1 - THREE.MathUtils.smoothstep(bunchWidth, (mobile ? 130 : 260)*revealScale, (mobile ? 175 : 350)*revealScale);
       const opacity = bunchDepth > 0 ? reveal * leave : 0;
       const nextBunch=opacity>.05?worldIndex:null;
       if(nextBunch!==lastBunch.current){lastBunch.current=nextBunch;setVisibleBunch(nextBunch)}
@@ -244,7 +252,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
         image.style.transform=`scale(${imageWidth/(baseImageWidth*(width/200)||1)},${imageWidth/(baseImageWidth*(height/244)||1)})`;
 
         link.style.opacity = String(opacity); link.style.pointerEvents = opacity > .5 ? 'auto' : 'none';
-        link.style.visibility = opacity > .01 ? 'visible' : 'hidden';
+        link.style.visibility = opacity > .01 ? 'visible' : 'hidden';link.style.willChange=opacity>.01?'transform':'auto';
         link.tabIndex = opacity > .5 ? 0 : -1;
         const shadow = productShadows[slot]; shadow.position.copy(base); shadow.position.y = stop.y + .07;
         shadow.rotation.z = -Math.atan2(stopTangent.x, stopTangent.z);
@@ -252,6 +260,24 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
         shadow.visible = opacity > .01;
         host.dataset.productsVisible = String(opacity > .5);
       });
+      // Additional designs occupy fixed roadside stations; only the camera moves.
+      extraShadows.count=extraStops[worldIndex].length;
+      extraStops[worldIndex].forEach(({point,direction,side,sign},slot)=>{
+        const link=extraLinks[worldIndex][slot],image=extraImages[worldIndex][slot];
+        const size=mobile?1.05:1.6;
+        base.copy(point).addScaledVector(side,sign*(mobile?.95:1.6));base.y+=.065;
+        const depth=-bunchView.copy(base).applyMatrix4(camera.matrixWorldInverse).z;
+        projectedBase.copy(base).project(camera);projectedTop.copy(base);projectedTop.y+=size*1.22;projectedTop.project(camera);projectedEdge.copy(base).addScaledVector(side,size).project(camera);
+        const width=Math.abs(projectedEdge.x-projectedBase.x)*screenWidth/2,height=Math.abs(projectedTop.y-projectedBase.y)*screenHeight/2;
+        const alpha=depth>0&&image.complete&&image.naturalWidth?THREE.MathUtils.smoothstep(width,mobile?40:65,mobile?60:100)*(1-THREE.MathUtils.smoothstep(width,mobile?155:280,mobile?220:390)):0;
+        link.style.visibility=alpha>.01?'visible':'hidden';link.style.willChange=alpha>.01?'transform':'auto';link.style.opacity=String(alpha);link.style.pointerEvents=alpha>.5?'auto':'none';link.tabIndex=alpha>.5?0:-1;
+        if(alpha>.01){
+          const x=(projectedBase.x+1)*screenWidth/2,y=(1-projectedBase.y)*screenHeight/2,aspect=image.naturalWidth/image.naturalHeight,baseWidth=Math.min(200,244*aspect),imageWidth=Math.min(width,height*aspect);
+          link.style.transform=`translate3d(${x}px,${y}px,0) rotate(${sign*5}deg) scale(${width/200},${height/244}) translate(-50%,-100%)`;
+          image.style.transform=`scale(${imageWidth/(baseWidth*(width/200)||1)},${imageWidth/(baseWidth*(height/244)||1)})`;
+        }
+        shadowPose.position.copy(base);shadowPose.position.y=point.y+.07;shadowPose.rotation.set(-Math.PI/2,0,-Math.atan2(direction.x,direction.z));shadowPose.scale.set(size*1.2*alpha,size*.55*alpha,1);shadowPose.updateMatrix();extraShadows.setMatrixAt(slot,shadowPose.matrix);
+      });extraShadows.instanceMatrix.needsUpdate=true;
       const mix01 = THREE.MathUtils.smoothstep(p, .30, .39), mix12 = THREE.MathUtils.smoothstep(p, .61, .70);
       blendedSky.copy(skyColors[0]).lerp(skyColors[1], mix01).lerp(skyColors[2], mix12);
       blendedRoad.copy(roadColors[0]).lerp(roadColors[1], mix01).lerp(roadColors[2], mix12);
@@ -269,14 +295,15 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
     const visibility=()=>{if(!document.hidden)wake.current()};document.addEventListener('visibilitychange',visibility);
     let disposed=false;
     renderer.compileAsync(scene,camera).then(()=>{if(!disposed){compiled=true;wake.current();setReady(true)}},()=>{if(!disposed)setContextLost(true)});
-    return () => { disposed=true;wake.current=()=>{};productImages.flat().forEach(image=>image.removeEventListener('load',refreshProducts));cancelAnimationFrame(raf);cancelAnimationFrame(resizeRaf);document.removeEventListener('visibilitychange',visibility);renderer.domElement.removeEventListener('webglcontextlost',loseContext);observer.disconnect(); intersection.disconnect(); media.removeEventListener('change', onReduced); const geometries = new Set<THREE.BufferGeometry>(); const materials = new Set<THREE.Material>(); scene.traverse(object => { if (object instanceof THREE.Mesh) { geometries.add(object.geometry); (Array.isArray(object.material) ? object.material : [object.material]).forEach(material => materials.add(material)); } }); geometries.forEach(geometry => geometry.dispose()); materials.forEach(material => material.dispose()); shadowTexture.dispose(); dashes.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove(); };
+    return () => { disposed=true;wake.current=()=>{};allImages.forEach(image=>image.removeEventListener('load',refreshProducts));cancelAnimationFrame(raf);cancelAnimationFrame(resizeRaf);document.removeEventListener('visibilitychange',visibility);renderer.domElement.removeEventListener('webglcontextlost',loseContext);observer.disconnect(); intersection.disconnect(); media.removeEventListener('change', onReduced); const geometries = new Set<THREE.BufferGeometry>(); const materials = new Set<THREE.Material>(); scene.traverse(object => { if (object instanceof THREE.Mesh) { geometries.add(object.geometry); (Array.isArray(object.material) ? object.material : [object.material]).forEach(material => materials.add(material)); } }); geometries.forEach(geometry => geometry.dispose()); materials.forEach(material => material.dispose()); shadowTexture.dispose(); dashes.dispose();extraShadows.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove(); };
   }, []);
 
   const world = journeyWorlds[active];
   return <div className="three-road-world" ref={mount} data-ready={ready} data-active={active}>
     <div className="three-category-backdrops" aria-hidden="true">{backdropPalettes.map(palette=><div key={palette} className={`animated-category-backdrop palette-${palette}`} data-present={backdropPalettes[active]===palette}><span className="mesh-light mesh-a"/><span className="mesh-light mesh-b"/><span className="mesh-light mesh-c"/><span className="mesh-light mesh-d"/></div>)}</div>
     <BrandO active={active} requested={requested}/>
-    <div className="three-featured-products">{journeyWorlds.map((item, index) => <div className={`three-featured-set${active === index ? ' is-active' : ''}`} aria-hidden={active !== index} key={item.id}>{item.products.map((product, productIndex) => <a href={`/products/${product.slug}`} className="three-featured-product" key={product.id} tabIndex={active === index ? 0 : -1} aria-label={`View ${product.title}`}><m.div className="motion-product-visual" initial={{opacity:0,scale:.94,y:12}} animate={visibleBunch===index?{opacity:1,scale:1,y:0}:{opacity:0,scale:.94,y:12}} transition={{...softSpring,delay:visibleBunch===index?productIndex*.07:0}} whileHover={{scale:1.03,y:-3}} whileTap={{scale:.98}}><picture><source media="(max-width: 600px)" srcSet={index<requested?thumbnailSet(product):undefined} sizes="200px"/><img src={index<requested?product.image:undefined} srcSet={index<requested?detailSet(product):undefined} sizes="350px" onError={event=>recoverImage(event,product.image)} alt={product.title} loading="eager" decoding="async" /></picture></m.div></a>)}</div>)}</div>
+    <div className="three-featured-products">{journeyWorlds.map((item, index) => <div className={`three-featured-set${active === index ? ' is-active' : ''}`} aria-hidden={active !== index} key={item.id}>{item.products.slice(0,3).map((product, productIndex) => <a href={`/products/${product.slug}`} className="three-featured-product" key={product.id} tabIndex={active === index ? 0 : -1} aria-label={`View ${product.title}`}><m.div className="motion-product-visual" initial={{opacity:0,scale:.94,y:12}} animate={visibleBunch===index?{opacity:1,scale:1,y:0}:{opacity:0,scale:.94,y:12}} transition={{...softSpring,delay:visibleBunch===index?productIndex*.07:0}} whileHover={{scale:1.03,y:-3}} whileTap={{scale:.98}}><picture><source media="(max-width: 600px)" srcSet={index<requested?thumbnailSet(product):undefined} sizes="200px"/><img src={index<requested?product.image:undefined} srcSet={index<requested?detailSet(product):undefined} sizes="350px" onError={event=>recoverImage(event,product.image)} alt={product.title} loading="eager" decoding="async" /></picture></m.div></a>)}</div>)}</div>
+    <div className="three-extra-products">{journeyWorlds.map((item,index)=><div className={`three-extra-set${active===index?' is-active':''}`} aria-hidden={active!==index} key={item.id}>{item.products.slice(3).map(product=><a href={`/products/${product.slug}`} className="three-featured-product three-extra-product" key={product.id} tabIndex={-1} aria-label={`View ${product.title}`}><m.div className="motion-product-visual" initial={false} whileHover={{scale:1.03,y:-3}} whileTap={{scale:.98}} transition={softSpring}><picture><source media="(max-width:600px)" srcSet={extrasEnabled&&index<requested?thumbnailSet(product):undefined} sizes="140px"/><img src={extrasEnabled&&index<requested?product.thumb:undefined} srcSet={extrasEnabled&&index<requested?thumbnailSet(product):undefined} sizes="(max-width:600px) 140px, 220px" alt={product.title} decoding="async" onError={event=>recoverImage(event,product.image)} width="240" height="240"/></picture></m.div></a>)}</div>)}</div>
     <div className="three-world-ui" aria-live="polite">
       <AnimatePresence mode="sync"><m.div key={world.id} className="three-world-copy" initial={{opacity:0,scale:.985,y:12}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:1.015,y:-6,pointerEvents:'none'}} transition={{duration:.45,ease:[.25,.1,.25,1]}}><Reveal><span className="eyebrow">{world.label}</span><h2>{world.title}</h2><p>{world.description}</p><MotionLink className="three-world-cta" href={`/categories/${world.id}`}>Explore collection <span aria-hidden="true">↗</span></MotionLink><p className="collection-scroll-cue"><span className="scroll-desktop">Keep scrolling to explore</span><span className="scroll-touch">Swipe up to explore</span><span aria-hidden="true"> ↓</span></p></Reveal></m.div></AnimatePresence>
       <span className="three-world-progress">{String(active + 1).padStart(2, '0')} / 03</span><MotionLink className="three-world-browse" href="/products">Browse all 96 designs ↗</MotionLink>

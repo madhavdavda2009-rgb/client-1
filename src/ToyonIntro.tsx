@@ -14,7 +14,7 @@ const intro={holeX:.348,holeY:.477,radius:.0274,length:1.35};
 export default function ToyonIntro(){
   const rootRef=useRef<HTMLElement>(null),journeyProgress=useMotionValue(0);
   useLayoutEffect(()=>{
-    gsap.registerPlugin(ScrollTrigger);ScrollTrigger.config({ignoreMobileResize:true});
+    gsap.registerPlugin(ScrollTrigger);ScrollTrigger.config({ignoreMobileResize:true,autoRefreshEvents:'visibilitychange,DOMContentLoaded,load'});
     const root=rootRef.current!,stage=root.querySelector<HTMLElement>('.stage')!;
     const logo=root.querySelector<SVGSVGElement>('.logo')!,art=root.querySelector<SVGGElement>('[data-logo-art]')!;
     const surroundingLetters=[...root.querySelectorAll<SVGPathElement>('[data-logo-surround]')];
@@ -23,7 +23,8 @@ export default function ToyonIntro(){
     const journeyHint=root.querySelector<HTMLElement>('.journey-scroll-cue')!;
     let width=1,height=1,baseWidth=1,portalRadius=1,progress=0,target=0,running=false,disposed=false,lastOpening=-1,lastTick=performance.now();
     let closingOrigin:{x:number;y:number}|null=null;
-    const totalLength=intro.length+3*2.05+1,openingFraction=intro.length/totalLength;
+    const totalLength=intro.length+3*2.45+1,openingFraction=intro.length/totalLength;
+    root.dataset.travelStart=String(intro.length*.44/totalLength);root.dataset.travelEnd=String((totalLength-1)/totalLength);
     function measure(){width=stage.clientWidth;height=stage.clientHeight;baseWidth=Math.min(width*.96,height*1.2,860);portalRadius=Math.min(width*(width<700?.45:.31),height*(width<700?.265:.43));root.style.setProperty('--portal-radius',`${portalRadius}px`);root.style.height=`${height*(1+totalLength)}px`;logo.setAttribute('viewBox',`0 0 ${width} ${height}`);lastOpening=-1;}
     function render(){
       // Start travelling as soon as the scenic O is revealed; avoid an empty hold after the logo.
@@ -100,7 +101,18 @@ export default function ToyonIntro(){
     function follow(value:number){target=value;if(!running){running=true;lastTick=performance.now();gsap.ticker.add(tick)}}
     measure();render();const observer=new IntersectionObserver(([entry])=>{root.dataset.visible=String(entry.isIntersecting)});observer.observe(root);
     const context=gsap.context(()=>{ScrollTrigger.create({trigger:root,start:'top top',end:'bottom bottom',onUpdate:self=>follow(self.progress),onRefreshInit:measure,onRefresh:self=>{render();follow(self.progress)}})},root);
-    return()=>{disposed=true;gsap.ticker.remove(tick);context.revert();observer.disconnect()};
+    let resizeFrame=0;
+    const viewportObserver=new ResizeObserver(()=>{
+      if(stage.clientWidth===width&&stage.clientHeight===height)return;
+      cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>{
+        const saved=target,top=root.getBoundingClientRect().top+scrollY;
+        measure();ScrollTrigger.refresh();
+        window.scrollTo({top:top+saved*(root.offsetHeight-height),behavior:'instant'});
+        follow(saved);render();
+      });
+    });viewportObserver.observe(stage);
+    const resume=()=>{if(document.hidden){gsap.ticker.remove(tick);running=false}else follow(target)};document.addEventListener('visibilitychange',resume);
+    return()=>{disposed=true;cancelAnimationFrame(resizeFrame);viewportObserver.disconnect();document.removeEventListener('visibilitychange',resume);gsap.ticker.remove(tick);context.revert();observer.disconnect()};
   },[journeyProgress]);
   return <><link rel="preload" as="image" href={originalLogo}/><main ref={rootRef} className="journey" aria-label="Toy-On road journey"><div className="stage"><HomeGradient/><HeroStream/><div className="portal-preview" aria-hidden="true"/><LogoArtwork/><div className="portal"><ThreeRoadWorld progress={journeyProgress}/></div><p className="scroll-hint"><span className="scroll-desktop">Scroll down to explore</span><span className="scroll-touch">Swipe up to explore</span><ScrollArrow/></p><p className="journey-scroll-cue"><span className="cue-enter"><span className="scroll-desktop">Keep scrolling to enter</span><span className="scroll-touch">Swipe up to enter</span></span><span className="cue-next"><span className="scroll-desktop">Scroll for the next collection</span><span className="scroll-touch">Swipe up for the next collection</span></span><span className="cue-finish"><span className="scroll-desktop">Scroll to continue</span><span className="scroll-touch">Swipe up to continue</span></span><ScrollArrow/></p></div></main></>;
 }

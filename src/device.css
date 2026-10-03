@@ -20,3 +20,22 @@ html[data-tab-visible=false] .mesh-light,html[data-tab-visible=false] .home-mesh
 .journey[data-phase=road] .home-mesh,.journey[data-phase=closing] .home-mesh,.journey[data-phase=road] .hero-life,.journey[data-phase=closing] .hero-life{display:none}
 /* Live canvas filtering multiplies the cost of every GPU frame on phones. The raised shoulder and road-clipped product shadows remain. */
 @media(hover:none),(pointer:coarse){.three-road-world canvas{filter:none}.journey .stage{height:100svh}}
+
+.three-extra-products{position:absolute;inset:0;z-index:5;pointer-events:none}.three-extra-set:not(.is-active){opacity:0}.three-extra-product{visibility:hidden;opacity:0}.three-extra-product img{width:100%;height:100%;object-fit:contain}.three-extra-product .motion-product-visual,.three-extra-product picture{display:block;width:100%;height:100%}
+
+/* A stable camera viewport prevents address-bar animation from reallocating WebGL buffers. UI tracks the visible viewport independently. */
+@media(hover:none),(pointer:coarse){
+ .journey .stage{height:100lvh}
+ .three-world-ui{bottom:max(0px,100lvh - 100dvh)}
+ .scroll-hint{bottom:calc(max(26px,env(safe-area-inset-bottom)) + max(0px,100lvh - 100dvh))}
+ .journey-scroll-cue{bottom:calc(max(28px,env(safe-area-inset-bottom)) + max(0px,100lvh - 100dvh))}
+}
+
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+/* Sticky already holds the stage throughout the journey. Switching its positioning mode during the intro caused mobile compositor jumps. */
+.journey[data-opening-active=true] .stage{position:sticky;inset:auto;top:0}
+.logo{mix-blend-mode:normal}
+
+.three-portal-world:not(.is-active){visibility:hidden;transition:opacity .95s cubic-bezier(.22,1,.36,1),visibility 0s .95s}
+.three-portal-world.is-active{visibility:visible;transition:opacity .95s cubic-bezier(.22,1,.36,1),visibility 0s}
+@media(prefers-reduced-motion:reduce){.three-portal-world{transition:none}}

@@ -1,5 +1,5 @@
 import { Children, createElement, isValidElement, useEffect, useState, useRef, type ReactNode } from 'react';
-import { m, AnimatePresence, useReducedMotion, type HTMLMotionProps, type Variants } from 'framer-motion';
+import { m, useReducedMotion, type HTMLMotionProps, type Variants } from 'framer-motion';
 import './motion-ui.css';
 
 export const softSpring={type:'spring' as const,stiffness:180,damping:24};
@@ -43,18 +43,8 @@ export function ScrollArrow(){
   return <m.span ref={ref} className="scroll-arrow" aria-hidden="true" animate={reduced||!visible?{y:0}:{y:[0,6,0]}} transition={reduced||!visible?{duration:.15}:{duration:2.1,repeat:Infinity,ease:'easeInOut'}}><svg viewBox="0 0 24 28" width="20" height="26" fill="none"><path d="M12 4v18m-6-6 6 6 6-6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg></m.span>;
 }
 
-// Native URLs and full-page navigation remain intact; only the exit is delayed.
+// Keep the current document intact until native navigation commits the destination.
 export function PageTransition({children,home}:{children:ReactNode;home:boolean}){
-  const reduced=useReducedMotion();const [leaving,setLeaving]=useState(false);const [destination,setDestination]=useState('');
-  useEffect(()=>{
-    function navigate(event:MouseEvent){
-      if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
-      const anchor=(event.target as Element).closest<HTMLAnchorElement>('a[href]');if(!anchor||anchor.hasAttribute('download')||anchor.target&&anchor.target!=='_self')return;
-      const url=new URL(anchor.href,location.href);if(url.origin!==location.origin||url.pathname===location.pathname&&url.search===location.search)return;
-      event.preventDefault();setDestination(url.href);setLeaving(true);
-    }
-    const restore=(event:PageTransitionEvent)=>{if(event.persisted){setLeaving(false);setDestination('')}};
-    document.addEventListener('click',navigate);window.addEventListener('pageshow',restore);return()=>{document.removeEventListener('click',navigate);window.removeEventListener('pageshow',restore)};
-  },[]);
-  return <AnimatePresence onExitComplete={()=>{if(destination)location.assign(destination)}}>{!leaving&&<m.div key="current-page" className={home?'home-motion-page':'page-reveal'} initial={home?false:{opacity:0,y:reduced?0:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:home||reduced?0:-8}} transition={{duration:reduced?.12:.35,ease:[.25,.1,.25,1]}}>{children}</m.div>}</AnimatePresence>;
+  const reduced=useReducedMotion();
+  return <m.div className={home?'home-motion-page':'page-reveal'} initial={home?false:{opacity:0,y:reduced?0:8}} animate={{opacity:1,y:0}} transition={{duration:reduced?.12:.25,ease:[.25,.1,.25,1]}}>{children}</m.div>;
 }

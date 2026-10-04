@@ -77,6 +77,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
 
   useEffect(() => {
     const host = mount.current; if (!host) return;
+    const touchDevice=matchMedia('(hover:none), (pointer:coarse)').matches;
     const scene = new THREE.Scene(); const camera = new THREE.PerspectiveCamera(48, 1, .1, 180); camera.position.set(0, 3.15, 10);
     const quality=new RenderQuality(host.clientWidth);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, stencil: true, powerPreference: 'high-performance' }); renderer.setPixelRatio(quality.pixelRatio(host.clientWidth)); renderer.setClearColor(0x000000, 0); host.appendChild(renderer.domElement);
@@ -184,7 +185,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
         image.style.setProperty('--mesh-play',moving?'running':'paused');
         image.style.setProperty('--mesh-change',moving?'transform':'auto');
         const start=[0,.345,.655][index],end=[.345,.655,1][index];
-        image.style.transform=`scale(${1+clamp((p-start)/(end-start))*.08})`;
+        if(!touchDevice)image.style.transform=`scale(${1+clamp((p-start)/(end-start))*.08})`;
       });
       const nextProduct = Math.min(2, Math.floor(localPosition));
       if (nextProduct !== Number(host.dataset.focusedProduct)) { host.dataset.focusedProduct = String(nextProduct); }

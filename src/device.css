@@ -39,3 +39,15 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .three-portal-world:not(.is-active){visibility:hidden;transition:opacity .95s cubic-bezier(.22,1,.36,1),visibility 0s .95s}
 .three-portal-world.is-active{visibility:visible;transition:opacity .95s cubic-bezier(.22,1,.36,1),visibility 0s}
 @media(prefers-reduced-motion:reduce){.three-portal-world{transition:none}}
+
+/* Mobile transitions: one colour field per palette instead of four full-screen compositor surfaces. */
+@media(hover:none),(pointer:coarse){
+ .journey .palette-christmas .mesh-a{background:radial-gradient(ellipse 68% 45% at 62% 20%,#59bdf5b0 0%,#a8e1f760 38%,#a8e1f700 80%),radial-gradient(ellipse 58% 48% at 87% 84%,#ffd5c5c9 0%,#ffd5c570 40%,#ffd5c500 80%),radial-gradient(ellipse 56% 44% at 12% 78%,#fff5db 0%,#fff5dbbb 35%,#fff5db00 80%),radial-gradient(ellipse 65% 48% at 48% 47%,#eaf8fa 0%,#eaf8fa99 36%,#eaf8fa00 75%)}
+ .journey .palette-dinosaurs .mesh-a{background:radial-gradient(ellipse 57% 43% at 64% 63%,#ffd66b 0%,#ffd66b77 42%,#ffd66b00 80%),radial-gradient(ellipse 58% 52% at 87% 82%,#ff9a50 0%,#ff9a5099 35%,#ff9a5000 82%),radial-gradient(ellipse 67% 47% at 36% 20%,#55c9b6b0 0%,#91d89b80 42%,#91d89b00 82%),radial-gradient(ellipse 64% 53% at 45% 50%,#e7efa7 0%,#e7efa799 38%,#e7efa700 78%)}
+ .journey .palette-halloween .mesh-a{background:radial-gradient(ellipse 60% 45% at 79% 65%,#e54c32 0%,#e54c3280 40%,#e54c3200 82%),radial-gradient(ellipse 56% 43% at 48% 79%,#ff9d2e 0%,#ff9d2eb0 35%,#ff9d2e00 80%),radial-gradient(ellipse 62% 40% at 67% 20%,#542063c0 0%,#54206377 40%,#54206300 80%),radial-gradient(ellipse 69% 52% at 48% 47%,#9b346baa 0%,#9b346b60 40%,#9b346b00 80%)}
+ .animated-category-backdrop :is(.mesh-b,.mesh-c,.mesh-d){display:none}
+ .animated-category-backdrop{contain:paint;will-change:opacity}
+ .journey .home-light-blue{background:radial-gradient(ellipse 52% 49% at 87% 18%,#b989d650 0%,#b989d628 40%,#b989d600 82%),radial-gradient(ellipse 59% 55% at 86% 84%,#ffb07888 0%,#f29aae66 40%,#f29aae00 82%),radial-gradient(ellipse 60% 56% at 53% 68%,#ffe28a8a 0%,#fff9f1aa 42%,#fff9f100 82%),radial-gradient(ellipse 61% 60% at 20% 57%,#66d1be8a 0%,#9edb9b66 36%,#9edb9b00 78%),radial-gradient(ellipse 58% 52% at 16% 20%,#55bff4a8 0%,#55bff455 35%,#55bff400 78%)}
+ .home-mesh-light:not(.home-light-blue){display:none}
+ .journey[data-phase=opening] .home-mesh-light{animation-play-state:paused}
+}

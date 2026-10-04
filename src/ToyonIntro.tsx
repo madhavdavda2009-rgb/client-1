@@ -19,6 +19,9 @@ export default function ToyonIntro(){
     const logo=root.querySelector<SVGSVGElement>('.logo')!,art=root.querySelector<SVGGElement>('[data-logo-art]')!;
     const surroundingLetters=[...root.querySelectorAll<SVGPathElement>('[data-logo-surround]')];
     const preview=root.querySelector<HTMLElement>('.portal-preview')!,portal=root.querySelector<HTMLElement>('.portal')!;
+    const touchDevice=matchMedia('(hover:none), (pointer:coarse)').matches;
+    const world=root.querySelector<HTMLElement>('.three-road-world')!;
+    art.style.transformOrigin='0 0';art.style.transformBox='view-box';art.style.willChange='transform';
     const hero=root.querySelector<HTMLElement>('.hero-life')!,hint=root.querySelector<HTMLElement>('.scroll-hint')!;
     const journeyHint=root.querySelector<HTMLElement>('.journey-scroll-cue')!;
     let width=1,height=1,baseWidth=1,portalRadius=1,progress=0,target=0,running=false,disposed=false,lastOpening=-1,lastTick=performance.now();
@@ -41,15 +44,15 @@ export default function ToyonIntro(){
       const hintOpacity = 1 - ease(range(target * totalLength * height, 0, 65));
       hint.style.opacity = `${hintOpacity}`; hint.style.visibility = hintOpacity ? 'visible' : 'hidden';
       const alignment = ease(range(opening, 0, .32));
-      const world=root.querySelector<HTMLElement>('.three-road-world')!;
       const gateX=Number(world.dataset.gateX)||width/2,gateY=Number(world.dataset.gateY)||height/2;
       const gateDiameter=Number(world.dataset.gateDiameter)||portalRadius*2;
       const scale = Math.pow(gateDiameter * 1600 / (210 * 1.2279355334 * baseWidth),alignment);
       const factor = baseWidth / 1600 * scale;
       const offsetX = (intro.holeX - .5) * baseWidth, offsetY = (intro.holeY - .5) * baseWidth / (1600 / 1131);
       const cx = (width/2+offsetX)*(1-alignment)+gateX*alignment, cy=(height*.48+offsetY)*(1-alignment)+gateY*alignment;
-      art.setAttribute('transform', `matrix(${factor} 0 0 ${factor} ${cx - intro.holeX * 1600 * factor} ${cy - intro.holeY * 1131 * factor})`);
-      preview.style.clipPath = `circle(${intro.radius * baseWidth * scale}px at ${cx}px ${cy}px)`;
+      art.style.transform=`translate3d(${cx-intro.holeX*1600*factor}px,${cy-intro.holeY*1131*factor}px,0) scale(${factor})`;
+      // The preview has no artwork; avoid repainting a viewport-sized empty clip every frame.
+      preview.style.clipPath='none';
       logo.style.clipPath=opening>.28?`circle(${gateDiameter*.51}px at ${gateX}px ${gateY}px)`:'none';
       const lettersOpacity=1-ease(range(opening,.14,.28));
       surroundingLetters.forEach(letter=>{letter.style.opacity=`${lettersOpacity}`});
@@ -59,9 +62,9 @@ export default function ToyonIntro(){
       preview.style.visibility = opening >= .64 ? 'hidden' : 'visible';
       const worldReveal = ease(range(opening, .32, .64));
       root.style.setProperty('--home-mesh-opacity',String(1-worldReveal));
-      root.style.setProperty('--home-mesh-pull',String(1-.18*ease(range(opening,0,.64))));
-      root.style.setProperty('--home-motion',String(1-ease(range(opening,0,.64))));
-      root.style.setProperty('--home-mesh-play',opening>=.64?'paused':'running');
+      root.style.setProperty('--home-mesh-pull',String(touchDevice?1:1-.18*ease(range(opening,0,.64))));
+      root.style.setProperty('--home-motion',String(touchDevice?1:1-ease(range(opening,0,.64))));
+      root.style.setProperty('--home-mesh-play',opening>=.64||(touchDevice&&opening>0)?'paused':'running');
       portal.style.opacity = `${worldReveal}`; portal.style.visibility = worldReveal ? 'visible' : 'hidden';
       }
       const closing=ease(range(progress,(totalLength-1)/totalLength,1));
@@ -74,15 +77,14 @@ export default function ToyonIntro(){
       if(closing===0 && opening===1){root.dataset.phase='road';logo.style.opacity='0';logo.style.visibility='hidden';portal.style.opacity='1';portal.style.visibility='visible'}
       if(closing>0){
         root.dataset.phase='closing';logo.style.clipPath='none';
-        const world=root.querySelector<HTMLElement>('.three-road-world')!;
-        closingOrigin??={x:Number(world.dataset.roadEndX)||width/2,y:Number(world.dataset.roadEndY)||height*.38};
+          closingOrigin??={x:Number(world.dataset.roadEndX)||width/2,y:Number(world.dataset.roadEndY)||height*.38};
         const emerge=ease(range(closing,0,.52)),assemble=ease(range(closing,.55,1));
         const endingScale=(.18+2.62*emerge)*(1-assemble)+assemble,factor=baseWidth/1600*endingScale;
         const finalX=width/2+(intro.holeX-.5)*baseWidth,finalY=height*.44+(intro.holeY-.5)*baseWidth/(1600/1131);
         const risenX=closingOrigin.x+(width/2-closingOrigin.x)*emerge;
         const risenY=closingOrigin.y+(height*.44-closingOrigin.y)*emerge;
         const cx=risenX+(finalX-risenX)*assemble,cy=risenY+(finalY-risenY)*assemble;
-        art.setAttribute('transform',`matrix(${factor} 0 0 ${factor} ${cx-intro.holeX*1600*factor} ${cy-intro.holeY*1131*factor})`);
+        art.style.transform=`translate3d(${cx-intro.holeX*1600*factor}px,${cy-intro.holeY*1131*factor}px,0) scale(${factor})`;
         surroundingLetters.forEach(letter=>{letter.style.opacity=String(ease(range(closing,.65,1)))});
         logo.style.opacity=String(ease(range(closing,0,.06)));logo.style.visibility='visible';
         const roadFade=ease(range(closing,.4,.85));

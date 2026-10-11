@@ -9,3 +9,9 @@ import './content.css';
 createRoot(document.getElementById('root')!).render(<StrictMode><App /></StrictMode>);
 
 import './device.css';
+
+import './brand-buttons.css';
+
+import './hierarchy.css';
+
+import './footer.css';

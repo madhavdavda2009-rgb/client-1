@@ -1,0 +1,40 @@
+
+:root{--toyon-green:#019e42;--toyon-green-deep:#00762f;--toyon-blue:#00a6ce;--toyon-yellow:#f5bc19;--toyon-paper:#f6f9f7}
+#root :is(.text-link,.three-world-cta,.business-cta,.contact-form button[type=submit]){--text-color:#000;color:#000;background:var(--toyon-yellow);border:1px solid #c9940e;border-radius:2px;box-shadow:0 3px 0 #bf8a0b;min-height:48px;padding:12px 20px;gap:20px;font-weight:700;font-size:13px;letter-spacing:.015em;text-transform:none;text-decoration:none;white-space:nowrap;transition:background .18s ease,box-shadow .18s ease}
+#root :is(.text-link,.three-world-cta,.business-cta,.contact-form button[type=submit]):hover{background:#ffca32;box-shadow:0 4px 0 #bf8a0b}
+#root :is(.menu-toggle,.three-world-browse,.empty-results button,.journey-category-nav button){--text-color:#000;color:#000;background:var(--toyon-paper);border:1px solid #c9940e;border-radius:2px;box-shadow:0 3px 0 #f5bc1933;letter-spacing:.015em;text-transform:none}
+#root .menu-toggle{min-height:44px;padding:10px 14px;gap:15px;font-size:12px}
+#root .journey-category-nav{background:#f6f9f7;padding:4px;gap:4px;border:1px solid #f5bc1940;border-radius:2px}
+#root .journey-category-nav button{box-shadow:none;border-color:transparent;padding:9px 13px;min-height:40px;font-size:12px}
+#root .journey-category-nav button[aria-pressed=true]{--text-color:#000;color:#000;background:var(--toyon-yellow);border-color:#c9940e}
+#root .journey-category-nav button:hover:not([aria-pressed=true]){background:#fff0bb}
+#root .three-world-browse{padding:10px 14px;min-height:44px;font-size:11px}
+#root .site-menu{background:var(--toyon-paper);border:1px solid #f5bc1960;box-shadow:0 8px 24px #bd8f1112}
+#root .site-menu a{border-color:#f5bc1940}#root .site-menu a[aria-current=page]{text-decoration-color:var(--toyon-yellow)}
+#root :is(.text-link,.three-world-cta,.three-world-browse,.menu-toggle,.journey-category-nav button):focus-visible{outline:3px solid var(--toyon-blue);outline-offset:4px}
+#root :is(.text-link,.three-world-cta,.three-world-browse,.menu-toggle,.journey-category-nav button):active{box-shadow:none}
+@media(max-width:600px){#root .journey-category-nav button{font-size:11px;padding:8px 9px}#root .journey-category-nav{max-width:96vw}#root .menu-toggle{padding:9px 12px;font-size:11px}#root .text-link{font-size:12px;padding:12px 17px}#root .three-world-cta{padding:12px 18px}}
+@media(prefers-reduced-motion:reduce){#root :is(.text-link,.three-world-cta,.three-world-browse,.menu-toggle,.journey-category-nav button){transition:none}}
+
+/* Red navigation is separate from the yellow primary actions. */
+#root .menu-toggle,#root .site-menu{--text-color:#fff;color:#fff;background:#e7473c;border-color:#e7473c;box-shadow:0 3px 0 #8e221e}
+#root .menu-toggle:hover{background:#e7473c}
+#root .menu-toggle .menu-glyph i{background:#fff}
+#root .site-menu a{--text-color:#fff;color:#fff;border-color:#ffffff40}
+#root .site-menu a:hover{background:#e7473c}
+#root .site-menu .menu-shared-line{background:#fff}
+#root .menu-toggle:focus-visible,#root .site-menu a:focus-visible{outline:3px solid #f5bc19;outline-offset:4px}
+
+#root .menu-toggle{--text-color:#fff;color:#fff;background:#e7473c;font-size:19px;font-weight:750}
+#root .menu-toggle .menu-label{color:#fff}
+#root .site-menu a{font-size:22px;font-weight:750}
+
+/* Header context outranks the shared button selector in every state. */
+#root .site-header .menu-toggle,
+#root .site-header .menu-toggle:hover,
+#root .site-header .menu-toggle:active,
+#root .site-header .menu-toggle:focus-visible{--text-color:#fff;color:#fff;background:#e7473c;border-color:#e7473c}
+#root .site-header .menu-toggle .menu-label{color:#fff}
+#root .site-header .menu-toggle .menu-glyph i{background:#fff}
+#root .site-header .site-menu{--text-color:#fff;color:#fff;background:#e7473c;border-color:#e7473c}
+#root .site-header .site-menu a{--text-color:#fff;color:#fff}

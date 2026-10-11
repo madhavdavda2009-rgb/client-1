@@ -13,6 +13,13 @@ const ease=(v:number)=>v*v*(3-2*v);
 const intro={holeX:.348,holeY:.477,radius:.0274,length:1.35};
 export default function ToyonIntro(){
   const rootRef=useRef<HTMLElement>(null),journeyProgress=useMotionValue(0);
+  const navigateWorld=(value:number)=>{
+    const root=rootRef.current;if(!root)return;
+    const stage=root.querySelector<HTMLElement>('.stage')!;
+    const start=Number(root.dataset.travelStart),end=Number(root.dataset.travelEnd);
+    const top=root.getBoundingClientRect().top+window.scrollY;
+    window.scrollTo({top:top+(root.offsetHeight-stage.clientHeight)*(start+value*(end-start)),behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});
+  };
   useLayoutEffect(()=>{
     gsap.registerPlugin(ScrollTrigger);ScrollTrigger.config({ignoreMobileResize:true,autoRefreshEvents:'visibilitychange,DOMContentLoaded,load'});
     const root=rootRef.current!,stage=root.querySelector<HTMLElement>('.stage')!;
@@ -26,12 +33,12 @@ export default function ToyonIntro(){
     const journeyHint=root.querySelector<HTMLElement>('.journey-scroll-cue')!;
     let width=1,height=1,baseWidth=1,portalRadius=1,progress=0,target=0,running=false,disposed=false,lastOpening=-1,lastTick=performance.now();
     let closingOrigin:{x:number;y:number}|null=null;
-    const totalLength=intro.length+3*2.45+1,openingFraction=intro.length/totalLength;
-    root.dataset.travelStart=String(intro.length*.44/totalLength);root.dataset.travelEnd=String((totalLength-1)/totalLength);
-    function measure(){width=stage.clientWidth;height=stage.clientHeight;baseWidth=Math.min(width*.96,height*1.2,860);portalRadius=Math.min(width*(width<700?.45:.31),height*(width<700?.265:.43));root.style.setProperty('--portal-radius',`${portalRadius}px`);root.style.height=`${height*(1+totalLength)}px`;logo.setAttribute('viewBox',`0 0 ${width} ${height}`);lastOpening=-1;}
+    const totalLength=intro.length+3*.55+.75,openingFraction=intro.length/totalLength;
+    root.dataset.travelStart=String(intro.length*.44/totalLength);root.dataset.travelEnd=String((totalLength-.75)/totalLength);
+    function measure(){width=stage.clientWidth;height=stage.clientHeight;baseWidth=Math.min(width*(width<900?.78:.96),height*1.2,860);portalRadius=Math.min(width*(width<700?.45:.31),height*(width<700?.265:.43));root.style.setProperty('--portal-radius',`${portalRadius}px`);root.style.height=`${height*(1+totalLength)}px`;logo.setAttribute('viewBox',`0 0 ${width} ${height}`);lastOpening=-1;}
     function render(){
       // Start travelling as soon as the scenic O is revealed; avoid an empty hold after the logo.
-      const opening=clamp(progress/openingFraction),travel=range(progress,openingFraction*.44,(totalLength-1)/totalLength);
+      const opening=clamp(progress/openingFraction),travel=range(progress,openingFraction*.44,(totalLength-.75)/totalLength);
       if (opening !== lastOpening) {
       lastOpening = opening;
       root.dataset.openingProgress = opening.toFixed(4);
@@ -49,7 +56,7 @@ export default function ToyonIntro(){
       const scale = Math.pow(gateDiameter * 1600 / (210 * 1.2279355334 * baseWidth),alignment);
       const factor = baseWidth / 1600 * scale;
       const offsetX = (intro.holeX - .5) * baseWidth, offsetY = (intro.holeY - .5) * baseWidth / (1600 / 1131);
-      const cx = (width/2+offsetX)*(1-alignment)+gateX*alignment, cy=(height*.48+offsetY)*(1-alignment)+gateY*alignment;
+      const cx = (width/2+offsetX)*(1-alignment)+gateX*alignment, cy=(height*(height<600?.28:.37)+offsetY)*(1-alignment)+gateY*alignment;
       art.style.transform=`translate3d(${cx-intro.holeX*1600*factor}px,${cy-intro.holeY*1131*factor}px,0) scale(${factor})`;
       // The preview has no artwork; avoid repainting a viewport-sized empty clip every frame.
       preview.style.clipPath='none';
@@ -67,7 +74,7 @@ export default function ToyonIntro(){
       root.style.setProperty('--home-mesh-play',opening>=.64||(touchDevice&&opening>0)?'paused':'running');
       portal.style.opacity = `${worldReveal}`; portal.style.visibility = worldReveal ? 'visible' : 'hidden';
       }
-      const closing=ease(range(progress,(totalLength-1)/totalLength,1));
+      const closing=ease(range(progress,(totalLength-.75)/totalLength,1));
       root.dataset.closing=String(closing>0);root.dataset.closingProgress=closing.toFixed(4);
       const cueOpacity=ease(range(opening,.10,.24))*(1-ease(range(opening,.56,.70)));
       journeyHint.style.opacity=String(cueOpacity);journeyHint.style.visibility=cueOpacity>0?'visible':'hidden';
@@ -91,6 +98,7 @@ export default function ToyonIntro(){
         portal.style.opacity=String(1-roadFade);portal.style.visibility=closing>=1?'hidden':'visible';
         preview.style.visibility='hidden';
       }
+      portal.inert=opening<.64||closing>.85;
       journeyProgress.set(travel);
     }
     function tick(){
@@ -116,5 +124,5 @@ export default function ToyonIntro(){
     const resume=()=>{if(document.hidden){gsap.ticker.remove(tick);running=false}else follow(target)};document.addEventListener('visibilitychange',resume);
     return()=>{disposed=true;cancelAnimationFrame(resizeFrame);viewportObserver.disconnect();document.removeEventListener('visibilitychange',resume);gsap.ticker.remove(tick);context.revert();observer.disconnect()};
   },[journeyProgress]);
-  return <><link rel="preload" as="image" href={originalLogo}/><main ref={rootRef} className="journey" aria-label="Toy-On road journey"><div className="stage"><HomeGradient/><HeroStream/><div className="portal-preview" aria-hidden="true"/><LogoArtwork/><div className="portal"><ThreeRoadWorld progress={journeyProgress}/></div><p className="scroll-hint"><span className="scroll-desktop">Scroll down to explore</span><span className="scroll-touch">Swipe up to explore</span><ScrollArrow/></p><p className="journey-scroll-cue"><span className="cue-enter"><span className="scroll-desktop">Keep scrolling to enter</span><span className="scroll-touch">Swipe up to enter</span></span><span className="cue-next"><span className="scroll-desktop">Scroll for the next collection</span><span className="scroll-touch">Swipe up for the next collection</span></span><span className="cue-finish"><span className="scroll-desktop">Scroll to continue</span><span className="scroll-touch">Swipe up to continue</span></span><ScrollArrow/></p></div></main></>;
+  return <><link rel="preload" as="image" href={originalLogo}/><main ref={rootRef} id="toyon-journey" className="journey" aria-label="Toy-On road journey"><div className="stage"><HomeGradient/><HeroStream onEnter={()=>navigateWorld(.145)}/><div className="portal-preview" aria-hidden="true"/><LogoArtwork/><div className="portal"><ThreeRoadWorld progress={journeyProgress} onNavigate={navigateWorld}/></div><p className="scroll-hint"><span className="scroll-desktop">Scroll down to explore</span><span className="scroll-touch">Swipe up to explore</span><ScrollArrow/></p><p className="journey-scroll-cue"><span className="cue-enter"><span className="scroll-desktop">Keep scrolling to enter</span><span className="scroll-touch">Swipe up to enter</span></span><span className="cue-next"><span className="scroll-desktop">Scroll for the next collection</span><span className="scroll-touch">Swipe up for the next collection</span></span><span className="cue-finish"><span className="scroll-desktop">Scroll to continue</span><span className="scroll-touch">Swipe up to continue</span></span><ScrollArrow/></p></div></main></>;
 }

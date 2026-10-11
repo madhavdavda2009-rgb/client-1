@@ -1,0 +1,26 @@
+
+/* Shared hierarchy: brand/headings first, larger main actions second, quieter supporting copy. */
+#root :is(.page-heading h1,.collection-heading h1,.detail-copy h1){font-size:clamp(40px,5.6vw,78px);font-weight:700;line-height:1.08;letter-spacing:-.035em;margin:14px 0 24px}
+#root :is(.journey-ending h2,.category-row h2){font-weight:700;line-height:1.12}
+#root .journey .three-world-copy h2{font-weight:700;font-size:clamp(34px,3.8vw,56px);line-height:1.1;margin:10px 0 20px}
+#root :is(.page-heading p,.detail-copy p,.enquiry-guidance p){font-size:16px;line-height:1.75}
+#root .journey .three-world-copy p:not(.collection-scroll-cue){font-size:15px;line-height:1.65;margin-bottom:24px}
+#root :is(.eyebrow,.collection-scroll-cue,.opening-scroll-note,.form-note){font-size:11px;line-height:1.5;font-weight:550}
+#root :is(.text-link,.three-world-cta,.business-cta,.enquiry-form button[type=submit]){min-height:56px;padding:16px 26px;font-size:16px;font-weight:750;line-height:1.4;gap:20px;letter-spacing:.01em;white-space:nowrap}
+#root .opening-products .opening-world-link.text-link{min-height:56px;padding:16px 24px;font-size:16px;font-weight:750;gap:20px}
+.opening-guide{width:min(68vw,360px)}
+#root .three-world-browse{min-height:44px;font-size:12px;padding:11px 16px}
+#root .catalogue-product h2{font-size:20px;font-weight:650;line-height:1.25}
+#root .journey-category-nav button{min-height:44px;font-size:13px;font-weight:650}
+@media(max-width:600px){
+ #root :is(.page-heading h1,.collection-heading h1,.detail-copy h1){font-size:clamp(34px,10vw,46px);line-height:1.12;margin-bottom:20px}
+ #root .journey .three-world-copy h2{font-size:34px;margin:10px 0 18px}
+ #root :is(.page-heading p,.detail-copy p,.enquiry-guidance p){font-size:15px;line-height:1.7}
+ #root .journey .three-world-copy p:not(.collection-scroll-cue){font-size:14px}
+ #root :is(.text-link,.three-world-cta,.business-cta,.enquiry-form button[type=submit]){min-height:52px;padding:14px 20px;font-size:14px;gap:16px}
+ #root .opening-products .opening-world-link.text-link{min-height:52px;padding:14px 16px;font-size:14px;gap:16px}
+ .opening-guide{width:60vw;max-width:320px}
+ #root .catalogue-product h2{font-size:17px}
+ #root .journey-category-nav button{font-size:11px;padding:8px 9px}
+}
+@media(max-height:600px){#root .opening-products .opening-world-link.text-link{min-height:48px;padding:12px 20px;font-size:14px}}

@@ -1,0 +1,37 @@
+
+.opening-products{position:relative;height:100svh;min-height:540px;overflow:clip;isolation:isolate;color:#000;background:radial-gradient(ellipse at 12% 20%,#dff2fa,transparent 55%),radial-gradient(ellipse at 86% 75%,#fff0be,transparent 52%),#f6f9f7}
+.opening-product-collage{position:absolute;inset:72px 14px 18px;z-index:0;pointer-events:none;contain:layout paint}
+.opening-showcase-photo{position:absolute;left:var(--dx);top:var(--dy);width:6.9vw;height:calc((100svh - 90px)*.078);object-fit:contain;transform:translate(-50%,-50%) rotate(var(--angle)) scale(var(--size));pointer-events:none;user-select:none;-webkit-user-drag:none}
+.opening-logo{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);width:min(76vw,850px);height:auto;mix-blend-mode:multiply;pointer-events:none;z-index:2}
+.opening-guide{position:absolute;z-index:3;top:55%;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:14px;width:min(42vw,300px);text-align:center}
+.opening-guide p{margin:0;font-size:15px;line-height:1.5}.opening-scroll-note{font-size:11px;line-height:1.5}
+.opening-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@media(max-width:900px){.opening-showcase-photo{left:var(--mx);top:var(--my);width:9.3vw;height:calc((100svh - 90px)*.052)}.opening-logo{width:78vw;top:40%}.opening-guide{top:55%;gap:10px;width:44vw}.opening-guide p{font-size:12px}.opening-scroll-note{font-size:9px}#root .opening-world-link{font-size:11px;padding:12px 13px;gap:12px;min-height:44px}}
+@media(max-height:600px){.opening-products{min-height:540px}.opening-showcase-photo{height:45px}.opening-guide{top:54%;gap:7px}.opening-guide p{font-size:12px}.opening-scroll-note{font-size:9px}}
+
+.opening-products.is-embedded{position:absolute;inset:0;height:100%;min-height:0;background:transparent}
+#root img,#root .three-featured-product{filter:none;box-shadow:none}
+#root .three-featured-product::after{display:none}
+
+.journey[data-phase=hero] .scroll-hint{display:none}
+#root .opening-world-link{width:100%;min-width:0;justify-content:center;padding:11px 8px;font-size:11px;gap:8px}
+
+/* A single static SVG background embeds the exact supplied photos in an irregular, non-grid composition. */
+.opening-product-collage{inset:0;background-image:url('/assets/scenery/showcase-desktop.svg');background-size:100% 100%;background-repeat:no-repeat;pointer-events:none}
+@media(max-width:900px) and (orientation:portrait){.opening-product-collage{background-image:url('/assets/scenery/showcase-mobile.svg')}}
+.journey[data-phase=hero] .home-mesh-light{animation-play-state:paused}
+
+/* Raster exports of the SVG composition keep one lightweight, non-interactive background layer. */
+.opening-product-collage{background-image:url('/assets/scenery/showcase-desktop.webp');background-size:cover;background-position:center}
+@media(min-aspect-ratio:17/10){.opening-product-collage{background-image:url('/assets/scenery/showcase-wide.webp')}}
+@media(max-width:900px) and (orientation:portrait){.opening-product-collage{background-image:url('/assets/scenery/showcase-mobile.webp')}}
+@media(min-width:600px) and (max-width:900px) and (orientation:portrait){.opening-product-collage{background-image:url('/assets/scenery/showcase-tablet.webp')}}
+@media(max-width:350px) and (min-height:780px) and (orientation:portrait){.opening-product-collage{background-image:url('/assets/scenery/showcase-small.webp')}}
+@media(max-width:1000px) and (orientation:landscape){.opening-product-collage{background-image:url('/assets/scenery/showcase-landscape.webp')}}
+
+@media(max-height:600px){.opening-products{min-height:0}.opening-logo{top:34%;width:60vw}.opening-scroll-note{display:none}}
+
+/* Give the logo its own space above the action rather than joining their visual blocks. */
+.opening-logo{top:37%}
+.opening-guide{top:56.5%}
+@media(max-height:600px){.opening-logo{top:28%}.opening-guide{top:54%}}

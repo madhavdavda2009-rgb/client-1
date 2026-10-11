@@ -1,0 +1,72 @@
+{
+  "homeTitle": "Products & Manufacturing in Ahmedabad | Toy-On",
+  "homeDescription": "Explore Toy-On product designs and a foil balloon manufacturing overview. Contact Toyon Industry Pvt Ltd in Odhav, Ahmedabad for business enquiries.",
+  "aboutDescription": "Meet Toyon Industry Pvt Ltd, founded by Daksh Patel in Odhav, Ahmedabad, with a professional production team and a growing product range.",
+  "contactDescription": "Email toyonindustry@gmail.com or call +91 95740 05775 to discuss Toy-On product designs, quantities, materials and production requirements.",
+  "steps": [
+    {
+      "title": "Film preparation & printing",
+      "body": "Foil-balloon constructions commonly use thin plastic film, including nylon or PET-based laminates. Artwork is printed on the selected film. A metallic finish may already be part of the supplied material; the preparation route varies."
+    },
+    {
+      "title": "Unwinding & tension control",
+      "body": "Prepared film rolls feed into the forming line. Rollers and tension controls help the material move steadily, reducing wrinkles and keeping the layers ready for the next stages."
+    },
+    {
+      "title": "Valve placement",
+      "body": "Where the specification includes a self-sealing valve, a valve strip is positioned at the inflation opening and bonded into the balloon structure. The valve design is part of the product specification."
+    },
+    {
+      "title": "Layer alignment",
+      "body": "The printed layers are brought into registration so the artwork and intended outline line up. Sensors and registration controls may help monitor alignment, depending on the equipment."
+    },
+    {
+      "title": "Heat sealing & cutting",
+      "body": "Heat and pressure join the layers along the intended boundary. Cutting tools separate the balloon shape from the surrounding film. Sealing and cutting arrangements depend on the design and production line."
+    },
+    {
+      "title": "Cooling & collection",
+      "body": "The processed pieces are allowed to cool and are collected or stacked for the next stage. The handling route depends on the machinery and the product being made."
+    },
+    {
+      "title": "Quality checks & packing",
+      "body": "Checks can cover print appearance, alignment, sealing and air retention. Sample inflation or leak testing may be used when relevant to the product. Inspection criteria and packing requirements should be agreed before production."
+    }
+  ],
+  "equipment": [
+    {
+      "title": "Printing equipment",
+      "body": "Gravure or flexographic systems may be used to apply artwork to suitable film."
+    },
+    {
+      "title": "Film preparation / metallising",
+      "body": "Metallic film may be purchased ready-prepared or processed separately. In-house metallising is not required for every production route."
+    },
+    {
+      "title": "Balloon forming equipment",
+      "body": "A configured forming line may combine film feeding, valve work, sealing and cutting."
+    },
+    {
+      "title": "Compressed-air support",
+      "body": "An air compressor can support pneumatic machine functions where that equipment requires it."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What are foil balloons made from?",
+      "answer": "Common constructions use thin plastic film, such as nylon or PET-based laminates, with layers selected for the design and finish. Confirm the exact material and intended use with Toy-On for the products you are considering."
+    },
+    {
+      "question": "What is the minimum order quantity?",
+      "answer": "Ask Toy-On to confirm the minimum order quantity for your selected designs. Include the products and quantities you have in mind in your enquiry; no fixed MOQ is published here."
+    },
+    {
+      "question": "Where is Toy-On located?",
+      "answer": "Toyon Industry Pvt Ltd is based at Gaytri Estate, Odhav, Ahmedabad."
+    },
+    {
+      "question": "What should I include in a manufacturing enquiry?",
+      "answer": "Share your selected designs, required quantities, intended use and any material, printing, packaging or inspection requirements. The company can then discuss the requirements relevant to your enquiry."
+    }
+  ]
+}

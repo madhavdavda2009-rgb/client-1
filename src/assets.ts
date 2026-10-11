@@ -31,3 +31,9 @@ export function recoverImage(event:{currentTarget:HTMLImageElement},original:str
     image.removeAttribute('srcset');image.src=original;
   }else{image.dataset.imageFailed='true';image.style.visibility='hidden'}
 }
+
+export function showcaseSrc(){
+ const portrait=matchMedia('(orientation:portrait)').matches;
+ const variant=!portrait&&innerWidth<=1000?'landscape':portrait&&innerWidth<=350&&innerHeight>=780?'small':portrait&&innerWidth<=900?(innerWidth>=600?'tablet':'mobile'):innerWidth/innerHeight>=1.7?'wide':'desktop';
+ return `/assets/scenery/showcase-${variant}.webp`;
+}

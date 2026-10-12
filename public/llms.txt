@@ -2,14 +2,14 @@
 
 Toy-On currently showcases 96 foil balloon designs presented by Toyon Industry Pvt Ltd for manufacturers and business buyers. Safety-minded materials, cleanliness and careful handling are stated priorities. Toy drones, promotional toys and keychains are future plans and are not in the current catalogue.
 
-- [Home](https://toy-on.vercel.app/)
-- [All products](https://toy-on.vercel.app/products)
-- [Collections](https://toy-on.vercel.app/categories)
-- [About](https://toy-on.vercel.app/about)
-- [Contact](https://toy-on.vercel.app/contact)
-- [Privacy policy](https://toy-on.vercel.app/privacy-policy)
-- [Terms and conditions](https://toy-on.vercel.app/terms-and-conditions)
+- [Home](https://www.toyonindustry.com/)
+- [All products](https://www.toyonindustry.com/products)
+- [Collections](https://www.toyonindustry.com/categories)
+- [About](https://www.toyonindustry.com/about)
+- [Contact](https://www.toyonindustry.com/contact)
+- [Privacy policy](https://www.toyonindustry.com/privacy-policy)
+- [Terms and conditions](https://www.toyonindustry.com/terms-and-conditions)
 
-Collections: [Christmas](https://toy-on.vercel.app/categories/christmas), [Animal faces](https://toy-on.vercel.app/categories/animal-faces), [Bird faces](https://toy-on.vercel.app/categories/bird-faces), [Dinosaurs](https://toy-on.vercel.app/categories/dinosaurs), [Fruit & vegetables](https://toy-on.vercel.app/categories/fruit-and-vegetables), [Vehicles](https://toy-on.vercel.app/categories/vehicles), [Headband shapes](https://toy-on.vercel.app/categories/headband-shapes), [Swords](https://toy-on.vercel.app/categories/swords), [Cartoon & masked faces](https://toy-on.vercel.app/categories/cartoon-and-masked-faces), [Halloween](https://toy-on.vercel.app/categories/halloween).
+Collections: [Christmas](https://www.toyonindustry.com/categories/christmas), [Animal faces](https://www.toyonindustry.com/categories/animal-faces), [Bird faces](https://www.toyonindustry.com/categories/bird-faces), [Dinosaurs](https://www.toyonindustry.com/categories/dinosaurs), [Fruit & vegetables](https://www.toyonindustry.com/categories/fruit-and-vegetables), [Vehicles](https://www.toyonindustry.com/categories/vehicles), [Headband shapes](https://www.toyonindustry.com/categories/headband-shapes), [Swords](https://www.toyonindustry.com/categories/swords), [Cartoon & masked faces](https://www.toyonindustry.com/categories/cartoon-and-masked-faces), [Halloween](https://www.toyonindustry.com/categories/halloween).
 
 Product pages contain visual descriptions of the supplied artwork. The contact form prepares a visitor-reviewed enquiry; it does not submit one automatically.

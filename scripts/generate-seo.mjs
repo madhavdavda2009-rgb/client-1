@@ -2,7 +2,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const base = 'https://toy-on.vercel.app';
+const base = 'https://www.toyonindustry.com';
 const source = await readFile(new URL('../src/catalog.ts', import.meta.url), 'utf8');
 const match = source.match(/^const data = (\{.*\});$/m);
 if (!match) throw new Error('Could not read the approved product catalogue');

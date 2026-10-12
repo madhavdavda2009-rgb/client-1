@@ -94,7 +94,7 @@ export default function App() {
     const description = (product ? `${product.description} Part of the Toy-On foil balloon range for business enquiries.` : undefined) || (category ? `Explore ${category.products.length} product designs in the Toy-On ${category.title} collection for business enquiries.` : ({ '/': manufacturingContent.homeDescription, '/products': `Browse ${products.length} Toy-On product designs across ${categories.length} themed collections for manufacturers and business buyers.`, '/categories': `Explore ${categories.length} themed Toy-On product collections, including festive designs, animals and characters.`, '/about': manufacturingContent.aboutDescription, '/contact': manufacturingContent.contactDescription, '/privacy-policy': legalContent.privacy.description, '/terms-and-conditions': legalContent.terms.description } as Record<string, string>)[path] || 'Explore Toy-On designs.');
     document.title = `${label} | Toy-On`;
     document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', description);
-    document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', `https://toy-on.vercel.app${path}`);
+    document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', `https://www.toyonindustry.com${path}`);
   }, [path, product, category]);
   let page;
   if (path === '/') page = <Home reduced={reduced} />;

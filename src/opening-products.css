@@ -24,10 +24,10 @@
 /* Raster exports of the SVG composition keep one lightweight, non-interactive background layer. */
 .opening-product-collage{background-image:url('/assets/scenery/showcase-desktop.webp');background-size:cover;background-position:center}
 @media(min-aspect-ratio:17/10){.opening-product-collage{background-image:url('/assets/scenery/showcase-wide.webp')}}
-@media(max-width:900px) and (orientation:portrait){.opening-product-collage{background-image:url('/assets/scenery/showcase-mobile.webp')}}
+@media(max-width:900px) and (orientation:portrait){.opening-product-collage{background-image:url('/assets/scenery/showcase-mobile-large-v2.webp')}}
 @media(min-width:600px) and (max-width:900px) and (orientation:portrait){.opening-product-collage{background-image:url('/assets/scenery/showcase-tablet.webp')}}
-@media(max-width:350px) and (min-height:780px) and (orientation:portrait){.opening-product-collage{background-image:url('/assets/scenery/showcase-small.webp')}}
-@media(max-width:1000px) and (orientation:landscape){.opening-product-collage{background-image:url('/assets/scenery/showcase-landscape.webp')}}
+@media(max-width:350px) and (min-height:780px) and (orientation:portrait){.opening-product-collage{background-image:url('/assets/scenery/showcase-small-large-v2.webp')}}
+@media(max-width:1000px) and (orientation:landscape){.opening-product-collage{background-image:url('/assets/scenery/showcase-landscape-large-v2.webp')}}
 
 @media(max-height:600px){.opening-products{min-height:0}.opening-logo{top:34%;width:60vw}.opening-scroll-note{display:none}}
 

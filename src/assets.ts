@@ -35,5 +35,6 @@ export function recoverImage(event:{currentTarget:HTMLImageElement},original:str
 export function showcaseSrc(){
  const portrait=matchMedia('(orientation:portrait)').matches;
  const variant=!portrait&&innerWidth<=1000?'landscape':portrait&&innerWidth<=350&&innerHeight>=780?'small':portrait&&innerWidth<=900?(innerWidth>=600?'tablet':'mobile'):innerWidth/innerHeight>=1.7?'wide':'desktop';
- return `/assets/scenery/showcase-${variant}.webp`;
+ const file=['mobile','small','landscape'].includes(variant)?variant+'-large-v2':variant;
+ return `/assets/scenery/showcase-${file}.webp`;
 }

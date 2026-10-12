@@ -15,3 +15,6 @@
 #root .site-footer a:focus-visible{outline:3px solid #f9bf25;outline-offset:5px}
 @media(max-width:900px){#root .site-footer{grid-template-columns:170px minmax(0,1fr);gap:30px}#root .site-footer nav{grid-column:1/-1}}
 @media(max-width:600px){#root .site-footer{grid-template-columns:1fr;padding:36px 7%;gap:26px}#root .site-footer .footer-brand{width:150px}#root .site-footer nav{grid-column:auto;gap:4px 16px}#root .site-footer .footer-copy p:first-child{font-size:18px}}
+
+#root .site-footer .footer-credit{grid-column:1/-1;margin:0;padding-top:18px;border-top:1px solid #ffffff30;color:#fff;font-size:13px;line-height:1.6}
+#root .site-footer .footer-credit a{display:inline-flex;align-items:center;min-height:44px;color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:4px}

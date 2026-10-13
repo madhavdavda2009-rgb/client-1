@@ -9,6 +9,17 @@
         history.scrollRestoration = 'manual';
         // Reset before rendering, never after visitors have already begun scrolling.
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        // Fetch the opening artwork before the React and 3D bundles finish loading.
+        const portrait = matchMedia('(orientation:portrait)').matches;
+        const variant = !portrait && innerWidth <= 1000 ? 'landscape'
+          : portrait && innerWidth <= 350 && innerHeight >= 780 ? 'small'
+          : portrait && innerWidth <= 900 ? (innerWidth >= 600 ? 'tablet' : 'mobile')
+          : innerWidth / innerHeight >= 1.7 ? 'wide' : 'desktop';
+        const file = ['mobile', 'small', 'landscape'].includes(variant) ? variant + '-large-v2' : variant;
+        const preload = document.createElement('link');
+        preload.rel = 'preload'; preload.as = 'image'; preload.fetchPriority = 'high';
+        preload.href = '/assets/scenery/showcase-' + file + '.webp';
+        document.head.appendChild(preload);
       }
     </script>
     <meta name="theme-color" content="#dceef0" />

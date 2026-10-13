@@ -17,7 +17,7 @@ export function preloadImage(src:string,srcset?:string,sizes?:string){
 }
 const prepared=new Map<string,Promise<boolean[]>>();
 let requested=1;const subscribers=new Set<()=>void>();
-export function useRequestedWorlds(){return useSyncExternalStore(callback=>{subscribers.add(callback);return()=>{subscribers.delete(callback)}},()=>requested)}
+export function useRequestedWorlds(){return useSyncExternalStore(callback=>{subscribers.add(callback);return()=>{subscribers.delete(callback)}},()=>requested,()=>1)}
 export function prepareWorld(index:number){
   if(index+1>requested){requested=index+1;subscribers.forEach(callback=>callback())}
   const key=`${index}|${innerWidth<=600}|${devicePixelRatio<=2}`;const previous=prepared.get(key);if(previous)return previous;

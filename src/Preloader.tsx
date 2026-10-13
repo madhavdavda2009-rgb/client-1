@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import originalLogo from '../assets/brand/toyon-hierarchy.svg?url';
+const originalLogo = '/assets/brand/toyon-hierarchy.svg';
 import { prepareWorld,preloadImage,showcaseSrc } from './assets';
 export default function Preloader(){
   const [progress,setProgress]=useState(0),[done,setDone]=useState(false);

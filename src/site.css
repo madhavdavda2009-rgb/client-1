@@ -58,3 +58,5 @@ html{font-family:'Outfit Variable',Outfit,Arial,sans-serif}
 /* Collection previews show the supplied balloons without scenic backplates. */
 .category-preview,.category-page,.catalogue-art{background:transparent}
 .category-landscape,.collection-heading>img{display:none}
+
+.enquiry-form .enquiry-consent{display:flex;flex-direction:row;align-items:flex-start;gap:12px;line-height:1.6;font-size:13px;margin:8px 0 16px}.enquiry-consent input[type=checkbox]{appearance:auto;width:18px;height:18px;flex:none;margin:2px 0 0;accent-color:#e7473c}.enquiry-consent a{text-decoration:underline;text-underline-offset:3px}.enquiry-form input:focus-visible,.enquiry-form textarea:focus-visible{outline:2px solid #e7473c;outline-offset:3px}

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { m, AnimatePresence, type MotionValue, useMotionValueEvent } from 'framer-motion';
 import * as THREE from 'three';
+import Link from 'next/link';
 import { categories, productById, type Category, type Product } from './catalog';
 import './three-road.css';
 import './animated-backdrops.css';
@@ -121,7 +122,7 @@ export default function ThreeRoadWorld({ progress, onNavigate }: { progress: Mot
     const current=new THREE.Vector3(),tangent=new THREE.Vector3(),side=new THREE.Vector3(),desiredCamera=new THREE.Vector3(),aim=new THREE.Vector3(),roadEnd=new THREE.Vector3(),gateView=new THREE.Vector3(),gateProjection=new THREE.Vector3(),gateTop=new THREE.Vector3(),base=new THREE.Vector3(),bunchView=new THREE.Vector3();
     const fixedGates=gates.map(t=>{const point=roadCurve.getPointAt(t);point.y+=1.1;return point});
     const fixedStops=stops.map(t=>{const point=roadCurve.getPointAt(t),direction=roadCurve.getTangentAt(t).normalize();return {point,direction,side:new THREE.Vector3().crossVectors(direction,new THREE.Vector3(0,1,0)).normalize()}});
-    const extraPositions:number[][]=[[.055,.105,.215,.265,.335],[.375,.425,.53,.575,.645],[.98]];
+    const extraPositions:number[][]=[[.13,.17,.235,.29,.34],[.50,.535,.57,.605,.64],[.885]];
     const extraLinks=journeyWorlds.map((_,index)=>[...host.querySelectorAll<HTMLAnchorElement>(`.three-extra-set:nth-child(${index+1}) .three-extra-product`)]);
     const extraImages=extraLinks.map(links=>links.map(link=>link.querySelector('img')!));
     const extraStops=extraPositions.map(positions=>positions.map((p,i)=>{const point=roadCurve.getPointAt(.045+p*.91),direction=roadCurve.getTangentAt(.045+p*.91).normalize(),side=new THREE.Vector3().crossVectors(direction,new THREE.Vector3(0,1,0)).normalize();return {point,direction,side,sign:i%2?-1:1}}));
@@ -153,7 +154,7 @@ export default function ThreeRoadWorld({ progress, onNavigate }: { progress: Mot
       if(!dirty && settledFrames>15 && Math.abs(raw-(camera.userData.progress??0))<.00001){last=time;cancelAnimationFrame(raf);raf=0;return}
       if(quality.observe(dt*1000)){resize();}
       previousCamera.copy(camera.position);previousAim.copy(cameraAim);
-      const p = reduced.current ? raw : THREE.MathUtils.damp(THREE.MathUtils.clamp(camera.userData.progress ?? 0, 0, 1), raw, 4.5, dt);
+      const p = reduced.current ? raw : THREE.MathUtils.damp(THREE.MathUtils.clamp(camera.userData.progress ?? 0, 0, 1), raw, 7.5, dt);
       camera.userData.progress = p;
       // Travel uses the reference spline and timings; products are lightweight HTML above the road.
       const journeyT = .045 + p * .91;roadCurve.getPointAt(journeyT,current);roadCurve.getTangentAt(journeyT,tangent).normalize();side.set(-tangent.z,0,tangent.x).normalize(); const mobile = viewportWidth < 620;
@@ -165,12 +166,12 @@ export default function ThreeRoadWorld({ progress, onNavigate }: { progress: Mot
       cameraAim.lerp(aim, reduced.current ? 1 : 1-Math.exp(-dt*7));
       camera.lookAt(cameraAim);
       // The complete ribbon remains connected through all three category stops.
-      if (worldIndex !== Number(host.dataset.active)) { host.dataset.active = String(worldIndex); setActive(worldIndex);extraLinks.forEach((links,index)=>{if(index!==worldIndex)links.forEach(link=>{link.style.visibility='hidden';link.style.willChange='auto';link.style.pointerEvents='none';link.tabIndex=-1})}); }
+      if (worldIndex !== Number(host.dataset.active)) { host.dataset.active = String(worldIndex); setActive(worldIndex);extraLinks.forEach((links,index)=>{if(index!==worldIndex)links.forEach(link=>{link.style.pointerEvents='none';link.tabIndex=-1})}); }
       const segmentStart = [0, .345, .655][worldIndex], segmentEnd = [.345, .655, 1][worldIndex];
       const localPosition = clamp((p - segmentStart) / (segmentEnd - segmentStart)) * 3;
       const background01=THREE.MathUtils.smoothstep(p,.30,.39),background12=THREE.MathUtils.smoothstep(p,.61,.70);
-      // A single timed backdrop fade starts with the existing O category handoff.
-      const weights=[1,worldIndex>=1?1:0,worldIndex===2?1:0];
+      // Blend with camera progress, including reverse scroll, so no palette drops out at a world boundary.
+      const weights=[1,background01,background12];
       backgrounds.forEach((image,index)=>{
         const backgroundOpacity=String(weights[index]);
         if(image.style.opacity!==backgroundOpacity)image.style.opacity=backgroundOpacity;
@@ -232,11 +233,13 @@ export default function ThreeRoadWorld({ progress, onNavigate }: { progress: Mot
       if(nextBunch!==lastBunch.current){lastBunch.current=nextBunch;setVisibleBunch(nextBunch)}
       occupied.length=0;
       productLinks[worldIndex].forEach((link, slot) => {
-        if(opacity<=.01){
+        const arrival = slot===0 ? 1 : THREE.MathUtils.smoothstep(p, segmentStart+slot*.032, segmentStart+slot*.032+.025);
+        const productOpacity = opacity*arrival;
+        if(productOpacity<=.01){
           if(link.style.visibility!=='hidden'){link.style.visibility='hidden';link.style.opacity='0';link.style.pointerEvents='none';link.style.willChange='auto';link.tabIndex=-1}
           return;
         }
-        base.copy(stop).addScaledVector(stopSide, [-1, 0, 1][slot] * (mobile ? 1.6 : 2.8));
+        base.copy(stop).addScaledVector(stopSide, [-1, 0, 1][slot] * (mobile ? 1.1 : 2.0));
         base.y += 1.05 + [0,.22,.10][slot];
         if (slot === 1) base.addScaledVector(stopTangent, .45);
         projectedBase.copy(base).project(camera);
@@ -253,10 +256,10 @@ export default function ThreeRoadWorld({ progress, onNavigate }: { progress: Mot
         const imageWidth=Math.min(width,height*aspect);
         image.style.transform=`scale(${imageWidth/(baseImageWidth*(width/200)||1)},${imageWidth/(baseImageWidth*(height/244)||1)})`;
 
-        link.style.opacity = String(opacity); link.style.pointerEvents = opacity > .5 ? 'auto' : 'none';
-        link.style.visibility = opacity > .01 ? 'visible' : 'hidden';link.style.willChange=opacity>.01?'transform':'auto';
-        link.tabIndex = opacity > .5 ? 0 : -1;
-        if(opacity>.01)occupied.push({left:x-imageWidth/2-20,right:x+imageWidth/2+20,top:y-imageWidth/aspect-20,bottom:y+20});
+        link.style.opacity = String(productOpacity); link.style.pointerEvents = productOpacity > .5 ? 'auto' : 'none';
+        link.style.visibility = productOpacity > .01 ? 'visible' : 'hidden';link.style.willChange=productOpacity>.01?'transform':'auto';
+        link.tabIndex = productOpacity > .5 ? 0 : -1;
+        if(productOpacity>.01)occupied.push({left:x-imageWidth/2-20,right:x+imageWidth/2+20,top:y-imageWidth/aspect-20,bottom:y+20});
         host.dataset.productsVisible = String(opacity > .5);
       });
       // Additional designs occupy fixed roadside stations; only the camera moves.
@@ -303,8 +306,8 @@ export default function ThreeRoadWorld({ progress, onNavigate }: { progress: Mot
   return <div className="three-road-world" ref={mount} data-ready={ready} data-active={active}>
     <div className="three-category-backdrops" aria-hidden="true">{backdropPalettes.map(palette=><div key={palette} className={`animated-category-backdrop palette-${palette}`} data-present={backdropPalettes[active]===palette}><span className="mesh-light mesh-a"/><span className="mesh-light mesh-b"/><span className="mesh-light mesh-c"/><span className="mesh-light mesh-d"/></div>)}</div>
     <BrandO active={active} requested={requested}/>
-    <div className="three-featured-products">{journeyWorlds.map((item, index) => <div className={`three-featured-set${active === index ? ' is-active' : ''}`} aria-hidden={active !== index} key={item.id}>{item.products.slice(0,3).map((product, productIndex) => <a href={`/products/${product.slug}`} className="three-featured-product" key={product.id} tabIndex={active === index ? 0 : -1} aria-label={`View ${product.title}`}><m.div className="motion-product-visual" initial={{opacity:0,scale:.94,y:12}} animate={visibleBunch===index?{opacity:1,scale:1,y:0}:{opacity:0,scale:.94,y:12}} transition={{...softSpring,delay:visibleBunch===index?productIndex*.07:0}} whileHover={{scale:1.03,y:-3}} whileTap={{scale:.98}}><picture><source media="(max-width: 600px)" srcSet={index<requested?thumbnailSet(product):undefined} sizes="200px"/><img src={index<requested?product.image:undefined} srcSet={index<requested?detailSet(product):undefined} sizes="350px" onError={event=>recoverImage(event,product.image)} alt={product.title} loading="eager" decoding="async" /></picture></m.div></a>)}</div>)}</div>
-    <div className="three-extra-products">{extraDesigns.map((items,index)=><div className={`three-extra-set${active===index?' is-active':''}`} aria-hidden={active!==index} key={journeyWorlds[index].id}>{items.map(product=><a href={`/products/${product.slug}`} className="three-featured-product three-extra-product" key={product.id} tabIndex={-1} aria-label={`View ${product.title}`}><m.div className="motion-product-visual" initial={false} whileHover={{scale:1.03,y:-3}} whileTap={{scale:.98}} transition={softSpring}><img src={extrasEnabled&&index<requested?product.thumb:undefined} alt={product.title} width="240" height="240" decoding="async" onError={event=>recoverImage(event,product.image)}/></m.div></a>)}</div>)}</div>
+    <div className="three-featured-products">{journeyWorlds.map((item, index) => <div className={`three-featured-set${active === index ? ' is-active' : ''}`} aria-hidden={active !== index} key={item.id}>{item.products.slice(0,3).map((product, productIndex) => <Link href={`/products/${product.slug}`} prefetch={false} className="three-featured-product" key={product.id} tabIndex={active === index ? 0 : -1} aria-label={`View ${product.title}`}><m.div className="motion-product-visual" initial={{opacity:0,scale:.94,y:12}} animate={visibleBunch===index?{opacity:1,scale:1,y:0}:{opacity:0,scale:.94,y:12}} transition={{...softSpring,delay:visibleBunch===index?productIndex*.07:0}} whileHover={{scale:1.03,y:-3}} whileTap={{scale:.98}}><picture><source media="(max-width: 600px)" srcSet={index<requested?thumbnailSet(product):undefined} sizes="200px"/><img src={index<requested?product.image:undefined} srcSet={index<requested?detailSet(product):undefined} sizes="350px" onError={event=>recoverImage(event,product.image)} alt={product.title} loading="eager" decoding="async" /></picture></m.div></Link>)}</div>)}</div>
+    <div className="three-extra-products">{extraDesigns.map((items,index)=><div className={`three-extra-set${active===index?' is-active':''}`} aria-hidden={active!==index} key={journeyWorlds[index].id}>{items.map(product=><Link href={`/products/${product.slug}`} prefetch={false} className="three-featured-product three-extra-product" key={product.id} tabIndex={-1} aria-label={`View ${product.title}`}><m.div className="motion-product-visual" initial={false} whileHover={{scale:1.03,y:-3}} whileTap={{scale:.98}} transition={softSpring}><img src={extrasEnabled&&index<requested?product.thumb:undefined} alt={product.title} width="240" height="240" decoding="async" onError={event=>recoverImage(event,product.image)}/></m.div></Link>)}</div>)}</div>
     <div className="three-world-ui" aria-live="polite">
       <nav className="journey-category-nav" aria-label="Jump to a collection">{journeyWorlds.map((item,index)=><button type="button" key={item.id} aria-pressed={active===index} onClick={()=>onNavigate([.145,.455,.775][index])}>{item.title}</button>)}</nav>
       <AnimatePresence mode="sync"><m.div key={world.id} className="three-world-copy" initial={{opacity:0,scale:.985,y:12}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:1.015,y:-6,pointerEvents:'none'}} transition={{duration:.45,ease:[.25,.1,.25,1]}}><Reveal><span className="eyebrow">{world.label}</span><h2>{world.title}</h2><p>{world.description}</p><MotionLink className="three-world-cta" href={`/categories/${world.id}`}>Explore collection <span aria-hidden="true">↗</span></MotionLink><p className="collection-scroll-cue"><span className="scroll-desktop">Scroll or choose a collection</span><span className="scroll-touch">Swipe up or choose a collection</span><span aria-hidden="true"> ↓</span></p></Reveal></m.div></AnimatePresence>

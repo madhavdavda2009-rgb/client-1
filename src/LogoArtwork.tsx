@@ -1,8 +1,8 @@
 import { artworkSrc } from './assets';
 import { m, useReducedMotion } from 'framer-motion';
 import { softSpring } from './MotionUI';
-import suppliedLogo from '../assets/brand/toyon-hierarchy.svg?raw';
-import originalLogo from '../assets/brand/toyon-hierarchy.svg?url';
+import { suppliedLogo } from './logo-inline';
+const originalLogo = '/assets/brand/toyon-hierarchy.svg';
 // Original user-supplied SVG paths, unchanged; only the coordinate system is normalized.
 const artwork = suppliedLogo.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '').replace(/<path\b[^>]*>/g, path => path.replace('<path', path.includes('fill="#fefefe"') ? '<path data-logo-paper' : path.includes('fill="#019e42"') ? '<path data-logo-o' : '<path data-logo-surround'));
 const gateArtwork=[

@@ -1,5 +1,6 @@
 import { Children, createElement, isValidElement, useEffect, useState, useRef, type ReactNode } from 'react';
 import { m, useReducedMotion, type HTMLMotionProps, type Variants } from 'framer-motion';
+import Link from 'next/link';
 import './motion-ui.css';
 
 export const softSpring={type:'spring' as const,stiffness:180,damping:24};
@@ -30,7 +31,8 @@ export function MotionLink({children,className='',revealOrder=0,...props}:Elemen
   const reduced=useReducedMotion();
   const card=/catalogue-product|category-row/.test(className),cta=/text-link|business-cta|three-world-cta|three-world-browse/.test(className);
   const content=cta?Children.map(children,child=>typeof child==='string'?<m.span variants={{hover:{x:reduced?0:1},rest:{x:0}}} transition={buttonSpring}>{child}</m.span>:isValidElement(child)&&child.type==='span'?createElement(m.span,{...(child.props as object),variants:{hover:{x:reduced?0:3},rest:{x:0}},transition:buttonSpring,key:child.key}):child):children;
-  return <m.a className={className} initial={card&&!reduced?{opacity:0,y:12,scale:.985}:false} whileInView={card?{opacity:1,y:0,scale:1,transition:{...uiSpring,delay:reduced?0:revealOrder*.035}}:undefined} viewport={{once:true,amount:.12}} variants={{hover:reduced?{}:card?{y:-3,scale:1.01}:cta?{y:-2,scale:1.035}:{y:-1},rest:{y:0,scale:1}}} whileHover="hover" animate="rest" whileTap={reduced?undefined:{scale:.98}} transition={cta?buttonSpring:uiSpring} {...props}>{content}</m.a>;
+  const anchor = <m.a className={className} initial={card&&!reduced?{opacity:0,y:12,scale:.985}:false} whileInView={card?{opacity:1,y:0,scale:1,transition:{...uiSpring,delay:reduced?0:revealOrder*.035}}:undefined} viewport={{once:true,amount:.12}} variants={{hover:reduced?{}:card?{y:-3,scale:1.01}:cta?{y:-2,scale:1.035}:{y:-1},rest:{y:0,scale:1}}} whileHover="hover" animate="rest" whileTap={reduced?undefined:{scale:.98}} transition={cta?buttonSpring:uiSpring} {...props}>{content}</m.a>;
+  return typeof props.href === 'string' && props.href.startsWith('/') ? <Link href={props.href} legacyBehavior passHref prefetch={!card}>{anchor}</Link> : anchor;
 }
 export function ScrollArrow(){
   const reduced=useReducedMotion();const ref=useRef<HTMLSpanElement>(null);const [visible,setVisible]=useState(true);

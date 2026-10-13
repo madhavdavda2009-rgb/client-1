@@ -10,7 +10,7 @@ import LogoArtwork, { originalLogo } from './LogoArtwork';
 const clamp=(v:number,min=0,max=1)=>Math.max(min,Math.min(max,v));
 const range=(v:number,a:number,b:number)=>clamp((v-a)/(b-a));
 const ease=(v:number)=>v*v*(3-2*v);
-const intro={holeX:.348,holeY:.477,radius:.0274,length:1.35};
+const intro={holeX:.348,holeY:.477,radius:.0274,length:1.05};
 export default function ToyonIntro(){
   const rootRef=useRef<HTMLElement>(null),journeyProgress=useMotionValue(0);
   const navigateWorld=(value:number)=>{
@@ -33,12 +33,13 @@ export default function ToyonIntro(){
     const journeyHint=root.querySelector<HTMLElement>('.journey-scroll-cue')!;
     let width=1,height=1,baseWidth=1,portalRadius=1,progress=0,target=0,running=false,disposed=false,lastOpening=-1,lastTick=performance.now();
     let closingOrigin:{x:number;y:number}|null=null;
-    const totalLength=intro.length+3*.55+.75,openingFraction=intro.length/totalLength;
-    root.dataset.travelStart=String(intro.length*.44/totalLength);root.dataset.travelEnd=String((totalLength-.75)/totalLength);
+    const closingLength=.45,worldLength=.34;
+    const totalLength=intro.length+3*worldLength+closingLength,openingFraction=intro.length/totalLength;
+    root.dataset.travelStart=String(intro.length*.44/totalLength);root.dataset.travelEnd=String((totalLength-closingLength)/totalLength);
     function measure(){width=stage.clientWidth;height=stage.clientHeight;baseWidth=Math.min(width*(width<900?.78:.96),height*1.2,860);portalRadius=Math.min(width*(width<700?.45:.31),height*(width<700?.265:.43));root.style.setProperty('--portal-radius',`${portalRadius}px`);root.style.height=`${height*(1+totalLength)}px`;logo.setAttribute('viewBox',`0 0 ${width} ${height}`);lastOpening=-1;}
     function render(){
       // Start travelling as soon as the scenic O is revealed; avoid an empty hold after the logo.
-      const opening=clamp(progress/openingFraction),travel=range(progress,openingFraction*.44,(totalLength-.75)/totalLength);
+      const opening=clamp(progress/openingFraction),travel=range(progress,openingFraction*.44,(totalLength-closingLength)/totalLength);
       if (opening !== lastOpening) {
       lastOpening = opening;
       root.dataset.openingProgress = opening.toFixed(4);
@@ -59,8 +60,7 @@ export default function ToyonIntro(){
       const cx = (width/2+offsetX)*(1-alignment)+gateX*alignment, cy=(height*(height<600?.28:.37)+offsetY)*(1-alignment)+gateY*alignment;
       art.style.transform=`translate3d(${cx-intro.holeX*1600*factor}px,${cy-intro.holeY*1131*factor}px,0) scale(${factor})`;
       // The preview has no artwork; avoid repainting a viewport-sized empty clip every frame.
-      preview.style.clipPath='none';
-      logo.style.clipPath=opening>.28?`circle(${gateDiameter*.51}px at ${gateX}px ${gateY}px)`:'none';
+      // The logo fades into the world without an abrupt, repainted clip boundary.
       const lettersOpacity=1-ease(range(opening,.14,.28));
       surroundingLetters.forEach(letter=>{letter.style.opacity=`${lettersOpacity}`});
       preview.style.opacity = `${ease(range(opening,.01,.12)) * (1-ease(range(opening,.32,.64)))}`;
@@ -74,7 +74,7 @@ export default function ToyonIntro(){
       root.style.setProperty('--home-mesh-play',opening>=.64||(touchDevice&&opening>0)?'paused':'running');
       portal.style.opacity = `${worldReveal}`; portal.style.visibility = worldReveal ? 'visible' : 'hidden';
       }
-      const closing=ease(range(progress,(totalLength-.75)/totalLength,1));
+      const closing=ease(range(progress,(totalLength-closingLength)/totalLength,1));
       root.dataset.closing=String(closing>0);root.dataset.closingProgress=closing.toFixed(4);
       const cueOpacity=ease(range(opening,.10,.24))*(1-ease(range(opening,.56,.70)));
       journeyHint.style.opacity=String(cueOpacity);journeyHint.style.visibility=cueOpacity>0?'visible':'hidden';
@@ -104,7 +104,7 @@ export default function ToyonIntro(){
     function tick(){
       const now=performance.now(),dt=Math.min((now-lastTick)/1000,.5);lastTick=now;
       if(disposed||document.hidden)return;
-      const distance=target-progress,limit=progress<=openingFraction?openingFraction*.8*dt:.65*dt;
+      const distance=target-progress,limit=progress<=openingFraction?openingFraction*.95*dt:1.1*dt;
       progress=Math.abs(distance)<.000001?target:progress+clamp(distance*(1-Math.exp(-dt/.14)),-limit,limit);render();
       if(progress===target){gsap.ticker.remove(tick);running=false;}
     }

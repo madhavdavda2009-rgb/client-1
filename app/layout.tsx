@@ -10,7 +10,7 @@ import '../src/brand-buttons.css';
 import '../src/hierarchy.css';
 import '../src/footer.css';
 
-export const metadata: Metadata = { metadataBase: new URL(siteBase), applicationName: 'Toy-On', icons: { icon: [{ url: '/favicon.ico', type: 'image/x-icon' }, { url: '/favicon.svg', type: 'image/svg+xml' }] } };
+export const metadata: Metadata = { metadataBase: new URL(siteBase), applicationName: 'Toy-On', icons: { icon: [{ url: '/favicon.ico', type: 'image/x-icon' }, { url: '/favicon-256.png', type: 'image/png', sizes: '256x256' }] } };
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#dceef0' };
 const openingPreload = `if (location.pathname === '/' && !location.hash) {
   history.scrollRestoration = 'manual';

@@ -10,8 +10,10 @@ const gateArtwork=[
   {src:'/assets/scenery/supplied/dino_o.webp',cx:653,cy:595,rx:547,ry:544,hx:655,hy:612,hrx:183,hry:196},
   {src:'/assets/scenery/supplied/halloween_o.webp',cx:649,cy:589,rx:546,ry:540,hx:645,hy:606,hrx:189,hry:199},
 ];
-export function BrandO({ active, requested=3 }: { active:number;requested?:number }) {
-  return <div className="three-portal-o" aria-hidden="true">{gateArtwork.map((art,index)=><img key={art.src} className={`three-portal-world${index===active?' is-active':''}`} src={index<requested?artworkSrc(index):undefined} width="1024" height="1024" decoding="async" alt=""/>)}</div>;
+// themes maps each road station to its portal artwork (0 festive, 1 dinosaur, 2 halloween).
+export function BrandO({ active, requested=3, themes=[0,1,2] }: { active:number;requested?:number;themes?:number[] }) {
+  const shown=themes[active]??active,loaded=themes.slice(0,requested);
+  return <div className="three-portal-o" aria-hidden="true">{gateArtwork.map((art,index)=><img key={art.src} className={`three-portal-world${index===shown?' is-active':''}`} src={loaded.includes(index)?artworkSrc(index):undefined} width="1024" height="1024" decoding="async" alt=""/>)}</div>;
 }
 export default function LogoArtwork() {
   const reduced=useReducedMotion();

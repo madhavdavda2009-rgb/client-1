@@ -1,12 +1,15 @@
 import { useSyncExternalStore } from 'react';
-import { categories, productById, type Product } from './catalog';
+import { roads, productById, themeIndex, type Product } from './catalog';
 import dimensions from './asset-dimensions.json';
+import { cloudinarySrcSet, isCloudinary } from './cloudinary';
 
-export const worldIds=['christmas','dinosaurs','halloween'] as const;
 export const worldArtwork=['chirstmas','dino','halloween'].map(id=>`/assets/scenery/supplied/${id}_o.webp`);
 export const productDimensions=(product:Product)=>dimensions[product.id as keyof typeof dimensions];
-export const thumbnailSet=(product:Product)=>`${product.thumb} 240w, ${product.image.replace('.webp','-480.webp')} 480w`;
-export const detailSet=(product:Product)=>`${product.image.replace('.webp','-detail-480.webp')} ${Math.min(480,productDimensions(product).width)}w, ${product.image} ${productDimensions(product).width}w`;
+// Bundled images have pre-generated responsive copies; images uploaded through the admin panel do not.
+const bundled=(product:Product)=>product.image.startsWith('/assets/catalog/')&&!!productDimensions(product);
+// Cloudinary images are resized on demand; bundled images use their pre-generated copies.
+export const thumbnailSet=(product:Product)=>isCloudinary(product.image)?cloudinarySrcSet(product.image,[240,480]):bundled(product)?`${product.thumb} 240w, ${product.image.replace('.webp','-480.webp')} 480w`:undefined;
+export const detailSet=(product:Product)=>isCloudinary(product.image)?cloudinarySrcSet(product.image,[480,800,1200,1600]):bundled(product)?`${product.image.replace('.webp','-detail-480.webp')} ${Math.min(480,productDimensions(product).width)}w, ${product.image} ${productDimensions(product).width}w`:undefined;
 export const heroSizes='(max-width:600px) 112px, (max-width:900px) 130px, 190px';
 export const catalogueSizes='(max-width:600px) calc((86vw - 18px)/2), (max-width:900px) calc((88vw - 50px)/3), min(24vw, 300px)';
 export function artworkSrc(index:number){return worldArtwork[index].replace('_o.webp',innerWidth<620&&devicePixelRatio<=2?'_portal-v2-768.webp':'_portal-v2-1024.webp')}
@@ -21,7 +24,7 @@ export function useRequestedWorlds(){return useSyncExternalStore(callback=>{subs
 export function prepareWorld(index:number){
   if(index+1>requested){requested=index+1;subscribers.forEach(callback=>callback())}
   const key=`${index}|${innerWidth<=600}|${devicePixelRatio<=2}`;const previous=prepared.get(key);if(previous)return previous;
-  const task=Promise.all(worldIds.slice(0,index+1).flatMap((id,i)=>[preloadImage(artworkSrc(i)),...categories.find(c=>c.id===id)!.products.slice(0,3).map(id=>{const product=productById[id];return innerWidth<=600?preloadImage(product.thumb,thumbnailSet(product),'200px'):preloadImage(product.image,detailSet(product),'350px')})]));prepared.set(key,task);return task;
+  const task=Promise.all(roads.slice(0,index+1).flatMap(road=>[preloadImage(artworkSrc(themeIndex(road.theme))),...road.products.slice(0,3).filter(id=>productById[id]).map(id=>{const product=productById[id];return innerWidth<=600?preloadImage(product.thumb,thumbnailSet(product),'200px'):preloadImage(product.image,detailSet(product),'350px')})]));prepared.set(key,task);return task;
 }
 export function recoverImage(event:{currentTarget:HTMLImageElement},original:string){
   const image=event.currentTarget;

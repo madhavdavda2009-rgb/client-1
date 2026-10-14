@@ -7,12 +7,16 @@ import HeroStream from './HeroStream';
 import HomeGradient from './HomeGradient';
 import { ScrollArrow } from './MotionUI';
 import LogoArtwork, { originalLogo } from './LogoArtwork';
+import { roads } from './catalog';
+import { roadLayout } from './road-layout';
 const clamp=(v:number,min=0,max=1)=>Math.max(min,Math.min(max,v));
 const range=(v:number,a:number,b:number)=>clamp((v-a)/(b-a));
 const ease=(v:number)=>v*v*(3-2*v);
 const intro={holeX:.348,holeY:.477,radius:.0274,length:1.05};
 export default function ToyonIntro(){
   const rootRef=useRef<HTMLElement>(null),journeyProgress=useMotionValue(0);
+  // One scroll stretch per road station (the road and its timings scale with the number of roads).
+  const layout=roadLayout(roads.length);
   const navigateWorld=(value:number)=>{
     const root=rootRef.current;if(!root)return;
     const stage=root.querySelector<HTMLElement>('.stage')!;
@@ -34,7 +38,7 @@ export default function ToyonIntro(){
     let width=1,height=1,baseWidth=1,portalRadius=1,progress=0,target=0,running=false,disposed=false,lastOpening=-1,lastTick=performance.now();
     let closingOrigin:{x:number;y:number}|null=null;
     const closingLength=.45,worldLength=.34;
-    const totalLength=intro.length+3*worldLength+closingLength,openingFraction=intro.length/totalLength;
+    const totalLength=intro.length+layout.count*worldLength+closingLength,openingFraction=intro.length/totalLength;
     root.dataset.travelStart=String(intro.length*.44/totalLength);root.dataset.travelEnd=String((totalLength-closingLength)/totalLength);
     function measure(){width=stage.clientWidth;height=stage.clientHeight;baseWidth=Math.min(width*(width<900?.78:.96),height*1.2,860);portalRadius=Math.min(width*(width<700?.45:.31),height*(width<700?.265:.43));root.style.setProperty('--portal-radius',`${portalRadius}px`);root.style.height=`${height*(1+totalLength)}px`;logo.setAttribute('viewBox',`0 0 ${width} ${height}`);lastOpening=-1;}
     function render(){
@@ -78,7 +82,7 @@ export default function ToyonIntro(){
       root.dataset.closing=String(closing>0);root.dataset.closingProgress=closing.toFixed(4);
       const cueOpacity=ease(range(opening,.10,.24))*(1-ease(range(opening,.56,.70)));
       journeyHint.style.opacity=String(cueOpacity);journeyHint.style.visibility=cueOpacity>0?'visible':'hidden';
-      root.dataset.scrollCue=closing>0?'finish':opening<.64?'enter':travel>.70?'finish':'next';
+      root.dataset.scrollCue=closing>0?'finish':opening<.64?'enter':travel>(layout.count-.9)/layout.count?'finish':'next';
       root.style.setProperty('--ending-white',String(ease(range(closing,0,.5))));
       if(closing===0)closingOrigin=null;
       if(closing===0 && opening===1){root.dataset.phase='road';logo.style.opacity='0';logo.style.visibility='hidden';portal.style.opacity='1';portal.style.visibility='visible'}
@@ -123,6 +127,6 @@ export default function ToyonIntro(){
     });viewportObserver.observe(stage);
     const resume=()=>{if(document.hidden){gsap.ticker.remove(tick);running=false}else follow(target)};document.addEventListener('visibilitychange',resume);
     return()=>{disposed=true;cancelAnimationFrame(resizeFrame);viewportObserver.disconnect();document.removeEventListener('visibilitychange',resume);gsap.ticker.remove(tick);context.revert();observer.disconnect()};
-  },[journeyProgress]);
-  return <><link rel="preload" as="image" href={originalLogo}/><main ref={rootRef} id="toyon-journey" className="journey" aria-label="Toy-On road journey"><div className="stage"><HomeGradient/><HeroStream onEnter={()=>navigateWorld(.145)}/><div className="portal-preview" aria-hidden="true"/><LogoArtwork/><div className="portal"><ThreeRoadWorld progress={journeyProgress} onNavigate={navigateWorld}/></div><p className="scroll-hint"><span className="scroll-desktop">Scroll down to explore</span><span className="scroll-touch">Swipe up to explore</span><ScrollArrow/></p><p className="journey-scroll-cue"><span className="cue-enter"><span className="scroll-desktop">Keep scrolling to enter</span><span className="scroll-touch">Swipe up to enter</span></span><span className="cue-next"><span className="scroll-desktop">Scroll for the next collection</span><span className="scroll-touch">Swipe up for the next collection</span></span><span className="cue-finish"><span className="scroll-desktop">Scroll to continue</span><span className="scroll-touch">Swipe up to continue</span></span><ScrollArrow/></p></div></main></>;
+  },[journeyProgress,layout.count]);
+  return <><link rel="preload" as="image" href={originalLogo}/><main ref={rootRef} id="toyon-journey" className="journey" aria-label="Toy-On road journey"><div className="stage"><HomeGradient/><HeroStream onEnter={()=>navigateWorld(layout.stations[0].pause)}/><div className="portal-preview" aria-hidden="true"/><LogoArtwork/><div className="portal"><ThreeRoadWorld progress={journeyProgress} onNavigate={navigateWorld}/></div><p className="scroll-hint"><span className="scroll-desktop">Scroll down to explore</span><span className="scroll-touch">Swipe up to explore</span><ScrollArrow/></p><p className="journey-scroll-cue"><span className="cue-enter"><span className="scroll-desktop">Keep scrolling to enter</span><span className="scroll-touch">Swipe up to enter</span></span><span className="cue-next"><span className="scroll-desktop">Scroll for the next collection</span><span className="scroll-touch">Swipe up for the next collection</span></span><span className="cue-finish"><span className="scroll-desktop">Scroll to continue</span><span className="scroll-touch">Swipe up to continue</span></span><ScrollArrow/></p></div></main></>;
 }

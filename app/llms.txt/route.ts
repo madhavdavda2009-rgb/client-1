@@ -1,10 +1,12 @@
 import { categories, products } from '../../src/catalog';
 import { siteBase } from '../../src/seo';
 import { company } from '../../src/site-content';
+import { ensureCatalog } from '../../src/catalog-server';
 
-export const dynamic = 'force-static';
+export const revalidate = 3600;
 
-export function GET() {
+export async function GET() {
+  await ensureCatalog();
   const collectionLinks = categories.map(category =>
     `- [${category.title}](${siteBase}/categories/${category.id}): ${category.products.length} product designs; follow the collection's links to individual artwork descriptions.`,
   ).join('\n');
@@ -21,7 +23,7 @@ Product descriptions identify the pictured designs. They do not establish dimens
 
 The homepage's manufacturing content is a general process overview. It does not confirm that every described machine or production method is used in-house by Toy-On.
 
-This website provides a catalogue and business enquiry draft tool, not online checkout. The enquiry form prepares a visitor-reviewed draft; it does not send the enquiry automatically. Contact the company through the published email or telephone to discuss selected designs, quantities, intended use and production requirements.
+This website provides a catalogue and a business enquiry form, not online checkout. Enquiries submitted through the form are received by the company. You can also contact the company through the published email or telephone to discuss selected designs, quantities, intended use and production requirements.
 
 ## Main pages
 
@@ -29,7 +31,7 @@ This website provides a catalogue and business enquiry draft tool, not online ch
 - [All products](${siteBase}/products): Browse the current ${products.length} designs and follow links to individual product pages.
 - [All collections](${siteBase}/categories): Browse the ${categories.length} themed collections.
 - [About ${company.name}](${siteBase}/about): Company background and published business information.
-- [Business enquiries](${siteBase}/contact): Published contact details and the visitor-reviewed enquiry draft tool.
+- [Business enquiries](${siteBase}/contact): Published contact details and the business enquiry form.
 
 ## Product collections
 
@@ -37,7 +39,7 @@ ${collectionLinks}
 
 ## Optional
 
-- [Privacy policy](${siteBase}/privacy-policy): Website information handling and local enquiry drafts.
+- [Privacy policy](${siteBase}/privacy-policy): Website information handling and enquiry data.
 - [Terms and conditions](${siteBase}/terms-and-conditions): Terms for using the showcase and making enquiries.
 - [XML sitemap](${siteBase}/sitemap.xml): All public page URLs and product image URLs.
 - [Crawler rules](${siteBase}/robots.txt): Public crawling rules and the sitemap location.

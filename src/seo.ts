@@ -5,7 +5,7 @@ import legalContent from './legal-content.json';
 
 export const siteBase = 'https://www.toyonindustry.com';
 const shareImage = '/assets/scenery/toyon-share-card.jpg';
-export const routes = ['/', '/products', '/categories', '/about', '/contact', '/privacy-policy', '/terms-and-conditions', ...categories.map(c => `/categories/${c.id}`), ...products.map(p => `/products/${p.slug}`)];
+export const getRoutes = () => ['/', '/products', '/categories', '/about', '/contact', '/privacy-policy', '/terms-and-conditions', ...categories.map(c => `/categories/${c.id}`), ...products.map(p => `/products/${p.slug}`)];
 
 export function routeMetadata(path: string): Metadata {
   const product = path.startsWith('/products/') ? productById[path.slice('/products/'.length)] : undefined;

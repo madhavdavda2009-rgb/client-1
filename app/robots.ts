@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       // Keep page rendering, product images and the favicon crawlable.
       allow: '/',
       // API responses are not catalogue pages. This is not access control.
-      disallow: '/api/',
+      disallow: ['/api/', '/admin'],
     },
     sitemap: `${siteBase}/sitemap.xml`,
   };

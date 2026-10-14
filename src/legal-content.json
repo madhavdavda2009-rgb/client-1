@@ -1,137 +1,137 @@
 {
-  "privacy": {
-    "title": "Privacy policy",
-    "description": "How Toy-On handles website browsing information, local enquiry drafts and privacy questions.",
-    "intro": "This policy explains information handling on the Toy-On product showcase operated by Toyon Industry Pvt Ltd. It covers this website and its enquiry-draft tools.",
-    "sections": [
-      {
-        "id": "scope",
-        "title": "1. Website browsing",
-        "paragraphs": [
-          "You can browse products and collections without creating an account or providing your name or email address. The current website has no sign-in, checkout or online payment facility.",
-          "Your browser requests pages, images and other files from the hosting provider. Technical information such as an IP address, browser information, requested URL and access time may be processed to deliver and protect the website. Hosting records are subject to the provider’s policies and applicable requirements."
-        ]
-      },
-      {
-        "id": "enquiries",
-        "title": "2. Enquiry details stay local until you share them",
-        "paragraphs": [
-          "The enquiry tool lets you enter your name, email address, product selection and message. When you choose “Copy enquiry”, these details are prepared as text and copied to your device’s clipboard. If copying is unavailable, the browser offers a text-file download instead.",
-          "The form does not automatically send your details to Toy-On, email them, or save them in a website database. You decide whether to share the prepared draft through a separate contact channel. Your device, browser, clipboard manager or downloaded-files folder may retain a copy.",
-          "If you contact the company outside this website, the information you choose to send is received through that channel. Ask the company about the handling arrangements relevant to that communication or any subsequent business transaction."
-        ]
-      },
-      {
-        "id": "storage",
-        "title": "3. Cookies, storage and analytics",
-        "paragraphs": [
-          "The current website application does not set tracking cookies or use local storage to save enquiry details, searches or product filters. Searches and filters operate within the page.",
-          "No advertising pixels or visitor-analytics tools are included in the current application. Fonts are served with the website rather than requested from a third-party font service. Your browser may cache website files or restore page history using its own settings.",
-          "Hosting and delivery services may use their own operational safeguards. This policy does not claim that those independent services never process technical information."
-        ]
-      },
-      {
-        "id": "choices",
-        "title": "4. Your choices",
-        "paragraphs": [
-          "You can browse without using the enquiry tool. Avoid including sensitive personal information in an enquiry unless it is necessary and the receiving company has confirmed an appropriate channel.",
-          "You can edit a draft before sharing it and remove copied or downloaded versions from your device. Closing or resetting the form clears the page’s current inputs; it does not erase copies held by your clipboard or downloads folder."
-        ]
-      },
-      {
-        "id": "requests",
-        "title": "5. Privacy questions and requests",
-        "paragraphs": [
-          "For information that you have actually shared with Toyon Industry Pvt Ltd, you may ask the company about access, correction, deletion or other rights available under applicable law. Do not include unnecessary sensitive information in an initial request.",
-          "Email toyonindustry@gmail.com for privacy questions about information you have shared with Toyon Industry Pvt Ltd. The website contact page can help prepare your message, but it does not deliver it automatically."
-        ]
-      },
-      {
-        "id": "business-use",
-        "title": "6. Intended audience and third-party services",
-        "paragraphs": [
-          "The website and business-enquiry tools are intended for business representatives. They are not designed to request personal information from children.",
-          "If you follow an external link or share a draft through email, messaging or another service, that service’s own terms and privacy practices apply."
-        ]
-      },
-      {
-        "id": "changes",
-        "title": "7. Updates",
-        "paragraphs": [
-          "This policy may be updated when the website’s functionality or information-handling practices change. Check the updated date when reviewing the policy."
-        ]
-      }
-    ]
-  },
-  "terms": {
-    "title": "Terms and conditions",
-    "description": "Website terms for browsing Toy-On designs, preparing enquiries and confirming product specifications before a business order.",
-    "intro": "These terms explain use of the Toy-On product showcase operated by Toyon Industry Pvt Ltd. They concern website access and enquiry preparation; they are not a supply agreement or an online purchase contract.",
-    "sections": [
-      {
-        "id": "purpose",
-        "title": "1. Purpose of the website",
-        "paragraphs": [
-          "The website presents product designs and themed collections for manufacturers and business buyers. It helps you shortlist designs and prepare a business enquiry.",
-          "The website currently has no checkout, payment processing or automatic order acceptance. Browsing a design or preparing an enquiry does not reserve stock, confirm a price or create a manufacturing order."
-        ]
-      },
-      {
-        "id": "specifications",
-        "title": "2. Product information and confirmation",
-        "paragraphs": [
-          "Images are visual presentations of the supplied designs. Colours, proportions and appearance can differ between screens, mockups and a finished product.",
-          "Before any purchase or production commitment, confirm the relevant design, material, dimensions, intended use, quantities, packaging, price and delivery arrangements directly with the company. Do not treat an image or a general website description as a product specification or compliance certificate."
-        ]
-      },
-      {
-        "id": "orders",
-        "title": "3. Business enquiries and supply terms",
-        "paragraphs": [
-          "The contact form prepares a draft on your device. You must review and send it through a separate confirmed channel if you want the company to receive it.",
-          "Any supply arrangement, quotation, payment schedule, minimum quantity, delivery commitment, warranty or return arrangement must be agreed separately. None of those commercial terms should be inferred from this website."
-        ]
-      },
-      {
-        "id": "use",
-        "title": "4. Responsible website use",
-        "paragraphs": [
-          "Use the website for lawful browsing and genuine business enquiries. Do not attempt to disrupt the service, bypass security controls, introduce malicious code or misrepresent your identity.",
-          "Do not use the website to submit unnecessary sensitive information or to interfere with another visitor’s access."
-        ]
-      },
-      {
-        "id": "content",
-        "title": "5. Branding, artwork and permissions",
-        "paragraphs": [
-          "Toy-On branding, product artwork and other website content may belong to Toyon Industry Pvt Ltd or their respective rights holders. Viewing the catalogue does not grant a licence to reproduce, manufacture, advertise or distribute a design.",
-          "Character imagery, logos and other third-party material may require separate permissions. Confirm ownership and licensing requirements before any commercial use."
-        ]
-      },
-      {
-        "id": "availability",
-        "title": "6. Website availability and external services",
-        "paragraphs": [
-          "Content and functionality may change, and the website may be unavailable during maintenance or for technical reasons. Important product or business details should be confirmed directly before relying on them.",
-          "External communication or other third-party services operate under their own terms. Toy-On’s enquiry tool does not control your email, messaging service, clipboard manager or downloaded files."
-        ]
-      },
-      {
-        "id": "privacy",
-        "title": "7. Privacy and legal rights",
-        "paragraphs": [
-          "The privacy policy explains the current website’s information-handling behaviour. Review it before using the enquiry-draft tool.",
-          "Nothing in these website terms is intended to exclude rights or remedies that cannot lawfully be excluded. Any binding transaction terms or dispute arrangements must be confirmed in the relevant written agreement."
-        ]
-      },
-      {
-        "id": "changes",
-        "title": "8. Updates and questions",
-        "paragraphs": [
-          "These website terms may be revised as the site or its services change. Check the updated date for the version you are reading.",
-          "For questions about a design, a business arrangement or these terms, use a confirmed company contact channel. The website’s contact page prepares a message; it does not automatically send one."
-        ]
-      }
-    ]
-  }
+"privacy": {
+"title": "Privacy policy",
+"description": "How Toy-On handles website browsing information, business enquiries and privacy questions.",
+"intro": "This policy explains information handling on the Toy-On product showcase operated by Toyon Industry Pvt Ltd. It covers this website and its business enquiry form.",
+"sections": [
+{
+"id": "scope",
+"title": "1. Website browsing",
+"paragraphs": [
+"You can browse products and collections without creating an account or providing your name or email address. The public website has no visitor sign-in, checkout or online payment facility.",
+"Your browser requests pages, images and other files from the hosting provider. Technical information such as an IP address, browser information, requested URL and access time may be processed to deliver and protect the website. Hosting records are subject to the provider’s policies and applicable requirements."
+]
+},
+{
+"id": "enquiries",
+"title": "2. Business enquiries you submit",
+"paragraphs": [
+"The enquiry form asks for your name, company, email address, an optional phone number, any selected design and your message. When you choose “Send enquiry”, these details are sent to Toyon Industry Pvt Ltd and stored in a secure database (Supabase) so the company can read and respond to your enquiry.",
+"Enquiries can only be viewed by authorised Toyon Industry staff through a password-protected admin area. They are used to respond to your enquiry and to manage any resulting business discussion, and are not sold or used for advertising.",
+"Enquiries are kept for as long as needed for these purposes, after which they may be deleted. You can ask for your enquiry to be corrected or deleted at any time (see section 5)."
+]
+},
+{
+"id": "storage",
+"title": "3. Cookies, storage and analytics",
+"paragraphs": [
+"The public website does not set tracking cookies or use local storage to save enquiry details, searches or product filters. Searches and filters operate within the page. The admin area stores a sign-in session in the administrator’s own browser only.",
+"No advertising pixels or visitor-analytics tools are included in the current application. Fonts are served with the website rather than requested from a third-party font service. Your browser may cache website files or restore page history using its own settings.",
+"Hosting and delivery services may use their own operational safeguards. This policy does not claim that those independent services never process technical information."
+]
+},
+{
+"id": "choices",
+"title": "4. Your choices",
+"paragraphs": [
+"You can browse without using the enquiry form, or contact the company directly by email or telephone instead. Avoid including sensitive personal information in an enquiry unless it is necessary.",
+"Only submit details you are entitled to share on behalf of your business."
+]
+},
+{
+"id": "requests",
+"title": "5. Privacy questions and requests",
+"paragraphs": [
+"For information that you have actually shared with Toyon Industry Pvt Ltd, you may ask the company about access, correction, deletion or other rights available under applicable law. Do not include unnecessary sensitive information in an initial request.",
+"Email toyonindustry@gmail.com for privacy questions, or to ask for access to, correction of or deletion of an enquiry you have submitted."
+]
+},
+{
+"id": "business-use",
+"title": "6. Intended audience and third-party services",
+"paragraphs": [
+"The website and business-enquiry tools are intended for business representatives. They are not designed to request personal information from children.",
+"If you follow an external link or contact the company through email, messaging or another service, that service’s own terms and privacy practices apply."
+]
+},
+{
+"id": "changes",
+"title": "7. Updates",
+"paragraphs": [
+"This policy may be updated when the website’s functionality or information-handling practices change. Check the updated date when reviewing the policy."
+]
 }
+]
+},
+"terms": {
+"title": "Terms and conditions",
+"description": "Website terms for browsing Toy-On designs, sending enquiries and confirming product specifications before a business order.",
+"intro": "These terms explain use of the Toy-On product showcase operated by Toyon Industry Pvt Ltd. They concern website access and business enquiries; they are not a supply agreement or an online purchase contract.",
+"sections": [
+{
+"id": "purpose",
+"title": "1. Purpose of the website",
+"paragraphs": [
+"The website presents product designs and themed collections for manufacturers and business buyers. It helps you shortlist designs and send a business enquiry.",
+"The website currently has no checkout, payment processing or automatic order acceptance. Browsing a design or sending an enquiry does not reserve stock, confirm a price or create a manufacturing order."
+]
+},
+{
+"id": "specifications",
+"title": "2. Product information and confirmation",
+"paragraphs": [
+"Images are visual presentations of the supplied designs. Colours, proportions and appearance can differ between screens, mockups and a finished product.",
+"Before any purchase or production commitment, confirm the relevant design, material, dimensions, intended use, quantities, packaging, price and delivery arrangements directly with the company. Do not treat an image or a general website description as a product specification or compliance certificate."
+]
+},
+{
+"id": "orders",
+"title": "3. Business enquiries and supply terms",
+"paragraphs": [
+"The contact form sends your enquiry to the company. Sending an enquiry does not create an order; the company will respond to discuss your requirements.",
+"Any supply arrangement, quotation, payment schedule, minimum quantity, delivery commitment, warranty or return arrangement must be agreed separately. None of those commercial terms should be inferred from this website."
+]
+},
+{
+"id": "use",
+"title": "4. Responsible website use",
+"paragraphs": [
+"Use the website for lawful browsing and genuine business enquiries. Do not attempt to disrupt the service, bypass security controls, introduce malicious code or misrepresent your identity.",
+"Do not use the website to submit unnecessary sensitive information or to interfere with another visitor’s access."
+]
+},
+{
+"id": "content",
+"title": "5. Branding, artwork and permissions",
+"paragraphs": [
+"Toy-On branding, product artwork and other website content may belong to Toyon Industry Pvt Ltd or their respective rights holders. Viewing the catalogue does not grant a licence to reproduce, manufacture, advertise or distribute a design.",
+"Character imagery, logos and other third-party material may require separate permissions. Confirm ownership and licensing requirements before any commercial use."
+]
+},
+{
+"id": "availability",
+"title": "6. Website availability and external services",
+"paragraphs": [
+"Content and functionality may change, and the website may be unavailable during maintenance or for technical reasons. Important product or business details should be confirmed directly before relying on them.",
+"External communication or other third-party services operate under their own terms."
+]
+},
+{
+"id": "privacy",
+"title": "7. Privacy and legal rights",
+"paragraphs": [
+"The privacy policy explains how enquiry details are stored and used. Review it before sending an enquiry.",
+"Nothing in these website terms is intended to exclude rights or remedies that cannot lawfully be excluded. Any binding transaction terms or dispute arrangements must be confirmed in the relevant written agreement."
+]
+},
+{
+"id": "changes",
+"title": "8. Updates and questions",
+"paragraphs": [
+"These website terms may be revised as the site or its services change. Check the updated date for the version you are reading.",
+"For questions about a design, a business arrangement or these terms, use the website’s contact form or a confirmed company contact channel."
+]
+}
+]
+}
+}

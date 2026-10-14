@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import App from '../../src/App';
-import { routes, routeMetadata } from '../../src/seo';
+import { getRoutes, routeMetadata } from '../../src/seo';
+import { ensureCatalog } from '../../src/catalog-server';
 type Props = { params: Promise<{ slug: string[] }> };
-export const dynamicParams = false;
-export function generateStaticParams() { return routes.filter(path => path !== '/' && path !== '/contact').map(path => ({ slug: path.slice(1).split('/') })); }
-export async function generateMetadata({ params }: Props): Promise<Metadata> { const { slug } = await params; const path = '/' + slug.join('/'); return routes.includes(path) ? routeMetadata(path) : { robots: { index: false } }; }
-export default async function RoutePage({ params }: Props) { const { slug } = await params; const path = '/' + slug.join('/'); if (!routes.includes(path)) notFound(); return <App path={path} />; }
+export const revalidate = 300;
+// New products/categories added in the admin panel get pages on first visit.
+export const dynamicParams = true;
+export async function generateStaticParams() { await ensureCatalog(); return getRoutes().filter(path => path !== '/' && path !== '/contact').map(path => ({ slug: path.slice(1).split('/') })); }
+export async function generateMetadata({ params }: Props): Promise<Metadata> { const { slug } = await params; await ensureCatalog(); const path = '/' + slug.join('/'); return getRoutes().includes(path) ? routeMetadata(path) : { robots: { index: false } }; }
+export default async function RoutePage({ params }: Props) { const { slug } = await params; await ensureCatalog(); const path = '/' + slug.join('/'); if (!getRoutes().includes(path)) notFound(); return <App path={path} />; }

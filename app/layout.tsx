@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { siteBase } from '../src/seo';
+import { ensureCatalog } from '../src/catalog-server';
+import CatalogHydrator from '../src/CatalogHydrator';
 import '../src/fonts.css';
 import '../src/style.css';
 import '../src/typography.css';
@@ -23,4 +25,4 @@ const openingPreload = `if (location.pathname === '/' && !location.hash) {
   preload.href = '/assets/scenery/showcase-' + file + '.webp';
   document.head.appendChild(preload);
 }`;
-export default function RootLayout({ children }: { children: ReactNode }) { return <html lang="en"><head><script dangerouslySetInnerHTML={{ __html: openingPreload }} /></head><body><div id="root">{children}</div></body></html>; }
+export default async function RootLayout({ children }: { children: ReactNode }) { const catalog = await ensureCatalog(); return <html lang="en"><head><script dangerouslySetInnerHTML={{ __html: openingPreload }} /></head><body><div id="root"><CatalogHydrator data={catalog}>{children}</CatalogHydrator></div></body></html>; }

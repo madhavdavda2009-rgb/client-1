@@ -10,12 +10,14 @@ import { BrandO } from './LogoArtwork';
 import { RenderQuality } from './render-quality';
 import { useRequestedWorlds,prepareWorld,thumbnailSet,detailSet,recoverImage } from './assets';
 import { roadLayout, type RoadLayout } from './road-layout';
+import type { RoadScene } from './road-scene';
+import StationBackdrop from './StationBackdrop';
 
-type JourneyWorld = Omit<Category, 'products'> & { products: Product[]; description: string; label: string; theme: RoadTheme; roadId: string };
+type JourneyWorld = Omit<Category, 'products'> & { products: Product[]; description: string; label: string; theme: RoadTheme; roadId: string; scene: RoadScene };
 
 // Road stations come from the CMS (roads + products on roads), already capped to the scene's slot capacity.
 function buildJourneyWorlds(): JourneyWorld[] {
-  return roads.filter(road => categoryById[road.category]).map(road => ({ ...categoryById[road.category], id: road.category, roadId: road.id, products: road.products.filter(id => productById[id]).map(id => productById[id]), label: road.label, description: road.description, theme: road.theme }));
+  return roads.filter(road => categoryById[road.category]).map(road => ({ ...categoryById[road.category], id: road.category, roadId: road.id, products: road.products.filter(id => productById[id]).map(id => productById[id]), label: road.label, description: road.description, theme: road.theme, scene: road.scene ?? {} }));
 }
 
 const clamp = (n: number, a = 0, b = 1) => Math.max(a, Math.min(b, n));
@@ -85,7 +87,7 @@ function roadRibbon(roadCurve: THREE.CatmullRomCurve3, scale: number, width = 5.
   geometry.setIndex(indices); geometry.computeVertexNormals(); return geometry;
 }
 
-export default function ThreeRoadWorld({ progress, onNavigate }: { progress: MotionValue<number>;onNavigate:(value:number)=>void }) {
+export default function ThreeRoadWorld({ progress }: { progress: MotionValue<number> }) {
   const journeyWorlds=useMemo(buildJourneyWorlds,[]);const layout=useMemo(()=>roadLayout(journeyWorlds.length),[journeyWorlds]);const roadPath=useMemo(()=>buildRoad(layout.lengthScale),[layout]);const backdropPalettes=journeyWorlds.map(world=>world.theme);const portalThemes=journeyWorlds.map(world=>themeIndex(world.theme));const extraDesigns=journeyWorlds.map(world=>world.products.slice(3));
   const requested=useRequestedWorlds();const wake=useRef(()=>{});const [extrasEnabled,setExtrasEnabled]=useState(false);
   const [contextLost,setContextLost]=useState(false);
@@ -103,6 +105,10 @@ export default function ThreeRoadWorld({ progress, onNavigate }: { progress: Mot
     const along=(p:number)=>layout.distance(p)/roadScale;const {stations}=layout;
     const themes=journeyWorlds.map(world=>themeIndex(world.theme));
     const touchDevice=matchMedia('(hover:none), (pointer:coarse)').matches;
+    // Interactive backgrounds follow the mouse (CSS vars --bg-px/--bg-py, -1..1); at most one update per frame.
+    let pointerRaf=0,pointerX=0,pointerY=0;
+    const onPointer=(event:PointerEvent)=>{pointerX=event.clientX/innerWidth*2-1;pointerY=event.clientY/innerHeight*2-1;if(!pointerRaf)pointerRaf=requestAnimationFrame(()=>{pointerRaf=0;host.style.setProperty('--bg-px',pointerX.toFixed(3));host.style.setProperty('--bg-py',pointerY.toFixed(3))})};
+    if(!touchDevice)window.addEventListener('pointermove',onPointer,{passive:true});
     const scene = new THREE.Scene(); const camera = new THREE.PerspectiveCamera(48, 1, .1, 180); camera.position.set(0, 3.15, 10);
     const quality=new RenderQuality(host.clientWidth);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, stencil: false, powerPreference: 'high-performance' }); renderer.setPixelRatio(quality.pixelRatio(host.clientWidth)); renderer.setClearColor(0x000000, 0); host.appendChild(renderer.domElement);
@@ -166,6 +172,24 @@ export default function ThreeRoadWorld({ progress, onNavigate }: { progress: Mot
       shown.set(link,next);if(next!==target)fading=true;return next;
     };
     const loaded=(image:HTMLImageElement|undefined)=>!!image&&image.complete&&image.naturalWidth>0;
+    // Products passing behind the collection text get a light blur so the text stays readable without a box.
+    // The text block is measured a few times a second (not every frame) in the scene's own coordinates.
+    type Box={left:number;right:number;top:number;bottom:number};
+    let textBox:Box|null=null,textBoxAt=-1e9;
+    const measureText=(time:number)=>{
+      if(time-textBoxAt<250)return;textBoxAt=time;
+      const copy=[...host.querySelectorAll<HTMLElement>('.three-world-copy')].pop(),scene=host.getBoundingClientRect(),r=copy?.getBoundingClientRect();
+      textBox=r&&r.width&&r.height?{left:r.left-scene.left-10,right:r.right-scene.left+10,top:r.top-scene.top-10,bottom:r.bottom-scene.top+10}:null;
+    };
+    const blurBehindText=(link:HTMLElement,box:Box|null)=>{
+      let px=0;
+      if(box&&textBox){
+        const overlapX=Math.max(0,Math.min(box.right,textBox.right)-Math.max(box.left,textBox.left)),overlapY=Math.max(0,Math.min(box.bottom,textBox.bottom)-Math.max(box.top,textBox.top));
+        const covered=overlapX*overlapY/Math.max(1,(box.right-box.left)*(box.bottom-box.top));
+        px=covered>.45?4:covered>.15?2.5:covered>0?1.5:0;
+      }
+      if(link.dataset.blur!==String(px)){link.dataset.blur=String(px);link.style.filter=px?`blur(${px}px)`:'';}
+    };
     const previousCamera=new THREE.Vector3(),previousAim=new THREE.Vector3();
     const refreshProducts=()=>{dirty=true;wake.current()};allImages.push(...productImages.flat());allImages.forEach(image=>image.addEventListener('load',refreshProducts));
     const media = window.matchMedia('(prefers-reduced-motion: reduce)'); reduced.current = media.matches; const onReduced = () => { reduced.current = media.matches;dirty=true;wake.current(); }; media.addEventListener('change', onReduced); let narrowRoad = false; const resize = () => { const w = host.clientWidth || 1; const h = host.clientHeight || 1;viewportWidth=w;viewportHeight=h;dirty=true; const nextNarrow = w < 620; if (nextNarrow !== narrowRoad) { road.geometry.dispose(); shoulder.geometry.dispose(); road.geometry = ribbon(nextNarrow ? 1.7 : 2.4); shoulder.geometry = ribbon(nextNarrow ? 1.9 : 2.65);shoulder.geometry.clearGroups(); narrowRoad = nextNarrow; } camera.aspect = w / h; camera.fov = w < 620 ? 52 : w < 900 ? 55 : 49; camera.updateProjectionMatrix(); renderer.setPixelRatio(quality.pixelRatio(w));host.dataset.quality=quality.tier; renderer.setSize(w, h, false);wake.current(); }; let resizeRaf=0;const observer = new ResizeObserver(()=>{cancelAnimationFrame(resizeRaf);resizeRaf=requestAnimationFrame(resize)}); observer.observe(host); resize();
@@ -174,6 +198,9 @@ export default function ThreeRoadWorld({ progress, onNavigate }: { progress: Mot
     const skyColors = [0xf7efdc, 0xf1f2d8, 0xf2e8df].map(color => new THREE.Color(color));
     const roadColors = [0xd8ba85, 0xc4ad78, 0xc99b79].map(value => new THREE.Color(value));
     const edgeColors = [0xf5e9d0, 0xe8edc6, 0xf0d3b7].map(value => new THREE.Color(value));
+    // A custom road colour from the admin replaces the theme's road colour; its edge is a lighter shade of it.
+    const stationRoad = journeyWorlds.map((world, index) => world.scene.roadColor ? new THREE.Color(world.scene.roadColor) : roadColors[themes[index]]);
+    const stationEdge = journeyWorlds.map((world, index) => world.scene.roadColor ? new THREE.Color(world.scene.roadColor).lerp(new THREE.Color(0xffffff), .55) : edgeColors[themes[index]]);
     const groundColors = [0x657a73, 0x47654b, 0x66505b].map(value => new THREE.Color(value));
     const blendedSky = new THREE.Color(); const blendedRoad = new THREE.Color(); const blendedEdge = new THREE.Color(); const blendedGround = new THREE.Color();
     scene.fog=null;
@@ -181,7 +208,7 @@ export default function ThreeRoadWorld({ progress, onNavigate }: { progress: Mot
       raf = requestAnimationFrame(tick);
       if (!visible || document.hidden || journey?.dataset.closingProgress==='1.0000' || (journey?.dataset.phase === 'hero' && host.dataset.gateX!==undefined && !dirty)) { last = time;cancelAnimationFrame(raf);raf=0; return; }
       // Render every display frame (no 60 fps cap) so motion stays even on 90/120/144 Hz screens.
-      const dt = Math.min((time - last) / 1000 || .016, .5); last = time; fading = false;
+      const dt = Math.min((time - last) / 1000 || .016, .5); last = time; fading = false; measureText(time);
       const raw = stationTravel(clamp(targetProgress.current),layout);
       if(!dirty && settledFrames>15 && Math.abs(raw-(camera.userData.progress??0))<.00001){last=time;cancelAnimationFrame(raf);raf=0;return}
       if(quality.observe(dt*1000)){resize();}
@@ -294,6 +321,7 @@ export default function ThreeRoadWorld({ progress, onNavigate }: { progress: Mot
         link.style.visibility = productOpacity > .01 ? 'visible' : 'hidden';link.style.willChange=productOpacity>.01?'transform':'auto';
         link.tabIndex = productOpacity > .5 ? 0 : -1;
         if(productOpacity>.01)occupied.push({left:x-imageWidth/2-20,right:x+imageWidth/2+20,top:y-imageWidth/aspect-20,bottom:y+20});
+        blurBehindText(link,productOpacity>.01?{left:x-imageWidth/2,right:x+imageWidth/2,top:y-imageWidth/aspect,bottom:y}:null);
         host.dataset.productsVisible = String(opacity > .5);
       });
       // Additional designs occupy fixed roadside stations; only the camera moves.
@@ -322,12 +350,13 @@ export default function ThreeRoadWorld({ progress, onNavigate }: { progress: Mot
           image.style.transform=`scale(${imageWidth/(baseWidth*(width/200)||1)},${imageWidth/(baseWidth*(height/244)||1)})`;
         }
         if(alpha>.01)occupied.push(bounds);
+        blurBehindText(link,alpha>.01?{left:bounds.left+20,right:bounds.right-20,top:bounds.top+20,bottom:bounds.bottom-20}:null);
       });
       }
-      blendedSky.copy(skyColors[themes[0]]); blendedRoad.copy(roadColors[themes[0]]); blendedEdge.copy(edgeColors[themes[0]]); blendedGround.copy(groundColors[themes[0]]);
+      blendedSky.copy(skyColors[themes[0]]); blendedRoad.copy(stationRoad[0]); blendedEdge.copy(stationEdge[0]); blendedGround.copy(groundColors[themes[0]]);
       for (let index = 1; index < stations.length; index += 1) {
-        blendedSky.lerp(skyColors[themes[index]], weights[index]); blendedRoad.lerp(roadColors[themes[index]], weights[index]);
-        blendedEdge.lerp(edgeColors[themes[index]], weights[index]); blendedGround.lerp(groundColors[themes[index]], weights[index]);
+        blendedSky.lerp(skyColors[themes[index]], weights[index]); blendedRoad.lerp(stationRoad[index], weights[index]);
+        blendedEdge.lerp(stationEdge[index], weights[index]); blendedGround.lerp(groundColors[themes[index]], weights[index]);
       }
       roadMaterials[0].color.copy(blendedRoad); roadMaterials[1].color.copy(blendedEdge); shoulderMaterial.color.copy(blendedGround);
       renderer.setClearColor(blendedSky, 0);
@@ -341,20 +370,21 @@ export default function ThreeRoadWorld({ progress, onNavigate }: { progress: Mot
     const visibility=()=>{if(!document.hidden)wake.current()};document.addEventListener('visibilitychange',visibility);
     let disposed=false;
     const compiling=renderer.compileAsync(scene,camera);compiling.then(()=>{if(!disposed){compiled=true;wake.current();setReady(true)}},()=>{if(!disposed)setContextLost(true)});
-    return () => { disposed=true;wake.current=()=>{};allImages.forEach(image=>image.removeEventListener('load',refreshProducts));cancelAnimationFrame(raf);cancelAnimationFrame(resizeRaf);document.removeEventListener('visibilitychange',visibility);renderer.domElement.removeEventListener('webglcontextlost',loseContext);observer.disconnect(); intersection.disconnect(); media.removeEventListener('change', onReduced); renderer.domElement.remove();
+    return () => { disposed=true;wake.current=()=>{};window.removeEventListener('pointermove',onPointer);cancelAnimationFrame(pointerRaf);allImages.forEach(image=>image.removeEventListener('load',refreshProducts));cancelAnimationFrame(raf);cancelAnimationFrame(resizeRaf);document.removeEventListener('visibilitychange',visibility);renderer.domElement.removeEventListener('webglcontextlost',loseContext);observer.disconnect(); intersection.disconnect(); media.removeEventListener('change', onReduced); renderer.domElement.remove();
       // compileAsync keeps polling the materials' shader programs; disposing them first makes three.js throw.
       const release=()=>{ const geometries = new Set<THREE.BufferGeometry>(); const materials = new Set<THREE.Material>(); scene.traverse(object => { if (object instanceof THREE.Mesh) { geometries.add(object.geometry); (Array.isArray(object.material) ? object.material : [object.material]).forEach(material => materials.add(material)); } }); geometries.forEach(geometry => geometry.dispose()); materials.forEach(material => material.dispose()); dashes.dispose();renderer.dispose();renderer.forceContextLoss(); }; compiling.then(release,release); };
   }, []);
 
   const world = journeyWorlds[Math.min(active, journeyWorlds.length - 1)];
+  const isLastStation = active >= journeyWorlds.length - 1;
   return <div className="three-road-world" ref={mount} data-ready={ready} data-active={active}>
-    <div className="three-category-backdrops" aria-hidden="true">{backdropPalettes.map((palette,index)=><div key={index} className={`animated-category-backdrop palette-${palette}`} data-present={active===index}><span className="mesh-light mesh-a"/><span className="mesh-light mesh-b"/><span className="mesh-light mesh-c"/><span className="mesh-light mesh-d"/></div>)}</div>
-    <BrandO active={active} requested={requested} themes={portalThemes}/>
+    <div className="three-category-backdrops" aria-hidden="true">{backdropPalettes.map((palette,index)=><StationBackdrop key={index} theme={palette} scene={journeyWorlds[index].scene} present={active===index} load={index<requested}/>)}</div>
+    <BrandO active={active} requested={requested} themes={portalThemes} custom={journeyWorlds.map(world=>world.scene.portalUrl)}/>
     <div className="three-featured-products">{journeyWorlds.map((item, index) => <div className={`three-featured-set${active === index ? ' is-active' : ''}`} aria-hidden={active !== index} key={item.roadId}>{item.products.slice(0,3).map((product, productIndex) => <Link href={`/products/${product.slug}`} prefetch={false} className="three-featured-product" key={product.id} tabIndex={active === index ? 0 : -1} aria-label={`View ${product.title}`}><m.div className="motion-product-visual" initial={{opacity:0,scale:.94,y:12}} animate={visibleBunch===index?{opacity:1,scale:1,y:0}:{opacity:0,scale:.94,y:12}} transition={{...softSpring,delay:visibleBunch===index?productIndex*.07:0}} whileHover={{scale:1.03,y:-3}} whileTap={{scale:.98}}><picture><source media="(max-width: 600px)" srcSet={index<requested?thumbnailSet(product):undefined} sizes="200px"/><img src={index<requested?product.image:undefined} srcSet={index<requested?detailSet(product):undefined} sizes="350px" onError={event=>recoverImage(event,product.image)} alt={productAlt(product)} loading="eager" decoding="async" /></picture></m.div></Link>)}</div>)}</div>
     <div className="three-extra-products">{extraDesigns.map((items,index)=><div className={`three-extra-set${active===index?' is-active':''}`} aria-hidden={active!==index} key={journeyWorlds[index].roadId}>{items.map(product=><Link href={`/products/${product.slug}`} prefetch={false} className="three-featured-product three-extra-product" key={product.id} tabIndex={-1} aria-label={`View ${product.title}`}><m.div className="motion-product-visual" initial={false} whileHover={{scale:1.03,y:-3}} whileTap={{scale:.98}} transition={softSpring}><img src={extrasEnabled&&index<requested?product.thumb:undefined} alt={productAlt(product)} width="240" height="240" decoding="async" onError={event=>recoverImage(event,product.image)}/></m.div></Link>)}</div>)}</div>
     <div className="three-world-ui" aria-live="polite">
-      <nav className="journey-category-nav" aria-label="Jump to a collection">{journeyWorlds.map((item,index)=><button type="button" key={item.roadId} aria-pressed={active===index} onClick={()=>onNavigate(layout.stations[index].pause)}>{item.title}</button>)}</nav>
-      <AnimatePresence mode="sync"><m.div key={world.roadId} className="three-world-copy" initial={{opacity:0,scale:.985,y:12}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:1.015,y:-6,pointerEvents:'none'}} transition={{duration:.45,ease:[.25,.1,.25,1]}}><Reveal><span className="eyebrow">{world.label}</span><h2>{world.title}</h2><p>{world.description}</p><MotionLink className="three-world-cta" href={`/categories/${world.id}`}>Explore collection <span aria-hidden="true">↗</span></MotionLink><p className="collection-scroll-cue"><span className="scroll-desktop">Scroll or choose a collection</span><span className="scroll-touch">Swipe up or choose a collection</span><span aria-hidden="true"> ↓</span></p></Reveal></m.div></AnimatePresence>
+      
+      <AnimatePresence mode="sync"><m.div key={world.roadId} className="three-world-copy" initial={{opacity:0,scale:.985,y:12}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:1.015,y:-6,pointerEvents:'none'}} transition={{duration:.45,ease:[.25,.1,.25,1]}}><Reveal><span className="eyebrow">{world.label}</span><h2>{world.title}</h2><p>{world.description}</p><MotionLink className="three-world-cta" href={`/categories/${world.id}`}>Explore collection <span aria-hidden="true">↗</span></MotionLink><p className="collection-scroll-cue"><span className="scroll-desktop">{isLastStation?'Scroll to continue':'Scroll for the next collection'}</span><span className="scroll-touch">{isLastStation?'Swipe up to continue':'Swipe up for the next collection'}</span><span aria-hidden="true"> ↓</span></p></Reveal></m.div></AnimatePresence>
       <span className="three-world-progress">{String(active + 1).padStart(2, '0')} / {String(journeyWorlds.length).padStart(2, '0')}</span><MotionLink className="three-world-browse" href="/products">Browse all {products.length} designs ↗</MotionLink>
     </div>
     <span className="three-world-sr">Travelling through the Toy-On world: {world.title}. Featured designs are linked to their product pages.</span>

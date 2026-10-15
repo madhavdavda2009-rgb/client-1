@@ -4,6 +4,8 @@ import type { Session } from '@supabase/supabase-js';
 import { cloudinaryEnabled, copyToCloudinary, deleteCloudinaryImages, getSupabase, refreshWebsite, slugify, uploadImage, type CategoryRow, type EnquiryRow, type ProductRow, type RoadProductRow, type RoadRow } from './supabase';
 import { MAX_ROADS, roadCapacity } from '../road-layout';
 import { cloudinaryAsset, cloudinaryImage, isCloudinary } from '../cloudinary';
+import SceneEditor from './SceneEditor';
+import { cleanScene, type RoadScene } from '../road-scene';
 import './admin.css';
 
 const IDLE_LIMIT_MS = 30 * 60 * 1000;
@@ -426,6 +428,8 @@ function Categories({ categories, products, roads, save, notify }: Ctx) {
 }
 
 const themeNames = { christmas: 'Festive (blue sky)', dinosaurs: 'Dinosaur (green & orange)', halloween: 'Halloween (purple)' };
+// Uploaded media in a road's scene (background file and O artwork).
+const sceneMedia = (scene?: RoadScene) => [scene?.background?.url, scene?.portalUrl].filter((url): url is string => !!url);
 function Roads({ categories, products, roads, roadProducts, save, notify }: Ctx) {
   const supabase = getSupabase();
   const [editing, setEditing] = useState<RoadRow | null>(null); const [isNew, setIsNew] = useState(false);
@@ -440,7 +444,7 @@ function Roads({ categories, products, roads, roadProducts, save, notify }: Ctx)
 
   function edit(road: RoadRow | null) {
     if (road) { setIsNew(false); setEditing({ ...road }); setItems(itemsFor(road.id)); }
-    else { setIsNew(true); setEditing({ id: '', label: '', description: '', category_id: categories[0]?.id ?? '', theme: 'christmas', sort_order: roads.length, is_published: true }); setItems([]); }
+    else { setIsNew(true); setEditing({ id: '', label: '', description: '', category_id: categories[0]?.id ?? '', theme: 'christmas', sort_order: roads.length, is_published: true, scene: {} }); setItems([]); }
     setAdding('');
   }
   const move = (i: number, d: number) => { const next = [...items]; const j = i + d; if (j < 0 || j >= next.length) return; [next[i], next[j]] = [next[j], next[i]]; setItems(next); };
@@ -448,7 +452,8 @@ function Roads({ categories, products, roads, roadProducts, save, notify }: Ctx)
   async function submit(event: FormEvent) {
     event.preventDefault(); if (!editing) return;
     if (!items.length) return notify('error', 'Add at least one product to this road.');
-    const row = { label: editing.label.trim(), description: editing.description.trim(), category_id: editing.category_id, theme: editing.theme, sort_order: Number(editing.sort_order) || 0, is_published: editing.is_published };
+    const row = { label: editing.label.trim(), description: editing.description.trim(), category_id: editing.category_id, theme: editing.theme, sort_order: Number(editing.sort_order) || 0, is_published: editing.is_published, scene: cleanScene(editing.scene) };
+    const before = roads.find(r => r.id === editing.id);
     setBusy(true);
     const ok = await save(async () => {
       let roadId = editing.id;
@@ -459,9 +464,14 @@ function Roads({ categories, products, roads, roadProducts, save, notify }: Ctx)
       return { error: ins.error };
     }, isNew ? 'Road added.' : 'Road saved.');
     setBusy(false); if (ok) setEditing(null);
+    // A replaced background or O artwork is removed from Cloudinary unless another road still uses it.
+    if (ok && before) { const old = sceneMedia(before.scene).filter(url => !sceneMedia(row.scene).includes(url) && !roads.some(r => r.id !== before.id && sceneMedia(r.scene).includes(url))); if (!(await deleteCloudinaryImages(old))) notify('error', 'Saved, but an old background could not be removed from Cloudinary.'); }
   }
   async function remove(r: RoadRow) {
-    if (await save(() => supabase.from('roads').delete().eq('id', r.id), 'Road deleted.')) setEditing(null);
+    if (!(await save(() => supabase.from('roads').delete().eq('id', r.id), 'Road deleted.'))) return;
+    setEditing(null);
+    const media = sceneMedia(r.scene).filter(url => !roads.some(other => other.id !== r.id && sceneMedia(other.scene).includes(url)));
+    if (!(await deleteCloudinaryImages(media))) notify('error', 'Road deleted, but its background could not be removed from Cloudinary.');
   }
 
   if (editing) return <form className="adm-card adm-stack adm-form" onSubmit={submit}>
@@ -470,7 +480,7 @@ function Roads({ categories, products, roads, roadProducts, save, notify }: Ctx)
       <label>Label (small heading)<input required maxLength={60} value={editing.label} onChange={e => setEditing({ ...editing, label: e.target.value })} /></label>
       <label>Description<textarea rows={3} maxLength={400} value={editing.description} onChange={e => setEditing({ ...editing, description: e.target.value })} /></label>
       <label>Collection (title and “Explore collection” link)<select value={editing.category_id} onChange={e => setEditing({ ...editing, category_id: e.target.value })}>{categories.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}</select></label>
-      <label>Scene style<select value={editing.theme} onChange={e => setEditing({ ...editing, theme: e.target.value as RoadRow['theme'] })}>{Object.entries(themeNames).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></label>
+      <label>Theme (default look and colours)<select value={editing.theme} onChange={e => setEditing({ ...editing, theme: e.target.value as RoadRow['theme'] })}>{Object.entries(themeNames).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></label>
       <label>Order on the road (lower comes first)<input type="number" value={editing.sort_order} onChange={e => setEditing({ ...editing, sort_order: Number(e.target.value) })} /></label>
       <label className="adm-check"><input type="checkbox" checked={editing.is_published} onChange={e => setEditing({ ...editing, is_published: e.target.checked })} />Visible on website</label>
     </div>
@@ -480,6 +490,7 @@ function Roads({ categories, products, roads, roadProducts, save, notify }: Ctx)
       <ol className="adm-order">{items.map((id, i) => <li key={id} className={i >= capacity ? 'over' : ''}>{productById[id] && <img src={productById[id].thumb || productById[id].image} alt="" />}<span>{productById[id]?.title ?? id}{i < 3 && <em> featured</em>}</span><button type="button" onClick={() => move(i, -1)} aria-label="Move up">↑</button><button type="button" onClick={() => move(i, 1)} aria-label="Move down">↓</button><button type="button" onClick={() => setItems(items.filter(x => x !== id))} aria-label="Remove">✕</button></li>)}</ol>
       <div className="adm-row"><select value={adding} onChange={e => setAdding(e.target.value)}><option value="">Choose a product to add…</option>{categories.map(c => <optgroup key={c.id} label={c.title}>{products.filter(p => p.category_id === c.id && !items.includes(p.id)).map(p => <option key={p.id} value={p.id}>{p.title}</option>)}</optgroup>)}</select><button type="button" className="adm-btn" disabled={!adding} onClick={() => { setItems([...items, adding]); setAdding(''); }}>Add</button></div>
     </div></div>
+    <SceneEditor scene={editing.scene ?? {}} theme={editing.theme} name={slugify(editing.label) || 'road'} onChange={scene => setEditing({ ...editing, scene })} notify={notify} />
     <div className="adm-row"><button className="adm-btn primary" disabled={busy}>{busy ? 'Saving…' : 'Save road'}</button>{!isNew && <ConfirmButton confirm={`Delete road “${editing.label}”? Its station is removed from the home page road.`} onConfirm={() => remove(editing)}>Delete</ConfirmButton>}</div>
   </form>;
 

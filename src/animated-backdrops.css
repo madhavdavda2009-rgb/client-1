@@ -27,3 +27,24 @@
 @keyframes mesh-drift-d{0%{transform:translate3d(4%,3%,0) scale(1.06)}61%{transform:translate3d(-2%,-4%,0) scale(1.02)}100%{transform:translate3d(-5%,2%,0) scale(1.08)}}
 .journey[data-phase=hero] .mesh-light,.journey[data-visible=false] .mesh-light,.journey[data-closing=true] .mesh-light{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.mesh-light{animation:none;transform:none;will-change:auto}.animated-category-backdrop{transition:none}}
+/* Custom moving colours chosen in the admin (Roads → Scene look): three colours drift like the theme light fields. */
+.palette-custom{background:linear-gradient(165deg,var(--c1) 0%,var(--c2) 52%,var(--c3) 100%)}
+.palette-custom .mesh-a{background:radial-gradient(ellipse 64% 50% at 46% 48%,color-mix(in srgb,var(--c2) 85%,transparent) 0%,transparent 76%)}
+.palette-custom .mesh-b{background:radial-gradient(ellipse 60% 44% at 20% 22%,color-mix(in srgb,var(--c1) 80%,transparent) 0%,transparent 80%)}
+.palette-custom .mesh-c{background:radial-gradient(ellipse 58% 48% at 84% 82%,var(--c3) 0%,color-mix(in srgb,var(--c3) 55%,transparent) 36%,transparent 80%)}
+.palette-custom .mesh-d{background:radial-gradient(ellipse 58% 44% at 70% 30%,color-mix(in srgb,var(--c1) 60%,var(--c3)) 0%,transparent 78%)}
+/* Uploaded image, GIF or video backgrounds cover the whole scene. */
+.animated-category-backdrop.has-media .backdrop-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+/* Interactive motion (Admin → Roads → Scene look → Motion). --follow: how far the background follows the mouse;
+   --mesh-speed: multiplies animation durations (slow 1.7, normal 1, fast .5). */
+.backdrop-follow,.backdrop-drift,.backdrop-still{position:absolute;inset:0}
+.backdrop-follow{inset:calc(-1 * var(--follow,0px) - 2px);transform:translate3d(calc(var(--bg-px,0) * var(--follow,0px) * -1),calc(var(--bg-py,0) * var(--follow,0px) * -1),0);transition:transform 1.1s cubic-bezier(.22,1,.36,1)}
+.backdrop-drift{animation:backdrop-drift calc(26s * var(--mesh-speed,1)) ease-in-out infinite alternate;transform-origin:50% 55%}
+.animated-category-backdrop[data-present=false] .backdrop-drift{animation-play-state:paused}
+.animated-category-backdrop .mesh-a{animation-duration:calc(17.3s * var(--mesh-speed,1))}
+.animated-category-backdrop .mesh-b{animation-duration:calc(23.7s * var(--mesh-speed,1))}
+.animated-category-backdrop .mesh-c{animation-duration:calc(19.1s * var(--mesh-speed,1))}
+.animated-category-backdrop .mesh-d{animation-duration:calc(14.9s * var(--mesh-speed,1))}
+@keyframes backdrop-drift{0%{transform:scale(1.04) translate3d(-1.2%,-.8%,0)}50%{transform:scale(1.1) translate3d(1%,1.2%,0)}100%{transform:scale(1.06) translate3d(1.6%,-1%,0)}}
+@media(hover:none),(pointer:coarse){.backdrop-follow{transform:none;inset:0}}
+@media(prefers-reduced-motion:reduce){.backdrop-follow{transform:none;transition:none;inset:0}.backdrop-drift{animation:none}}

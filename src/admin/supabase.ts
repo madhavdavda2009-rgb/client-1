@@ -2,6 +2,7 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { supabaseKey, supabaseUrl } from '../supabase-config';
 import { cloudinaryImage, isCloudinary } from '../cloudinary';
+import type { RoadScene } from '../road-scene';
 
 let client: SupabaseClient | null = null;
 export function getSupabase() {
@@ -13,7 +14,7 @@ export function getSupabase() {
 
 export type CategoryRow = { id: string; title: string; sky: string; ground: string; road: string; ink: string; background: string; cloud: string; sort_order: number; is_published: boolean };
 export type ProductRow = { id: string; slug: string; title: string; description: string; category_id: string; image: string; thumb: string; sort_order: number; is_published: boolean };
-export type RoadRow = { id: string; label: string; description: string; category_id: string; theme: 'christmas' | 'dinosaurs' | 'halloween'; sort_order: number; is_published: boolean };
+export type RoadRow = { id: string; label: string; description: string; category_id: string; theme: 'christmas' | 'dinosaurs' | 'halloween'; sort_order: number; is_published: boolean; scene: RoadScene };
 export type RoadProductRow = { road_id: string; product_id: string; position: number };
 export type EnquiryRow = { id: string; name: string; company: string; email: string; phone: string | null; product_id: string | null; product_title: string | null; message: string; status: 'new' | 'read' | 'replied' | 'archived'; admin_notes: string | null; created_at: string };
 
@@ -29,26 +30,27 @@ async function toWebp(file: File, max: number): Promise<Blob> {
   bitmap.close();
   return new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Could not process image')), 'image/webp', 0.88));
 }
-type Folder = 'products' | 'categories';
+type Folder = 'products' | 'categories' | 'roads';
+type UploadKind = 'image' | 'gif' | 'video';
 // Asks the server to sign a Cloudinary upload. Returns null when Cloudinary is not configured (Supabase storage is used).
-async function signUpload(folder: Folder, name: string, exact: boolean) {
+async function signUpload(folder: Folder, name: string, exact: boolean, kind: UploadKind = 'image') {
   const { data } = await getSupabase().auth.getSession();
   const token = data.session?.access_token;
   if (!token) throw new Error('Your session has expired. Please sign in again.');
-  const res = await fetch('/api/cloudinary/sign', { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ folder, name, exact }) });
+  const res = await fetch('/api/cloudinary/sign', { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ folder, name, exact, kind }) });
   if (res.status === 503) return null;
   const json = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(json.error || 'Could not prepare the image upload.');
-  return json as { cloudName: string; apiKey: string; signature: string; params: Record<string, string> };
+  return json as { cloudName: string; apiKey: string; signature: string; params: Record<string, string>; resourceType: 'image' | 'video' };
 }
 // Uploads straight from the browser to Cloudinary; existing images are never overwritten (signed overwrite=false).
-async function uploadToCloudinary(file: Blob, folder: Folder, name: string, exact = false): Promise<string | null> {
-  const sign = await signUpload(folder, name, exact);
+async function uploadToCloudinary(file: Blob, folder: Folder, name: string, exact = false, kind: UploadKind = 'image'): Promise<string | null> {
+  const sign = await signUpload(folder, name, exact, kind);
   if (!sign) return null;
   const form = new FormData();
   form.append('file', file); form.append('api_key', sign.apiKey); form.append('signature', sign.signature);
   for (const [key, value] of Object.entries(sign.params)) form.append(key, value);
-  const res = await fetch(`https://api.cloudinary.com/v1_1/${sign.cloudName}/image/upload`, { method: 'POST', body: form });
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${sign.cloudName}/${sign.resourceType ?? 'image'}/upload`, { method: 'POST', body: form });
   const json = await res.json().catch(() => ({}));
   if (!res.ok || !json.secure_url) throw new Error(json.error?.message || 'Cloudinary upload failed.');
   return json.secure_url as string;
@@ -74,6 +76,20 @@ export async function copyToCloudinary(url: string, folder: Folder, name: string
   const uploaded = await uploadToCloudinary(await res.blob(), folder, name, true);
   if (!uploaded) throw new Error('Cloudinary is not configured.');
   return uploaded;
+}
+
+// Road scene media (Admin → Roads → Scene look): photos are resized to WebP, GIFs and videos are uploaded as they are
+// so they keep their animation. Cloudinary is required because it converts and resizes these on delivery.
+export async function uploadSceneMedia(file: File, use: 'background' | 'portal', name: string) {
+  const isVideo = /^video\/(mp4|webm|quicktime)$/.test(file.type), isGif = file.type === 'image/gif';
+  if (use === 'portal' && isVideo) throw new Error('The O artwork must be an image or GIF.');
+  if (!isVideo && !isGif && !/^image\/(png|jpeg|webp)$/.test(file.type)) throw new Error(use === 'background' ? 'Please upload a JPG, PNG, WebP, GIF or MP4/WebM/MOV video.' : 'Please upload a PNG, WebP or GIF.');
+  const limit = isVideo ? 60 : isGif ? 15 : 15;
+  if (file.size > limit * 1024 * 1024) throw new Error(`This file is larger than ${limit} MB. Please upload a smaller one.`);
+  const blob = isVideo || isGif ? file : await toWebp(file, use === 'portal' ? 1024 : 2400);
+  const url = await uploadToCloudinary(blob, 'roads', name, false, isVideo ? 'video' : isGif ? 'gif' : 'image');
+  if (!url) throw new Error('Road backgrounds need Cloudinary. Add the Cloudinary keys to the server settings first.');
+  return url;
 }
 
 export async function uploadImage(file: File, folder: Folder, name: string, sizes: { main: number; thumb?: number }) {

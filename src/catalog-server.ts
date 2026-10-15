@@ -1,5 +1,6 @@
 import { applyCatalog, fallbackCatalog, type CatalogData, type Category, type Product, type Road, type RoadTheme } from './catalog';
 import { CATALOG_TAG, supabaseKey, supabaseUrl } from './supabase-config';
+import { cleanScene } from './road-scene';
 
 type Row = Record<string, unknown>;
 async function get<T = Row>(path: string): Promise<T[]> {
@@ -17,7 +18,7 @@ export async function loadCatalog(): Promise<CatalogData> {
     const [cats, prods, roadRows, links] = await Promise.all([
       get('categories?select=id,title,sky,ground,road,ink,background,cloud,sort_order&is_published=eq.true&order=sort_order.asc,title.asc'),
       get('products?select=id,slug,title,description,category_id,image,thumb,sort_order&is_published=eq.true&order=sort_order.asc,title.asc'),
-      get('roads?select=id,label,description,category_id,theme,sort_order&is_published=eq.true&order=sort_order.asc'),
+      get('roads?select=id,label,description,category_id,theme,scene,sort_order&is_published=eq.true&order=sort_order.asc'),
       get('road_products?select=road_id,product_id,position&order=position.asc'),
     ]);
     const catIds = new Set(cats.map(c => String(c.id)));
@@ -31,7 +32,7 @@ export async function loadCatalog(): Promise<CatalogData> {
       products: products.filter(p => p.category === c.id).map(p => p.id),
     }));
     const roads: Road[] = roadRows.map(r => ({
-      id: String(r.id), label: String(r.label), description: String(r.description ?? ''), category: String(r.category_id), theme: String(r.theme) as RoadTheme,
+      id: String(r.id), label: String(r.label), description: String(r.description ?? ''), category: String(r.category_id), theme: String(r.theme) as RoadTheme, scene: cleanScene(r.scene),
       products: links.filter(l => l.road_id === r.id).map(l => String(l.product_id)),
     }));
     if (!products.length || !categories.length) return fallbackCatalog;

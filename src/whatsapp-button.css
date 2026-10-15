@@ -1,0 +1,14 @@
+/* Brand yellow button (see brand-buttons.css): yellow fill, black text, gold border and solid shadow. */
+.whatsapp-float{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));z-index:29;display:flex;align-items:center;gap:10px;height:58px;min-width:58px;padding:0 14px;border:1px solid #c9940e;border-radius:2px;background:var(--toyon-yellow,#f5bc19);color:#000;text-decoration:none;font-weight:700;font-size:15px;box-shadow:0 3px 0 #bf8a0b,0 10px 22px #bd8f1126;transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .2s,background .18s}
+.whatsapp-float.is-raised{bottom:max(76px,calc(env(safe-area-inset-bottom) + 64px))}
+.whatsapp-float svg{flex:none}
+.whatsapp-float::before{content:"";position:absolute;inset:-1px;border-radius:inherit;box-shadow:0 0 0 0 #f5bc1999;animation:whatsapp-pulse 2.8s ease-out 1.5s 3;pointer-events:none}
+.whatsapp-float-label{max-width:0;overflow:hidden;white-space:nowrap;opacity:0;transition:max-width .3s cubic-bezier(.22,1,.36,1),opacity .2s}
+.whatsapp-float:hover,.whatsapp-float:focus-visible{background:#ffca32;transform:translateY(-2px);box-shadow:0 4px 0 #bf8a0b,0 14px 28px #bd8f1133}
+.whatsapp-float:active{transform:translateY(1px);box-shadow:0 1px 0 #bf8a0b}
+.whatsapp-float:hover .whatsapp-float-label,.whatsapp-float:focus-visible .whatsapp-float-label{max-width:140px;opacity:1}
+.whatsapp-float:focus-visible{outline:3px solid var(--toyon-blue,#00a6ce);outline-offset:4px}
+@keyframes whatsapp-pulse{0%{box-shadow:0 0 0 0 #f5bc1999}70%{box-shadow:0 0 0 16px #f5bc1900}100%{box-shadow:0 0 0 0 #f5bc1900}}
+@media(max-width:600px){.whatsapp-float{height:54px;min-width:54px;padding:0 12px}.whatsapp-float.is-raised{bottom:max(64px,calc(env(safe-area-inset-bottom) + 54px))}}
+@media(prefers-reduced-motion:reduce){.whatsapp-float,.whatsapp-float-label{transition:none}.whatsapp-float::before{animation:none}}
+@media print{.whatsapp-float{display:none}}

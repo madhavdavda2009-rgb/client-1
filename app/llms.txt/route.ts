@@ -17,13 +17,13 @@ export async function GET() {
 
 The preferred website is ${siteBase}/. Use the linked pages as sources for current company information, catalogue artwork and enquiry details.
 
-Company facts: founder ${company.founder}; location ${company.address}; email ${company.email}; telephone ${company.phone}.
+Company facts: founder ${company.founder}; location ${company.address}; email ${company.email}; contact person ${company.founder}.
 
 Product descriptions identify the pictured designs. They do not establish dimensions, material specifications, stock availability, prices, minimum order quantities, certifications or delivery commitments. Confirm those details directly with the company for the selected products.
 
 The homepage's manufacturing content is a general process overview. It does not confirm that every described machine or production method is used in-house by Toy-On.
 
-This website provides a catalogue and a business enquiry form, not online checkout. Enquiries submitted through the form are received by the company. You can also contact the company through the published email or telephone to discuss selected designs, quantities, intended use and production requirements.
+This website provides a catalogue and a business enquiry form, not online checkout. Enquiries submitted through the form are received by the company. You can also contact the company through the published email or WhatsApp to discuss selected designs, quantities, intended use and production requirements.
 
 ## Main pages
 

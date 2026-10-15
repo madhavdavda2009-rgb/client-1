@@ -33,7 +33,7 @@
 .cluster-world{background:transparent}
 .cluster-world>.atmospheric-gradient{position:absolute;inset:0;width:100%;height:100%;z-index:0}
 
-html{font-family:'Outfit Variable',Outfit,Arial,sans-serif}
+html{font-family:var(--font-body)}
 
 /* The landing keeps the original O portal, with a moving scenic field behind it. */
 .stage{background:#dceef0}
@@ -46,7 +46,7 @@ html{font-family:'Outfit Variable',Outfit,Arial,sans-serif}
 .hero-landscape-light{top:-33%;left:52%;width:55vw;height:55vw;border-radius:50%;background:#fffde4a0;filter:blur(65px);animation:landscape-glow 16s ease-in-out infinite alternate}
 .hero-intro{position:absolute;z-index:2;left:6%;bottom:9%;width:min(330px,35vw);color:#1b4847}
 .hero-intro .eyebrow{font-weight:700;letter-spacing:.18em}
-.hero-intro p{font-family:'Fredoka Variable','Outfit Variable',sans-serif;font-size:clamp(19px,2vw,30px);line-height:1.12;letter-spacing:-.03em;margin:9px 0 16px}
+.hero-intro p{font-family:var(--font-display);font-size:clamp(19px,2vw,30px);line-height:1.12;letter-spacing:-.03em;margin:9px 0 16px}
 .hero-intro-link{display:inline-flex;gap:16px;align-items:center;border-bottom:1px solid currentColor;padding-bottom:4px;text-decoration:none;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
 .hero-intro-link span{transition:transform .2s}.hero-intro-link:hover span{transform:translate(3px,-3px)}
 .scroll-hint{color:#173f42;font-weight:700;text-shadow:0 1px 8px #fff8}
@@ -63,8 +63,8 @@ html{font-family:'Outfit Variable',Outfit,Arial,sans-serif}
 @media(max-width:767px){.hero-landscape img{object-position:54% center}.hero-landscape::after{background:linear-gradient(0deg,#eaf4decc,transparent 60%)}.hero-intro{background:#fff8e8d8;padding:12px 14px;border-left:3px solid #183e44}}
 @media(prefers-reduced-motion:reduce){.hero-landscape img{animation:none}}
 .hero-landscape::after{content:none}
-.hero-intro p{font-family:'Outfit Variable',Outfit,Arial,sans-serif;font-weight:600;letter-spacing:-.045em}
-.hero-skip-link{position:absolute;z-index:3;left:6%;bottom:9%;display:inline-flex;align-items:center;gap:18px;padding:13px 16px;border:1px solid #1c484a;background:#fff9edee;color:#173f43;box-shadow:3px 4px 0 #1c484a55;text-decoration:none;text-transform:uppercase;font:700 11px 'Outfit Variable',Outfit,Arial,sans-serif;letter-spacing:.09em;transition:transform .2s,box-shadow .2s}
+.hero-intro p{font-family:var(--font-display);font-weight:600;letter-spacing:-.045em}
+.hero-skip-link{position:absolute;z-index:3;left:6%;bottom:9%;display:inline-flex;align-items:center;gap:18px;padding:13px 16px;border:1px solid #1c484a;background:#fff9edee;color:#173f43;box-shadow:3px 4px 0 #1c484a55;text-decoration:none;text-transform:uppercase;font:700 11px var(--font-body);letter-spacing:.09em;transition:transform .2s,box-shadow .2s}
 .hero-skip-link:hover{transform:translate(2px,2px);box-shadow:1px 2px 0 #1c484a55}
 @media(max-width:767px){.hero-skip-link{left:7%;bottom:12%;padding:12px 14px}}
 
@@ -82,7 +82,7 @@ html{font-family:'Outfit Variable',Outfit,Arial,sans-serif}
 @keyframes hero-carousel-move{to{transform:translateX(-50%)}}
 .hero-skip-link{left:50%;bottom:14%;transform:translateX(-50%);white-space:nowrap;background:#f7f5ee;box-shadow:none}
 .hero-skip-link:hover{transform:translate(-50%,-2px);box-shadow:0 4px 0 #1c484a24}
-.scroll-hint{bottom:max(20px,env(safe-area-inset-bottom));font-family:'Outfit Variable',Outfit,Arial,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.18em}
+.scroll-hint{bottom:max(20px,env(safe-area-inset-bottom));font-family:var(--font-body);font-size:11px;text-transform:uppercase;letter-spacing:.18em}
 .scroll-hint span{font-size:18px;margin-top:3px}
 @media(max-width:767px){.hero-carousel{top:46%;height:24%}.hero-carousel-product{width:clamp(104px,34vw,155px)}.hero-skip-link{left:50%;bottom:12%;transform:translateX(-50%);padding:11px 13px}.hero-skip-link:hover{transform:translate(-50%,-2px)}}
 @media(prefers-reduced-motion:reduce){.hero-carousel-track{animation:none}.hero-carousel-product{transition:none}}

@@ -37,4 +37,6 @@ export function applyCatalog(next: CatalogData) {
   roads.splice(0, roads.length, ...chosen.map((r, i) => ({ ...r, products: r.products.filter(id => productById[id]).slice(0, roadCapacity(i, chosen.length)) })));
 }
 applyCatalog(fallbackCatalog);
+// Image alt text, e.g. "Snowman foil balloon" (helps Google Images; also describes the image for screen readers).
+export const productAlt = (product: Pick<Product, 'title'>) => `${product.title} foil balloon`;
 export const themeIndex = (theme: RoadTheme) => Math.max(0, roadThemes.indexOf(theme));

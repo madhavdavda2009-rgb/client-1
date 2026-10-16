@@ -8,10 +8,10 @@ export default function OpeningProducts({embedded=false,onEnter}:{embedded?:bool
   const target=document.querySelector('.fallback-world, .reduced-home .category-rows')||document.getElementById('toyon-journey');if(!target)return;
   event.preventDefault();target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth',block:'start'});
  };
- return <section className={`opening-products${embedded?' is-embedded':''}`} aria-label="Toy-On product showcase">
+ return <section className={`opening-products${embedded?' is-embedded':''}`} aria-label="Toyon product showcase">
   <div className="opening-product-collage" aria-hidden="true"/>
-  <span className="opening-sr">Toy-On products</span>
-  {!embedded&&<img className="opening-logo" src={logo} alt="Toy-On Industry Pvt Ltd" width="1600" height="1131" fetchPriority="high"/>}
+  <span className="opening-sr">Toyon products</span>
+  {!embedded&&<img className="opening-logo" src={logo} alt="Toyon Industry Pvt Ltd" width="1600" height="1131" fetchPriority="high"/>}
   <div className="opening-guide"><a className="text-link opening-world-link" href="#toyon-journey" onClick={enterWorlds}>Explore worlds <span aria-hidden="true">↓</span></a><span className="opening-scroll-note">Scroll to enter the worlds</span></div>
  </section>;
 }

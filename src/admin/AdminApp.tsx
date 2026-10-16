@@ -95,7 +95,7 @@ function Login() {
   }
 
   return <div className="adm-center"><form className="adm-card adm-login" onSubmit={submit}>
-    <img src="/assets/brand/toyon-hierarchy.svg" alt="Toy-On" className="adm-logo" />
+    <img src="/assets/brand/toyon-hierarchy.svg" alt="Toyon" className="adm-logo" />
     <h1>{mode === 'login' ? 'Admin sign in' : 'Reset password'}</h1>
     <label>Email<input type="email" autoComplete="username" required value={email} onChange={e => setEmail(e.target.value)} /></label>
     {mode === 'login' && <label>Password<input type="password" autoComplete="current-password" required value={password} onChange={e => setPassword(e.target.value)} /></label>}
@@ -167,7 +167,7 @@ function Dashboard({ session }: { session: Session }) {
 
   return <div className="adm-shell">
     <aside className={`adm-side${menuOpen ? ' open' : ''}`}>
-      <div className="adm-brand"><img src="/assets/brand/toyon-hierarchy.svg" alt="Toy-On" /><span>Admin</span></div>
+      <div className="adm-brand"><img src="/assets/brand/toyon-hierarchy.svg" alt="Toyon" /><span>Admin</span></div>
       <nav>{tabs.map(([id, label]) => <button key={id} className={tab === id ? 'active' : ''} onClick={() => { setTab(id); setMenuOpen(false); }}>{label}</button>)}</nav>
       <div className="adm-side-foot"><a href="/" target="_blank" rel="noopener noreferrer">View website ↗</a><button onClick={() => supabase.auth.signOut()}>Sign out</button></div>
     </aside>
@@ -239,7 +239,7 @@ function Enquiries({ enquiries, setEnquiries, reload, notify }: { enquiries: Enq
     </div>
     <div className="adm-card">{open ? <div className="adm-stack">
       <h2>{open.name} <small className="adm-muted">{open.company}</small></h2>
-      <dl className="adm-dl"><dt>Received</dt><dd>{fmtDate(open.created_at)}</dd><dt>Email</dt><dd><a href={`mailto:${open.email}?subject=${encodeURIComponent('Your Toy-On enquiry')}`}>{open.email}</a></dd>{open.phone && <><dt>Phone</dt><dd><a href={`tel:${open.phone}`}>{open.phone}</a></dd></>}{open.product_title && <><dt>Design</dt><dd>{open.product_id ? <a href={`/products/${open.product_id}`} target="_blank" rel="noopener noreferrer">{open.product_title} ↗</a> : open.product_title}</dd></>}</dl>
+      <dl className="adm-dl"><dt>Received</dt><dd>{fmtDate(open.created_at)}</dd><dt>Email</dt><dd><a href={`mailto:${open.email}?subject=${encodeURIComponent('Your Toyon enquiry')}`}>{open.email}</a></dd>{open.phone && <><dt>Phone</dt><dd><a href={`tel:${open.phone}`}>{open.phone}</a></dd></>}{open.product_title && <><dt>Design</dt><dd>{open.product_id ? <a href={`/products/${open.product_id}`} target="_blank" rel="noopener noreferrer">{open.product_title} ↗</a> : open.product_title}</dd></>}</dl>
       <p className="adm-message">{open.message}</p>
       <label>Status<select value={open.status} onChange={e => update(open.id, { status: e.target.value as EnquiryRow['status'] })}><option value="new">New</option><option value="read">Read</option><option value="replied">Replied</option><option value="archived">Archived</option></select></label>
       <label>Internal notes<textarea rows={4} maxLength={2000} value={notes} onChange={e => setNotes(e.target.value)} /></label>

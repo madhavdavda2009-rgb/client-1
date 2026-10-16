@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { siteBase } from '../src/seo';
+import { company } from '../src/site-content';
 import { ensureCatalog } from '../src/catalog-server';
 import CatalogHydrator from '../src/CatalogHydrator';
 import '../src/fonts.css';
@@ -12,7 +13,7 @@ import '../src/brand-buttons.css';
 import '../src/hierarchy.css';
 import '../src/footer.css';
 
-export const metadata: Metadata = { metadataBase: new URL(siteBase), applicationName: 'Toy-On', icons: { icon: [{ url: '/favicon.ico', type: 'image/x-icon' }, { url: '/favicon-256.png', type: 'image/png', sizes: '256x256' }] } };
+export const metadata: Metadata = { metadataBase: new URL(siteBase), applicationName: company.name, icons: { icon: [{ url: '/favicon.ico', type: 'image/x-icon', sizes: '16x16 32x32 48x48 64x64' }, { url: '/favicon-256.png', type: 'image/png', sizes: '256x256' }], shortcut: '/favicon.ico' } };
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#dceef0' };
 const openingPreload = `if (location.pathname === '/' && !location.hash) {
   history.scrollRestoration = 'manual';

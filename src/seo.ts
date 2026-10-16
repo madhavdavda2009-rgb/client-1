@@ -18,31 +18,31 @@ export function routeMetadata(path: string): Metadata {
   // A few well-known themes for descriptions (written out so names keep their capitals).
   const themes = 'Christmas, Halloween, dinosaur, animal and character';
   const fixed: Record<string, { title: string; description: string }> = {
-    '/': { title: `Foil Balloon Manufacturer in ${place} | Toy-On`, description: `Toy-On makes foil balloons in ${place}: ${products.length} ${themes} designs for wholesale and bulk orders.` },
-    '/products': { title: `Foil Balloon Designs for Wholesale (${products.length}) | Toy-On`, description: `Browse ${products.length} foil balloon designs in ${categories.length} collections: Christmas, Halloween, dinosaurs, animals and more. Wholesale and bulk orders from Ahmedabad.` },
-    '/categories': { title: 'Foil Balloon Collections | Toy-On Balloons', description: `${categories.length} foil balloon collections from Toy-On: Christmas, Halloween, dinosaurs, animals and more. Pick a collection and send a bulk enquiry.` },
-    '/about': { title: `About Toy-On | Foil Balloon Maker, ${place}`, description: `Toyon Industry Pvt Ltd (Toy-On) is a foil balloon manufacturer in Odhav, Ahmedabad, founded by ${company.founder}, making balloons for bulk orders.` },
-    '/contact': { title: 'Bulk Foil Balloon Enquiry & Quote | Toy-On', description: 'Get a quote for foil balloons in bulk. Choose designs and quantities, and Toy-On in Ahmedabad will call or message you about pricing and delivery.' },
-    '/privacy-policy': { title: 'Privacy Policy | Toy-On', description: legalContent.privacy.description },
-    '/terms-and-conditions': { title: 'Terms and Conditions | Toy-On', description: legalContent.terms.description },
+    '/': { title: `Foil Balloon Manufacturer | Toyon Industry Pvt Ltd`, description: `Toyon makes foil balloons in ${place}: ${products.length} ${themes} designs for wholesale and bulk orders.` },
+    '/products': { title: `Foil Balloon Designs for Wholesale (${products.length}) | Toyon`, description: `Browse ${products.length} foil balloon designs in ${categories.length} collections: Christmas, Halloween, dinosaurs, animals and more. Wholesale and bulk orders from Ahmedabad.` },
+    '/categories': { title: 'Foil Balloon Collections | Toyon Balloons', description: `${categories.length} foil balloon collections from Toyon: Christmas, Halloween, dinosaurs, animals and more. Pick a collection and send a bulk enquiry.` },
+    '/about': { title: `About Toyon | Foil Balloon Maker, ${place}`, description: `Toyon Industry Pvt Ltd is a foil balloon manufacturer in Odhav, Ahmedabad, founded by ${company.founder}, making balloons for bulk orders.` },
+    '/contact': { title: 'Bulk Foil Balloon Enquiry & Quote | Toyon', description: 'Get a quote for foil balloons in bulk. Choose designs and quantities, and Toyon in Ahmedabad will call or message you about pricing and delivery.' },
+    '/privacy-policy': { title: 'Privacy Policy | Toyon', description: legalContent.privacy.description },
+    '/terms-and-conditions': { title: 'Terms and Conditions | Toyon', description: legalContent.terms.description },
   };
-  const title = product ? `${product.title} foil balloon | Toy-On`
-    : category ? `${category.title} foil balloons – wholesale | Toy-On`
-    : fixed[path]?.title ?? 'Toy-On foil balloons';
-  const description = clip(product ? `${product.title} foil balloon for bulk and wholesale orders from Toy-On, ${place}. ${product.description}`
-    : category ? `${category.products.length} ${category.title} foil balloon designs from Toy-On, ${place}. Browse the collection and send a bulk or wholesale enquiry.`
-    : fixed[path]?.description ?? `Foil balloons from Toy-On, ${place}.`);
-  const image = product ? [{ url: product.image, alt: productAlt(product) }] : [{ url: shareImage, width: 1200, height: 630, alt: 'Toy-On foil balloon designs and brand logo' }];
+  const title = product ? `${product.title} foil balloon | Toyon`
+    : category ? `${category.title} foil balloons – wholesale | Toyon`
+    : fixed[path]?.title ?? 'Toyon foil balloons';
+  const description = clip(product ? `${product.title} foil balloon for bulk and wholesale orders from Toyon, ${place}. ${product.description}`
+    : category ? `${category.products.length} ${category.title} foil balloon designs from Toyon, ${place}. Browse the collection and send a bulk or wholesale enquiry.`
+    : fixed[path]?.description ?? `Foil balloons from Toyon, ${place}.`);
+  const image = product ? [{ url: product.image, alt: productAlt(product) }] : [{ url: shareImage, width: 1200, height: 630, alt: 'Toyon foil balloon designs and brand logo' }];
   return {
     title, description, alternates: { canonical: siteBase + path },
-    openGraph: { title, description, url: siteBase + path, type: 'website', siteName: 'Toy-On', locale: 'en_IN', images: image },
+    openGraph: { title, description, url: siteBase + path, type: 'website', siteName: company.name, locale: 'en_IN', images: image },
     twitter: { card: 'summary_large_image', title, description, images: image.map(i => i.url) },
   };
 }
 
 // Schema.org data for Google: who the company is (home page) and where a page sits (breadcrumbs).
 const organization = () => ({
-  '@type': 'Organization', '@id': `${siteBase}/#organization`, name: company.name, alternateName: 'Toy-On', url: siteBase,
+  '@type': 'Organization', '@id': `${siteBase}/#organization`, name: company.name, legalName: company.name, alternateName: ['Toyon Industry', 'Toyon'], url: siteBase,
   logo: `${siteBase}/favicon-256.png`, email: company.email,
   founder: { '@type': 'Person', name: company.founder },
   address: { '@type': 'PostalAddress', streetAddress: 'Gaytri Estate, Odhav', addressLocality: 'Ahmedabad', addressRegion: 'Gujarat', addressCountry: 'IN' },
@@ -56,7 +56,7 @@ const crumbs = (items: [string, string][]) => ({
 export function structuredData(path: string): object | null {
   const product = path.startsWith('/products/') ? productById[path.slice('/products/'.length)] : undefined;
   const category = path.startsWith('/categories/') ? categoryById[path.slice('/categories/'.length)] : undefined;
-  if (path === '/') return { '@context': 'https://schema.org', '@graph': [organization(), { '@type': 'WebSite', '@id': `${siteBase}/#website`, url: siteBase, name: 'Toy-On', publisher: { '@id': `${siteBase}/#organization` } }] };
+  if (path === '/') return { '@context': 'https://schema.org', '@graph': [organization(), { '@type': 'WebSite', '@id': `${siteBase}/#website`, url: `${siteBase}/`, name: company.name, alternateName: ['Toyon Industry', 'Toyon'], publisher: { '@id': `${siteBase}/#organization` } }] };
   if (product) {
     const parent = categoryById[product.category];
     return { '@context': 'https://schema.org', ...crumbs([['Home', '/'], ['Foil balloons', '/products'], ...(parent ? [[`${parent.title} balloons`, `/categories/${parent.id}`] as [string, string]] : []), [productAlt(product), path]]) };

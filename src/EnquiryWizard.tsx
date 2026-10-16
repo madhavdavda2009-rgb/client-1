@@ -100,7 +100,7 @@ export default function EnquiryWizard({ searchProduct }: { searchProduct?: strin
   }
 
   const firstName = name.trim().split(/\s+/)[0];
-  const whatsappText = [`Hi Toy-On, I just sent an enquiry on your website.`, `Name: ${name.trim()}`, ...summary].join('\n');
+  const whatsappText = [`Hi Toyon, I just sent an enquiry on your website.`, `Name: ${name.trim()}`, ...summary].join('\n');
   const canNext = step === 'products' ? selected.length > 0 : step === 'quantity' ? quantityKeys.every(key => quantity[key]) : true;
 
   const needsCheck = !!turnstileSiteKey && (!token || Date.now() - token.at > TOKEN_LIFETIME);

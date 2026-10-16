@@ -11,9 +11,9 @@ export async function GET() {
     `- [${category.title}](${siteBase}/categories/${category.id}): ${category.products.length} product designs; follow the collection's links to individual artwork descriptions.`,
   ).join('\n');
 
-  const content = `# Toy-On — ${company.name}
+  const content = `# Toyon — ${company.name}
 
-> Toy-On is the product showcase of ${company.name}, based in ${company.address}. The current catalogue contains ${products.length} foil balloon designs across ${categories.length} themed collections for manufacturers and business buyers.
+> Toyon is the product showcase of ${company.name}, based in ${company.address}. The current catalogue contains ${products.length} foil balloon designs across ${categories.length} themed collections for manufacturers and business buyers.
 
 The preferred website is ${siteBase}/. Use the linked pages as sources for current company information, catalogue artwork and enquiry details.
 
@@ -21,7 +21,7 @@ Company facts: founder ${company.founder}; location ${company.address}; email ${
 
 Product descriptions identify the pictured designs. They do not establish dimensions, material specifications, stock availability, prices, minimum order quantities, certifications or delivery commitments. Confirm those details directly with the company for the selected products.
 
-The homepage's manufacturing content is a general process overview. It does not confirm that every described machine or production method is used in-house by Toy-On.
+The homepage's manufacturing content is a general process overview. It does not confirm that every described machine or production method is used in-house by Toyon.
 
 This website provides a catalogue and a business enquiry form, not online checkout. Enquiries submitted through the form are received by the company. You can also contact the company through the published email or WhatsApp to discuss selected designs, quantities, intended use and production requirements.
 

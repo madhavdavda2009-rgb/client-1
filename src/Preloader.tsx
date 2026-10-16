@@ -14,5 +14,5 @@ export default function Preloader(){
     Promise.all([opening,...tasks.map(task=>task.then(result=>{if(!cancelled){if(!result)document.documentElement.dataset.preloadFailed='true';setProgress(++loaded/tasks.length)}}))]).then(()=>{clearTimeout(fallback);finish()});
     return()=>{cancelled=true;clearTimeout(fallback);clearTimeout(poll);unlock()};
   },[]);
-  return <div className={`brand-preloader${done?' is-ready':''}`} aria-hidden={done} aria-label="Loading Toy-On"><img src={originalLogo} alt="Toy-On" width="500" height="354" fetchPriority="high"/><div className="loading-line"><span style={{transform:`scaleX(${progress})`}}/></div></div>;
+  return <div className={`brand-preloader${done?' is-ready':''}`} aria-hidden={done} aria-label="Loading Toyon"><img src={originalLogo} alt="Toyon" width="500" height="354" fetchPriority="high"/><div className="loading-line"><span style={{transform:`scaleX(${progress})`}}/></div></div>;
 }

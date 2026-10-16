@@ -110,7 +110,7 @@ export default function ToyonIntro(){
       const now=performance.now(),dt=Math.min((now-lastTick)/1000,.5);lastTick=now;
       if(disposed||document.hidden)return;
       const distance=target-progress,limit=progress<=openingFraction?openingFraction*.95*dt:1.1*dt;
-      progress=Math.abs(distance)<.000001?target:progress+clamp(distance*(1-Math.exp(-dt/.14)),-limit,limit);render();
+      progress=Math.abs(distance)<.000001?target:progress+clamp(distance*(1-Math.exp(-dt/.1)),-limit,limit);render();
       if(progress===target){gsap.ticker.remove(tick);running=false;}
     }
     function follow(value:number){target=value;if(!running){running=true;lastTick=performance.now();gsap.ticker.add(tick)}}

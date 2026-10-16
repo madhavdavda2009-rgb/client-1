@@ -9,7 +9,7 @@ import { MotionLink, Reveal, softSpring } from './MotionUI';
 import { BrandO } from './LogoArtwork';
 import { RenderQuality } from './render-quality';
 import { useRequestedWorlds,prepareWorld,thumbnailSet,detailSet,recoverImage } from './assets';
-import { roadLayout, type RoadLayout } from './road-layout';
+import { roadLayout } from './road-layout';
 import type { RoadScene } from './road-scene';
 import StationBackdrop from './StationBackdrop';
 
@@ -21,20 +21,7 @@ function buildJourneyWorlds(): JourneyWorld[] {
 }
 
 const clamp = (n: number, a = 0, b = 1) => Math.max(a, Math.min(b, n));
-// A short scroll-controlled pause; never grab input or run an automatic camera zoom.
-// Travel speed eases smoothly from full speed at the zone edges to rest at the station (no sudden speed change).
-function stationTravel(value:number,layout:RoadLayout){
-  const width=layout.travel,hold=layout.hold,k=(width-hold)/width;
-  // g(0)=0, g'(0)=0 (at rest), g(1)=1 and a slope matching normal travel at the zone edge.
-  const ease=(x:number)=>(3-k)*x*x+(k-2)*x*x*x;
-  for(const {pause:station} of layout.stations){
-    const offset=value-station,distance=Math.abs(offset);
-    if(distance>width)continue;
-    if(distance<=hold)return station;
-    return station+Math.sign(offset)*width*ease((distance-hold)/(width-hold));
-  }
-  return value;
-}
+// The road follows the scroll directly (no pause at stations: a pause made scrolling feel stuck).
 const roadPoints = [
   new THREE.Vector3(0, 0, 12), new THREE.Vector3(-1.4, .15, 3), new THREE.Vector3(1.8, .2, -10),
   new THREE.Vector3(4.5, .35, -24), new THREE.Vector3(1.2, .5, -38), new THREE.Vector3(-4.7, .7, -52),
@@ -109,8 +96,10 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
     const startLoading=()=>prepareWorld(0);
     if(scrollY>0)startLoading();else window.addEventListener('scroll',startLoading,{once:true,passive:true});
     // Interactive backgrounds follow the mouse (CSS vars --bg-px/--bg-py, -1..1); at most one update per frame.
+    // Set on the background layer only (not the whole scene) so a mouse move restyles as little as possible.
+    const backdropLayer=host.querySelector<HTMLElement>('.three-category-backdrops');
     let pointerRaf=0,pointerX=0,pointerY=0;
-    const onPointer=(event:PointerEvent)=>{pointerX=event.clientX/innerWidth*2-1;pointerY=event.clientY/innerHeight*2-1;if(!pointerRaf)pointerRaf=requestAnimationFrame(()=>{pointerRaf=0;host.style.setProperty('--bg-px',pointerX.toFixed(3));host.style.setProperty('--bg-py',pointerY.toFixed(3))})};
+    const onPointer=(event:PointerEvent)=>{pointerX=event.clientX/innerWidth*2-1;pointerY=event.clientY/innerHeight*2-1;if(!pointerRaf)pointerRaf=requestAnimationFrame(()=>{pointerRaf=0;backdropLayer?.style.setProperty('--bg-px',pointerX.toFixed(3));backdropLayer?.style.setProperty('--bg-py',pointerY.toFixed(3))})};
     if(!touchDevice)window.addEventListener('pointermove',onPointer,{passive:true});
     const scene = new THREE.Scene(); const camera = new THREE.PerspectiveCamera(48, 1, .1, 180); camera.position.set(0, 3.15, 10);
     const quality=new RenderQuality(host.clientWidth);
@@ -212,20 +201,20 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
       if (!visible || document.hidden || journey?.dataset.closingProgress==='1.0000' || (journey?.dataset.phase === 'hero' && host.dataset.gateX!==undefined && !dirty)) { last = time;cancelAnimationFrame(raf);raf=0; return; }
       // Render every display frame (no 60 fps cap) so motion stays even on 90/120/144 Hz screens.
       const dt = Math.min((time - last) / 1000 || .016, .5); last = time; fading = false; measureText(time);
-      const raw = stationTravel(clamp(targetProgress.current),layout);
+      const raw = clamp(targetProgress.current);
       if(!dirty && settledFrames>15 && Math.abs(raw-(camera.userData.progress??0))<.00001){last=time;cancelAnimationFrame(raf);raf=0;return}
       if(quality.observe(dt*1000)){resize();}
       previousCamera.copy(camera.position);previousAim.copy(cameraAim);
-      const p = reduced.current ? raw : THREE.MathUtils.damp(THREE.MathUtils.clamp(camera.userData.progress ?? 0, 0, 1), raw, 7.5, dt);
+      const p = reduced.current ? raw : THREE.MathUtils.damp(THREE.MathUtils.clamp(camera.userData.progress ?? 0, 0, 1), raw, 12, dt);
       camera.userData.progress = p;
       // Travel uses the reference spline and timings; products are lightweight HTML above the road.
       const journeyT = along(p);roadCurve.getPointAt(journeyT,current);roadCurve.getTangentAt(journeyT,tangent).normalize();side.set(-tangent.z,0,tangent.x).normalize(); const mobile = viewportWidth < 620;
       const compact = viewportWidth < 900;
-      camera.position.lerp(desiredCamera.copy(current).addScaledVector(tangent, compact ? -5 : -6).addScaledVector(side,compact ? .1 : .35).setY(current.y + (mobile ? 2.8 : 3.15)), reduced.current ? 1 : 1-Math.exp(-dt*9));
+      camera.position.lerp(desiredCamera.copy(current).addScaledVector(tangent, compact ? -5 : -6).addScaledVector(side,compact ? .1 : .35).setY(current.y + (mobile ? 2.8 : 3.15)), reduced.current ? 1 : 1-Math.exp(-dt*14));
       const worldIndex = layout.stationAt(p);
       // Constant forward distance and height: product focus cannot change camera pitch or FOV.
       aim.copy(current).addScaledVector(tangent,6.5);aim.y=current.y+.7;
-      cameraAim.lerp(aim, reduced.current ? 1 : 1-Math.exp(-dt*7));
+      cameraAim.lerp(aim, reduced.current ? 1 : 1-Math.exp(-dt*11));
       camera.lookAt(cameraAim);
       // The complete ribbon remains connected through all three category stops.
       if (worldIndex !== Number(host.dataset.active)) { host.dataset.active = String(worldIndex); setActive(worldIndex);extraLinks.forEach((links,index)=>{if(index!==worldIndex)links.forEach(link=>{link.style.pointerEvents='none';link.tabIndex=-1;
@@ -245,8 +234,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
           image.style.setProperty('--mesh-play',moving?'running':'paused');
           image.style.setProperty('--mesh-change',moving?'transform':'auto');
         }
-        const {start,end}=stations[index];
-        if(!touchDevice)image.style.transform=`scale(${1+clamp((p-start)/(end-start))*.08})`;
+        // No per-frame zoom here: scaling these full-screen gradients every frame forced a CPU repaint and made scrolling laggy.
       });
       const nextProduct = Math.min(2, Math.floor(localPosition));
       if (nextProduct !== Number(host.dataset.focusedProduct)) { host.dataset.focusedProduct = String(nextProduct); }

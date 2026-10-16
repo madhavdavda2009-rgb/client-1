@@ -26,7 +26,10 @@ export function routeMetadata(path: string): Metadata {
     '/privacy-policy': { title: 'Privacy Policy | Toyon', description: legalContent.privacy.description },
     '/terms-and-conditions': { title: 'Terms and Conditions | Toyon', description: legalContent.terms.description },
   };
-  const title = product ? `${product.title} foil balloon | Toyon`
+  // Some designs share a name across collections; distinguish their search titles.
+  const productCollection = product && products.some(other => other.slug !== product.slug && other.title === product.title)
+    ? categoryById[product.category]?.title : undefined;
+  const title = product ? `${product.title} foil balloon${productCollection ? ` (${productCollection})` : ''} | Toyon`
     : category ? `${category.title} foil balloons – wholesale | Toyon`
     : fixed[path]?.title ?? 'Toyon foil balloons';
   const description = clip(product ? `${product.title} foil balloon for bulk and wholesale orders from Toyon, ${place}. ${product.description}`

@@ -1,4 +1,5 @@
 import { supabaseKey, supabaseUrl } from '../../../src/supabase-config';
+import { normalizePhone } from '../../../src/phone';
 
 // Receives the website enquiry form. When TURNSTILE_SECRET_KEY is set, the visitor's "I'm human" check is verified
 // with Cloudflare before the enquiry is saved. The database still validates every field and rate-limits submissions.
@@ -21,6 +22,10 @@ export async function POST(request: Request) {
   }
 
   const row = Object.fromEntries(FIELDS.map(key => [key, typeof body[key] === 'string' && body[key] ? body[key] : null]));
+  // A valid phone / WhatsApp number is required (10-digit Indian mobile, or + country code); saved in one format.
+  const phone = typeof row.phone === 'string' ? normalizePhone(row.phone) : null;
+  if (!phone) return Response.json({ ok: false, error: 'phone' }, { status: 400 });
+  row.phone = phone;
   const res = await fetch(`${supabaseUrl}/rest/v1/enquiries`, {
     method: 'POST',
     headers: { apikey: supabaseKey, 'Content-Type': 'application/json', Prefer: 'return=minimal' },

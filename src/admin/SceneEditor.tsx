@@ -5,7 +5,7 @@ import { artworkSrc } from '../assets';
 import { themeIndex, type RoadTheme } from '../catalog';
 import { cloudinaryImage } from '../cloudinary';
 import { cleanScene, motionDefaults, portalTemplate, themeMotionColors, themeRoadColor, type BackgroundKind, type MotionSpeed, type MotionStrength, type RoadScene } from '../road-scene';
-import { uploadSceneMedia } from './supabase';
+import { deleteCloudinaryImages, uploadSceneMedia } from './supabase';
 import '../animated-backdrops.css';
 
 const KINDS: [BackgroundKind, string][] = [['theme', 'Theme default'], ['motion', 'Moving colours'], ['image', 'Image / GIF'], ['video', 'Video']];
@@ -14,7 +14,9 @@ const FOLLOW: [MotionStrength, string][] = [['off', 'Off'], ['gentle', 'Gentle']
 const lighter = (hex: string) => '#' + [1, 3, 5].map(i => Math.round(parseInt(hex.slice(i, i + 2), 16) * .45 + 255 * .55).toString(16).padStart(2, '0')).join('');
 
 // "Scene look" of one road station: background (theme / moving colours / image or GIF / video), road colour and O artwork.
-export default function SceneEditor({ scene, theme, name, onChange, notify }: { scene: RoadScene; theme: RoadTheme; name: string; onChange: (scene: RoadScene) => void; notify: (kind: 'ok' | 'error', text: string) => void }) {
+// savedUrls: media used by saved roads (live on the website) — those are only deleted from Cloudinary when the road is saved.
+// onUploaded: reports each new upload so the Roads screen can clean up unused uploads on save or cancel.
+export default function SceneEditor({ scene, theme, name, savedUrls, onChange, onUploaded, notify }: { scene: RoadScene; theme: RoadTheme; name: string; savedUrls: string[]; onChange: (scene: RoadScene) => void; onUploaded: (url: string) => void; notify: (kind: 'ok' | 'error', text: string) => void }) {
   const [uploading, setUploading] = useState<'background' | 'portal' | null>(null);
   const bg = scene.background ?? { kind: 'theme' as BackgroundKind };
   const preview = useMemo(() => cleanScene(scene), [scene]);
@@ -31,11 +33,25 @@ export default function SceneEditor({ scene, theme, name, onChange, notify }: { 
     setUploading(use);
     try {
       const url = await uploadSceneMedia(file, use, `${name || 'road'}-${use}`);
+      onUploaded(url);
+      // A replaced upload that was never saved is not used anywhere: delete it from Cloudinary now.
+      const previous = use === 'portal' ? scene.portalUrl : bg.url;
+      if (previous && !savedUrls.includes(previous)) void deleteCloudinaryImages([previous]);
       if (use === 'portal') onChange({ ...scene, portalUrl: url });
       else onChange({ ...scene, background: { kind: file.type.startsWith('video/') ? 'video' : 'image', url } });
       notify('ok', 'Uploaded. Save the road to publish it.');
     } catch (e) { notify('error', e instanceof Error ? e.message : 'Upload failed.'); }
     setUploading(null);
+  }
+  // Remove an uploaded background or O artwork. If it is not live yet it is deleted from Cloudinary straight away;
+  // if it is live, it comes off the website (and out of Cloudinary) when the road is saved.
+  async function remove(use: 'background' | 'portal') {
+    const url = use === 'portal' ? scene.portalUrl : bg.url;
+    if (!url) return;
+    onChange(use === 'portal' ? { ...scene, portalUrl: undefined } : { ...scene, background: undefined });
+    if (savedUrls.includes(url)) return notify('ok', 'Removed. Save the road to take it off the website and delete it from Cloudinary.');
+    const deleted = await deleteCloudinaryImages([url]);
+    notify(deleted ? 'ok' : 'error', deleted ? 'Removed and deleted from Cloudinary.' : 'Removed, but the file could not be deleted from Cloudinary. Please try again later.');
   }
   const fileInput = (use: 'background' | 'portal', accept: string, label: string) => <label className="adm-btn">{uploading === use ? 'Uploading…' : label}
     <input type="file" hidden accept={accept} disabled={!!uploading} onChange={e => { const f = e.target.files?.[0]; if (f) upload(f, use); e.target.value = ''; }} /></label>;
@@ -50,6 +66,7 @@ export default function SceneEditor({ scene, theme, name, onChange, notify }: { 
           {bg.kind === 'motion' && <div className="adm-row">{[0, 1, 2].map(i => <label key={i} className="adm-color"><input type="color" value={(bg.colors ?? themeMotionColors[theme])[i]} onChange={e => { const colors = [...(bg.colors ?? themeMotionColors[theme])] as [string, string, string]; colors[i] = e.target.value; onChange({ ...scene, background: { kind: 'motion', colors } }); }} />Colour {i + 1}</label>)}</div>}
           {bg.kind === 'image' && <div className="adm-row">{fileInput('background', 'image/png,image/jpeg,image/webp,image/gif', bg.url ? 'Replace image / GIF' : 'Upload image / GIF')}<small className="adm-muted">JPG, PNG, WebP or animated GIF, up to 15 MB. Landscape works best (1920×1080).</small></div>}
           {bg.kind === 'video' && <div className="adm-row">{fileInput('background', 'video/mp4,video/webm,video/quicktime', bg.url ? 'Replace video' : 'Upload video')}<small className="adm-muted">MP4, WebM or MOV, up to 60 MB. It plays silently on a loop; 5–15 seconds is ideal.</small></div>}
+          {(bg.kind === 'image' || bg.kind === 'video') && bg.url && <div className="adm-row"><button type="button" className="adm-btn danger" disabled={!!uploading} onClick={() => remove('background')}>{bg.kind === 'video' ? 'Remove video' : 'Remove image'}</button><small className="adm-muted">Goes back to the theme background and deletes the file from Cloudinary.</small></div>}
           {(bg.kind === 'image' || bg.kind === 'video') && !bg.url && <small className="adm-muted">Until a file is uploaded, the theme background is used.</small>}
         </div>
         <div className="adm-stack-sm">
@@ -69,7 +86,7 @@ export default function SceneEditor({ scene, theme, name, onChange, notify }: { 
           <span className="adm-label">O shape</span>
           <div className="adm-row">
             {fileInput('portal', 'image/png,image/webp,image/gif', scene.portalUrl ? 'Replace O artwork' : 'Upload custom O artwork')}
-            {scene.portalUrl && <button type="button" className="adm-btn" onClick={() => onChange({ ...scene, portalUrl: undefined })}>Use theme O</button>}
+            {scene.portalUrl && <button type="button" className="adm-btn danger" disabled={!!uploading} onClick={() => remove('portal')}>Remove O artwork</button>}
           </div>
           <small className="adm-muted">Square PNG, WebP or GIF (1024×1024) with a transparent hole in the middle, like the <a href={portalTemplate} download target="_blank" rel="noopener noreferrer">template</a>.</small>
         </div>

@@ -19,8 +19,9 @@ export function preloadImage(src:string,srcset?:string,sizes?:string){
   const task=new Promise<boolean>(resolve=>{const image=new Image();image.decoding='async';if(srcset){image.sizes=sizes||'100vw';image.srcset=srcset}image.src=src;image.decode().then(()=>resolve(true),()=>resolve(false))});cache.set(key,task);return task;
 }
 const prepared=new Map<string,Promise<boolean[]>>();
-let requested=1;const subscribers=new Set<()=>void>();
-export function useRequestedWorlds(){return useSyncExternalStore(callback=>{subscribers.add(callback);return()=>{subscribers.delete(callback)}},()=>requested,()=>1)}
+// Road stations whose photos may load. 0 until the visitor first scrolls, so nothing from Cloudinary loads with the page.
+let requested=0;const subscribers=new Set<()=>void>();
+export function useRequestedWorlds(){return useSyncExternalStore(callback=>{subscribers.add(callback);return()=>{subscribers.delete(callback)}},()=>requested,()=>0)}
 export function prepareWorld(index:number){
   if(index+1>requested){requested=index+1;subscribers.forEach(callback=>callback())}
   const key=`${index}|${innerWidth<=600}|${devicePixelRatio<=2}`;const previous=prepared.get(key);if(previous)return previous;

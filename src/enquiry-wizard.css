@@ -57,3 +57,7 @@
 .turnstile-box{min-height:65px;width:100%;max-width:400px}
 .wizard-verify-again{display:flex;flex-direction:column;gap:8px;padding:14px;border:1px dashed var(--wz-gold);border-radius:2px;background:var(--wz-paper)}
 .wizard-verify-again>span{font-size:13px;font-weight:700}
+.wizard-details small{font-size:12px;font-weight:500;line-height:1.5}
+.wizard-field-hint{opacity:.65}
+.wizard-details small.form-error{color:#a12a1f;font-weight:600}
+.wizard-details input[aria-invalid=true]{border-color:#a12a1f}

@@ -34,7 +34,8 @@
 .palette-custom .mesh-c{background:radial-gradient(ellipse 58% 48% at 84% 82%,var(--c3) 0%,color-mix(in srgb,var(--c3) 55%,transparent) 36%,transparent 80%)}
 .palette-custom .mesh-d{background:radial-gradient(ellipse 58% 44% at 70% 30%,color-mix(in srgb,var(--c1) 60%,var(--c3)) 0%,transparent 78%)}
 /* Uploaded image, GIF or video backgrounds cover the whole scene. */
-.animated-category-backdrop.has-media .backdrop-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+/* (More specific than the old ".three-category-backdrops img{opacity:0}" rule for the retired raster backdrops.) */
+.three-category-backdrops .animated-category-backdrop.has-media .backdrop-media,.animated-category-backdrop.has-media .backdrop-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:1;transform:none;transition:none;pointer-events:none}
 /* Interactive motion (Admin → Roads → Scene look → Motion). --follow: how far the background follows the mouse;
    --mesh-speed: multiplies animation durations (slow 1.7, normal 1, fast .5). */
 .backdrop-follow,.backdrop-drift,.backdrop-still{position:absolute;inset:0}

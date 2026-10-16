@@ -5,6 +5,11 @@
 export const MAX_ROADS = 10;
 export const FEATURED_PER_ROAD = 3;
 
+// Scroll length of the home journey, in screen heights: opening, one stretch per road station, closing.
+// STATION_SCROLL controls road speed (higher = slower, longer road).
+export const INTRO_SCROLL = 1.05, STATION_SCROLL = 1, CLOSING_SCROLL = .45;
+export const journeyScreens = (stations: number) => INTRO_SCROLL + Math.max(1, Math.min(MAX_ROADS, stations)) * STATION_SCROLL + CLOSING_SCROLL;
+
 type Role = 'first' | 'middle' | 'last';
 // Offsets from the start of the station: scroll pause, product bunch, scenic O gate, roadside extras.
 const template: Record<Role, { pause: number; stop: number; gate: number; extras: number[] }> = {

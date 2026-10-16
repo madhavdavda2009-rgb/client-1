@@ -8,11 +8,11 @@ import HomeGradient from './HomeGradient';
 import { ScrollArrow } from './MotionUI';
 import LogoArtwork, { originalLogo } from './LogoArtwork';
 import { roads } from './catalog';
-import { roadLayout } from './road-layout';
+import { CLOSING_SCROLL, INTRO_SCROLL, journeyScreens, roadLayout } from './road-layout';
 const clamp=(v:number,min=0,max=1)=>Math.max(min,Math.min(max,v));
 const range=(v:number,a:number,b:number)=>clamp((v-a)/(b-a));
 const ease=(v:number)=>v*v*(3-2*v);
-const intro={holeX:.348,holeY:.477,radius:.0274,length:1.05};
+const intro={holeX:.348,holeY:.477,radius:.0274,length:INTRO_SCROLL};
 export default function ToyonIntro(){
   const rootRef=useRef<HTMLElement>(null),journeyProgress=useMotionValue(0);
   // One scroll stretch per road station (the road and its timings scale with the number of roads).
@@ -37,8 +37,9 @@ export default function ToyonIntro(){
     const journeyHint=root.querySelector<HTMLElement>('.journey-scroll-cue')!;
     let width=1,height=1,baseWidth=1,portalRadius=1,progress=0,target=0,running=false,disposed=false,lastOpening=-1,lastTick=performance.now();
     let closingOrigin:{x:number;y:number}|null=null;
-    const closingLength=.45,worldLength=.34;
-    const totalLength=intro.length+layout.count*worldLength+closingLength,openingFraction=intro.length/totalLength;
+    // Scroll lengths live in road-layout.ts (STATION_SCROLL sets the road speed).
+    const closingLength=CLOSING_SCROLL;
+    const totalLength=journeyScreens(layout.count),openingFraction=intro.length/totalLength;
     root.dataset.travelStart=String(intro.length*.44/totalLength);root.dataset.travelEnd=String((totalLength-closingLength)/totalLength);
     function measure(){width=stage.clientWidth;height=stage.clientHeight;baseWidth=Math.min(width*(width<900?.78:.96),height*1.2,860);portalRadius=Math.min(width*(width<700?.45:.31),height*(width<700?.265:.43));root.style.setProperty('--portal-radius',`${portalRadius}px`);root.style.height=`${height*(1+totalLength)}px`;logo.setAttribute('viewBox',`0 0 ${width} ${height}`);lastOpening=-1;}
     function render(){

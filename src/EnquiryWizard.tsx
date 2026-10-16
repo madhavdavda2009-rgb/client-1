@@ -3,6 +3,7 @@ import { m, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { categories, productById, products } from './catalog';
 import { company } from './site-content';
 import Turnstile, { turnstileSiteKey } from './Turnstile';
+import { normalizePhone, phoneError, phoneHint } from './phone';
 import { recoverImage } from './assets';
 import { whatsappLink } from './whatsapp';
 import './enquiry-wizard.css';
@@ -87,9 +88,9 @@ export default function EnquiryWizard({ searchProduct }: { searchProduct?: strin
       const response = await fetch('/api/enquiry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: captcha, name: name.trim(), company: business, email: email.trim(), phone: phone.trim(), message, product_id: firstProduct?.id ?? null, product_title: firstProduct ? (selected.length > 1 ? `${firstProduct.title} +${selected.length - 1} more` : firstProduct.title).slice(0, 120) : null }),
+        body: JSON.stringify({ token: captcha, name: name.trim(), company: business, email: email.trim(), phone: normalizePhone(phone) ?? phone.trim(), message, product_id: firstProduct?.id ?? null, product_title: firstProduct ? (selected.length > 1 ? `${firstProduct.title} +${selected.length - 1} more` : firstProduct.title).slice(0, 120) : null }),
       });
-      if (!response.ok) { const detail = await response.json().catch(() => null) as { error?: string } | null; throw new Error(detail?.error === 'captcha' ? 'Please tick the “I’m human” check again, then send.' : detail?.error && detail.error !== 'send-failed' && detail.error !== 'invalid' ? detail.error : 'send-failed'); }
+      if (!response.ok) { const detail = await response.json().catch(() => null) as { error?: string } | null; throw new Error(detail?.error === 'phone' ? phoneError : detail?.error === 'captcha' ? 'Please tick the “I’m human” check again, then send.' : detail?.error && detail.error !== 'send-failed' && detail.error !== 'invalid' ? detail.error : 'send-failed'); }
       go('done');
     } catch (error) {
       setStatus({ kind: 'error', text: error instanceof Error && error.message !== 'send-failed' && error.message !== 'Failed to fetch' ? error.message : `We couldn’t send your enquiry. Please try again, or message us on WhatsApp.` });
@@ -138,7 +139,8 @@ export default function EnquiryWizard({ searchProduct }: { searchProduct?: strin
     <h2 ref={heading} tabIndex={-1}>Last step: your details</h2>
     <label>Your name<input required minLength={2} maxLength={80} autoComplete="name" value={name} onChange={e => setName(e.target.value)} /></label>
     <label>Email<input type="email" required maxLength={254} autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} /></label>
-    <label>Phone / WhatsApp number<input type="tel" required minLength={7} maxLength={20} pattern="[+0-9\(\) .\-]{7,20}" autoComplete="tel" inputMode="tel" placeholder="+91 98765 43210" value={phone} onChange={e => setPhone(e.target.value)} /></label>
+    <label>Phone / WhatsApp number<input type="tel" required maxLength={24} autoComplete="tel" inputMode="tel" placeholder="98765 43210" aria-describedby="phone-help" aria-invalid={!!phone.trim() && !normalizePhone(phone)} value={phone} onChange={e => { setPhone(e.target.value); e.target.setCustomValidity(e.target.value.trim() && !normalizePhone(e.target.value) ? phoneError : ''); }} />
+      <small id="phone-help" className={phone.trim() && !normalizePhone(phone) ? 'form-error' : 'wizard-field-hint'}>{phone.trim() && !normalizePhone(phone) ? phoneError : phoneHint}</small></label>
     <label className="enquiry-trap" aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>Website<input tabIndex={-1} autoComplete="off" value={trap} onChange={e => setTrap(e.target.value)} /></label>
     <details className="wizard-review"><summary>Review your enquiry</summary><pre>{summary.join('\n')}</pre></details>
     {needsCheck && <div className="wizard-verify-again"><span>Please confirm you are human</span><Turnstile onToken={onToken} /></div>}

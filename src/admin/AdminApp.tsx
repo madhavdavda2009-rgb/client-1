@@ -434,6 +434,10 @@ function Roads({ categories, products, roads, roadProducts, save, notify }: Ctx)
   const supabase = getSupabase();
   const [editing, setEditing] = useState<RoadRow | null>(null); const [isNew, setIsNew] = useState(false);
   const [items, setItems] = useState<string[]>([]); const [adding, setAdding] = useState(''); const [busy, setBusy] = useState(false);
+  // Files uploaded while editing this road; any not used when it is saved (or cancelled) are deleted from Cloudinary.
+  const [uploads, setUploads] = useState<string[]>([]);
+  const savedMedia = roads.flatMap(r => sceneMedia(r.scene));
+  const discardUploads = (keep: string[]) => { const unused = uploads.filter(url => !keep.includes(url) && !savedMedia.includes(url)); if (unused.length) void deleteCloudinaryImages(unused); };
   const productById = useMemo(() => Object.fromEntries(products.map(p => [p.id, p])), [products]);
   // Mirrors the website: every visible road with products and a visible collection becomes a station, in order.
   const live = roads.filter(r => r.is_published && categories.find(c => c.id === r.category_id)?.is_published && roadProducts.some(rp => rp.road_id === r.id)).slice(0, MAX_ROADS);
@@ -445,7 +449,7 @@ function Roads({ categories, products, roads, roadProducts, save, notify }: Ctx)
   function edit(road: RoadRow | null) {
     if (road) { setIsNew(false); setEditing({ ...road }); setItems(itemsFor(road.id)); }
     else { setIsNew(true); setEditing({ id: '', label: '', description: '', category_id: categories[0]?.id ?? '', theme: 'christmas', sort_order: roads.length, is_published: true, scene: {} }); setItems([]); }
-    setAdding('');
+    setAdding(''); setUploads([]);
   }
   const move = (i: number, d: number) => { const next = [...items]; const j = i + d; if (j < 0 || j >= next.length) return; [next[i], next[j]] = [next[j], next[i]]; setItems(next); };
 
@@ -463,7 +467,7 @@ function Roads({ categories, products, roads, roadProducts, save, notify }: Ctx)
       const ins = await supabase.from('road_products').insert(items.map((product_id, position) => ({ road_id: roadId, product_id, position })));
       return { error: ins.error };
     }, isNew ? 'Road added.' : 'Road saved.');
-    setBusy(false); if (ok) setEditing(null);
+    setBusy(false); if (ok) { discardUploads(sceneMedia(row.scene)); setEditing(null); }
     // A replaced background or O artwork is removed from Cloudinary unless another road still uses it.
     if (ok && before) { const old = sceneMedia(before.scene).filter(url => !sceneMedia(row.scene).includes(url) && !roads.some(r => r.id !== before.id && sceneMedia(r.scene).includes(url))); if (!(await deleteCloudinaryImages(old))) notify('error', 'Saved, but an old background could not be removed from Cloudinary.'); }
   }
@@ -475,7 +479,7 @@ function Roads({ categories, products, roads, roadProducts, save, notify }: Ctx)
   }
 
   if (editing) return <form className="adm-card adm-stack adm-form" onSubmit={submit}>
-    <div className="adm-row spread"><h2>{isNew ? 'Add road' : `Edit road: ${editing.label}`}</h2><button type="button" className="adm-btn" onClick={() => setEditing(null)}>Cancel</button></div>
+    <div className="adm-row spread"><h2>{isNew ? 'Add road' : `Edit road: ${editing.label}`}</h2><button type="button" className="adm-btn" onClick={() => { discardUploads([]); setEditing(null); }}>Cancel</button></div>
     <div className="adm-grid2"><div className="adm-stack">
       <label>Label (small heading)<input required maxLength={60} value={editing.label} onChange={e => setEditing({ ...editing, label: e.target.value })} /></label>
       <label>Description<textarea rows={3} maxLength={400} value={editing.description} onChange={e => setEditing({ ...editing, description: e.target.value })} /></label>
@@ -490,7 +494,7 @@ function Roads({ categories, products, roads, roadProducts, save, notify }: Ctx)
       <ol className="adm-order">{items.map((id, i) => <li key={id} className={i >= capacity ? 'over' : ''}>{productById[id] && <img src={productById[id].thumb || productById[id].image} alt="" />}<span>{productById[id]?.title ?? id}{i < 3 && <em> featured</em>}</span><button type="button" onClick={() => move(i, -1)} aria-label="Move up">↑</button><button type="button" onClick={() => move(i, 1)} aria-label="Move down">↓</button><button type="button" onClick={() => setItems(items.filter(x => x !== id))} aria-label="Remove">✕</button></li>)}</ol>
       <div className="adm-row"><select value={adding} onChange={e => setAdding(e.target.value)}><option value="">Choose a product to add…</option>{categories.map(c => <optgroup key={c.id} label={c.title}>{products.filter(p => p.category_id === c.id && !items.includes(p.id)).map(p => <option key={p.id} value={p.id}>{p.title}</option>)}</optgroup>)}</select><button type="button" className="adm-btn" disabled={!adding} onClick={() => { setItems([...items, adding]); setAdding(''); }}>Add</button></div>
     </div></div>
-    <SceneEditor scene={editing.scene ?? {}} theme={editing.theme} name={slugify(editing.label) || 'road'} onChange={scene => setEditing({ ...editing, scene })} notify={notify} />
+    <SceneEditor scene={editing.scene ?? {}} theme={editing.theme} name={slugify(editing.label) || 'road'} savedUrls={savedMedia} onChange={scene => setEditing({ ...editing, scene })} onUploaded={url => setUploads(list => [...list, url])} notify={notify} />
     <div className="adm-row"><button className="adm-btn primary" disabled={busy}>{busy ? 'Saving…' : 'Save road'}</button>{!isNew && <ConfirmButton confirm={`Delete road “${editing.label}”? Its station is removed from the home page road.`} onConfirm={() => remove(editing)}>Delete</ConfirmButton>}</div>
   </form>;
 

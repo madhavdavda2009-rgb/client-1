@@ -46,7 +46,32 @@ function Header({path}:{path:string}) {
   </m.header>;
 }
 function Footer() {
-  return <footer className="site-footer"><Link href="/" className="footer-brand" aria-label="Toyon home"><img src={logo} alt="Toyon"/></Link><div className="footer-copy"><p>{company.name}</p><p>Products for manufacturers and business buyers.</p><div className="footer-contacts"><a href={`mailto:${company.email}`}>{company.email}</a><span className="contact-person">{company.founder}</span></div></div><nav aria-label="Footer navigation">{[['/products','Products'],['/categories','Categories'],['/about','About us'],['/contact','Contact'],['/privacy-policy','Privacy policy'],['/terms-and-conditions','Terms & conditions']].map(([href,label])=><Link key={href} href={href}>{label}</Link>)}</nav><p className="footer-credit">Website created and managed by <a href="https://www.infronixweb.in/" target="_blank" rel="noopener noreferrer">InfronixWeb</a></p></footer>;
+  return <footer className="site-footer">
+    <div className="footer-inner">
+      <div className="footer-main">
+        <div className="footer-identity">
+          <Link href="/" className="footer-brand" aria-label="Toyon home"><img src={logo} alt="Toyon" width="1600" height="1131" loading="lazy" /></Link>
+          <div className="footer-copy"><p className="footer-company">{company.name}</p><p>Products for manufacturers and business buyers.</p></div>
+        </div>
+        <nav className="footer-navigation" aria-label="Footer navigation">
+          <h2>Explore Toyon</h2>
+          {[['/products','Products'],['/categories','Collections'],['/about','About us'],['/contact','Contact']].map(([href,label])=><Link key={href} href={href}>{label}</Link>)}
+        </nav>
+        <div className="footer-contact">
+          <h2>Get in touch</h2>
+          <a href={'mailto:' + company.email}>{company.email}</a>
+          <a href={'tel:' + company.phone}>{company.phoneDisplay}</a>
+          <p className="footer-person">{company.founder}</p>
+          <address>{company.address}</address>
+        </div>
+      </div>
+      <div className="footer-bottom">
+        <p className="footer-copyright">© 2026 {company.name}. All rights reserved.</p>
+        <nav className="footer-policies" aria-label="Legal links"><Link href="/privacy-policy">Privacy policy</Link><Link href="/terms-and-conditions">Terms &amp; conditions</Link></nav>
+        <p className="footer-credit">Website created and managed by <a href="https://www.infronixweb.in/" target="_blank" rel="noopener noreferrer">InfronixWeb</a></p>
+      </div>
+    </div>
+  </footer>;
 }
 function ProductGrid({ items }: { items: Product[] }) {
   return <div className="product-grid">{items.map((product,index) => <MotionLink revealOrder={index%4} className="catalogue-product" href={`/products/${product.slug}`} key={product.id}><div className="catalogue-art"><m.img variants={{hover:{scale:1.025,y:-4},rest:{scale:1,y:0}}} transition={uiSpring} src={product.thumb} srcSet={thumbnailSet(product)} sizes={catalogueSizes} onError={event=>recoverImage(event,product.image)} alt={productAlt(product)} width="240" height="240" loading="lazy" decoding="async" /></div><span className="eyebrow">{categoryById[product.category]?.title}</span><h2>{product.title}<span aria-hidden="true">↗</span></h2></MotionLink>)}</div>;

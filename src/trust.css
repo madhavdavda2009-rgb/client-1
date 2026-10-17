@@ -1,0 +1,26 @@
+/* Trust and use-case sections (product pages, /foil-balloon-uses). Brand yellow accents, black text. */
+.trust-points,.trust-faq,.order-steps,.use-case-links{margin:56px 0 0}
+.trust-points h2,.trust-faq h2,.order-steps h2,.use-case-links h2{margin:0 0 20px;font-family:var(--font-display);font-size:clamp(26px,2.6vw,36px);font-weight:600;letter-spacing:-.025em;line-height:1.15}
+.trust-points ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px}
+.trust-points li{padding:20px;border:1px solid #c9940e55;border-top:4px solid var(--toyon-yellow,#f5bc19);border-radius:2px;background:var(--toyon-paper,#f6f9f7)}
+.trust-points h3,.order-steps h3{margin:0 0 8px;font-family:var(--font-display);font-size:18px;font-weight:600;letter-spacing:-.015em}
+.trust-points p,.order-steps p,.trust-faq p,.use-case p{margin:0;font-size:15px;line-height:1.65}
+.use-case-links ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+#root .use-case-links a{display:inline-flex;align-items:center;min-height:42px;padding:9px 16px;border:1px solid #c9940e;border-radius:2px;background:var(--toyon-paper,#f6f9f7);color:#000;font-size:14px;font-weight:650;text-decoration:none}
+#root .use-case-links a:hover{background:#fff0bb}
+.trust-faq details{border-bottom:1px solid #183e4426;padding:14px 0}
+.trust-faq summary{cursor:pointer;font-size:16px;font-weight:650;list-style-position:outside}
+.trust-faq details p{margin-top:10px;max-width:70ch}
+.order-steps ol{list-style:none;counter-reset:step;margin:0 0 28px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px}
+.order-steps li{counter-increment:step;padding:20px;border:1px solid #183e4426;border-radius:2px;background:#fff}
+.order-steps li::before{content:counter(step);display:grid;place-items:center;width:34px;height:34px;margin-bottom:12px;border:1px solid #c9940e;border-radius:2px;background:var(--toyon-yellow,#f5bc19);font-weight:800}
+.use-cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px}
+.use-case{padding:24px;border:1px solid #183e4426;border-radius:2px;background:#fff;scroll-margin-top:110px}
+.use-case:target{outline:3px solid var(--toyon-yellow,#f5bc19);outline-offset:2px}
+.use-case img{width:calc(100% + 48px);margin:-24px -24px 18px;aspect-ratio:16/10;object-fit:cover;display:block}
+.use-case h2{margin:0 0 10px;font-family:var(--font-display);font-size:22px;font-weight:600;letter-spacing:-.02em}
+.use-case-collections{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:14px!important}
+#root .use-case-collections a{font-size:14px;font-weight:650;color:#000;text-decoration:underline;text-decoration-color:var(--toyon-yellow,#f5bc19);text-decoration-thickness:3px;text-underline-offset:4px}
+.uses-page .trust-points{margin-top:72px}
+@media(max-width:600px){.trust-points,.trust-faq,.order-steps,.use-case-links{margin-top:40px}.use-case{padding:18px}.use-case img{width:calc(100% + 36px);margin:-18px -18px 14px}}
+#root .context-uses{margin:18px 0 0}#root .context-uses a{font-size:15px;font-weight:650;color:#000;text-decoration:underline;text-decoration-color:var(--toyon-yellow,#f5bc19);text-decoration-thickness:3px;text-underline-offset:4px}

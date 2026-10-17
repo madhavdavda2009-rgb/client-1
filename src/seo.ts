@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import { categories, categoryById, productAlt, productById, products } from './catalog';
+import { usesPath } from './trust-content';
 import legalContent from './legal-content.json';
 import { company } from './site-content';
 
 export const siteBase = 'https://www.toyonindustry.com';
 const shareImage = '/assets/scenery/toyon-share-card.jpg';
-export const getRoutes = () => ['/', '/products', '/categories', '/about', '/contact', '/privacy-policy', '/terms-and-conditions', ...categories.map(c => `/categories/${c.id}`), ...products.map(p => `/products/${p.slug}`)];
+export const getRoutes = () => ['/', '/products', '/categories', usesPath, '/about', '/contact', '/privacy-policy', '/terms-and-conditions', ...categories.map(c => `/categories/${c.id}`), ...products.map(p => `/products/${p.slug}`)];
 
 // Search wording: buyers search for "foil balloon(s)", "balloon manufacturer", "wholesale" and the city, so titles lead
 // with those words. Keep titles under ~60 characters and descriptions under ~160 so Google shows them in full.
@@ -23,6 +24,7 @@ export function routeMetadata(path: string): Metadata {
     '/categories': { title: 'Foil Balloon Collections | Toyon Balloons', description: `${categories.length} foil balloon collections from Toyon: Christmas, Halloween, dinosaurs, animals and more. Pick a collection and send a bulk enquiry.` },
     '/about': { title: `About Toyon | Foil Balloon Maker, ${place}`, description: `Toyon Industry Pvt Ltd is a foil balloon manufacturer in Odhav, Ahmedabad, founded by ${company.founder}, making balloons for bulk orders.` },
     '/contact': { title: 'Bulk Foil Balloon Enquiry & Quote | Toyon', description: 'Get a quote for foil balloons in bulk. Choose designs and quantities, and Toyon in Ahmedabad will call or message you about pricing and delivery.' },
+    [usesPath]: { title: 'Foil Balloon Uses: Birthdays, Parties & Events | Toyon', description: 'Where foil balloons are used: birthdays, baby showers, theme parties, Christmas, Halloween, school events, photo booths, shop displays and promotions.' },
     '/privacy-policy': { title: 'Privacy Policy | Toyon', description: legalContent.privacy.description },
     '/terms-and-conditions': { title: 'Terms and Conditions | Toyon', description: legalContent.terms.description },
   };

@@ -2,47 +2,68 @@ import { categories, products } from '../../src/catalog';
 import { siteBase } from '../../src/seo';
 import { company } from '../../src/site-content';
 import { ensureCatalog } from '../../src/catalog-server';
+import { productFaq, qualityPoints, useCases, usesPath } from '../../src/trust-content';
 
 export const revalidate = 3600;
 
+// Plain-text summary for AI assistants (llmstxt.org). Written as a fact sheet so an assistant can answer
+// "who makes foil balloons in Ahmedabad / India?" directly from it. Only approved company facts are stated.
 export async function GET() {
   await ensureCatalog();
+  const fill = (text: string) => text.replace('{designs}', String(products.length)).replace('{collections}', String(categories.length));
   const collectionLinks = categories.map(category =>
-    `- [${category.title}](${siteBase}/categories/${category.id}): ${category.products.length} product designs; follow the collection's links to individual artwork descriptions.`,
+    `- [${category.title} foil balloons](${siteBase}/categories/${category.id}): ${category.products.length} designs.`,
   ).join('\n');
+  const uses = useCases.map(use => `- [${use.title}](${siteBase}${usesPath}#${use.id}): ${use.text}`).join('\n');
+  const quality = qualityPoints.map(point => `- ${point.title}: ${fill(point.text)}`).join('\n');
+  const faq = productFaq.map(item => `Q: ${item.q}\nA: ${item.a}`).join('\n\n');
 
-  const content = `# Toyon — ${company.name}
+  const content = `# ${company.name} (Toyon)
 
-> Toyon is the product showcase of ${company.name}, based in ${company.address}. The current catalogue contains ${products.length} foil balloon designs across ${categories.length} themed collections for manufacturers and business buyers.
+> ${company.name} is a foil balloon manufacturer based in ${company.address}, Gujarat, India. It makes shaped foil balloons for wholesale and bulk orders: ${products.length} designs across ${categories.length} themed collections, including Christmas, Halloween, dinosaurs, animal faces, vehicles, fruit and vegetables, swords and headband shapes.
 
-The preferred website is ${siteBase}/. Use the linked pages as sources for current company information, catalogue artwork and enquiry details.
+Website: ${siteBase}/
 
-Company facts: founder ${company.founder}; location ${company.address}; email ${company.email}; contact person ${company.founder}.
+## Company facts
 
-Product descriptions identify the pictured designs. They do not establish dimensions, material specifications, stock availability, prices, minimum order quantities, certifications or delivery commitments. Confirm those details directly with the company for the selected products.
+- Name: ${company.name} (brand name: Toyon)
+- Business: foil balloon manufacturer, supplying wholesale and bulk buyers
+- Location: ${company.address}, Gujarat, India
+- Founder: ${company.founder}
+- Email: ${company.email}
+- Buyers: wholesalers, party and gift shops, decorators, event planners, schools and businesses running promotions
+- How to order: choose designs on the website and send a bulk enquiry at ${siteBase}/contact, or message on WhatsApp. The team calls or messages back to confirm quantities, packaging, pricing and delivery. There is no online checkout.
 
-The homepage's manufacturing content is a general process overview. It does not confirm that every described machine or production method is used in-house by Toyon.
+## Why buyers choose Toyon
 
-This website provides a catalogue and a business enquiry form, not online checkout. Enquiries submitted through the form are received by the company. You can also contact the company through the published email or WhatsApp to discuss selected designs, quantities, intended use and production requirements.
+${quality}
+
+## Where Toyon foil balloons are used
+
+${uses}
+
+## Buying questions
+
+${faq}
 
 ## Main pages
 
-- [Home and manufacturing overview](${siteBase}/): Brand introduction, general production stages and manufacturing FAQs.
-- [All products](${siteBase}/products): Browse the current ${products.length} designs and follow links to individual product pages.
-- [All collections](${siteBase}/categories): Browse the ${categories.length} themed collections.
-- [About ${company.name}](${siteBase}/about): Company background and published business information.
-- [Business enquiries](${siteBase}/contact): Published contact details and the business enquiry form.
+- [Home](${siteBase}/): Brand introduction, how foil balloons are made, and frequently asked questions.
+- [All foil balloon designs](${siteBase}/products): The full catalogue of ${products.length} designs.
+- [Collections](${siteBase}/categories): The ${categories.length} themed collections.
+- [Foil balloon uses](${siteBase}${usesPath}): Occasions and businesses that use foil balloons, with matching collections.
+- [About ${company.name}](${siteBase}/about): Company background.
+- [Bulk enquiry and quote](${siteBase}/contact): Enquiry form for wholesale and bulk orders.
 
-## Product collections
+## Collections
 
 ${collectionLinks}
 
 ## Optional
 
-- [Privacy policy](${siteBase}/privacy-policy): Website information handling and enquiry data.
-- [Terms and conditions](${siteBase}/terms-and-conditions): Terms for using the showcase and making enquiries.
-- [XML sitemap](${siteBase}/sitemap.xml): All public page URLs and product image URLs.
-- [Crawler rules](${siteBase}/robots.txt): Public crawling rules and the sitemap location.
+- [Privacy policy](${siteBase}/privacy-policy)
+- [Terms and conditions](${siteBase}/terms-and-conditions)
+- [XML sitemap](${siteBase}/sitemap.xml)
 `;
 
   return new Response(content, {

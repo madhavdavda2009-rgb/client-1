@@ -70,7 +70,6 @@ function Footer() {
         <div className="footer-contact">
           <h2>Get in touch</h2>
           <a href={'mailto:' + company.email}>{company.email}</a>
-          <a href={'tel:' + company.phone}>{company.phoneDisplay}</a>
           <p className="footer-person">{company.founder}</p>
           <address>{company.address}</address>
         </div>

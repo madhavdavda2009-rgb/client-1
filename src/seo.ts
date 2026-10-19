@@ -32,7 +32,9 @@ export function routeMetadata(path: string): Metadata {
   // Some designs share a name across collections; distinguish their search titles.
   const productCollection = product && products.some(other => other.slug !== product.slug && other.title === product.title)
     ? categoryById[product.category]?.title : undefined;
-  const title = product ? `${product.title} foil balloon${productCollection ? ` (${productCollection})` : ''} | Toyon`
+  const productTitle = product && `${product.title} foil balloon${productCollection ? ` (${productCollection})` : ''}`;
+  // Drop the brand suffix when it would push a product title past what Google shows in full.
+  const title = productTitle ? (productTitle.length > 56 ? productTitle : `${productTitle} | Toyon`)
     : category ? `${category.title} foil balloons – wholesale | Toyon`
     : fixed[path]?.title ?? 'Toyon foil balloons';
   const description = clip(product ? `${product.title} foil balloon for bulk and wholesale orders from Toyon, ${place}. ${product.description}`

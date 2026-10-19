@@ -376,7 +376,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
     <div className="three-world-ui" aria-live="polite">
       
       <AnimatePresence mode="sync"><m.div key={world.roadId} className="three-world-copy" initial={{opacity:0,scale:.985,y:12}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:1.015,y:-6,pointerEvents:'none'}} transition={{duration:.45,ease:[.25,.1,.25,1]}}><Reveal><span className="eyebrow">{world.label}</span><h2>{world.title}</h2><p>{world.description}</p><MotionLink className="three-world-cta" href={`/categories/${world.id}`}>Explore collection <span aria-hidden="true">↗</span></MotionLink><p className="collection-scroll-cue"><span className="scroll-desktop">{isLastStation?'Scroll to continue':'Scroll for the next collection'}</span><span className="scroll-touch">{isLastStation?'Swipe up to continue':'Swipe up for the next collection'}</span><span aria-hidden="true"> ↓</span></p></Reveal></m.div></AnimatePresence>
-      <span className="three-world-progress">{String(active + 1).padStart(2, '0')} / {String(journeyWorlds.length).padStart(2, '0')}</span><MotionLink className="three-world-browse" href="/products">Browse all {products.length} designs ↗</MotionLink>
+      <span className="three-world-progress">{String(active + 1).padStart(2, '0')} / {String(journeyWorlds.length).padStart(2, '0')}</span><MotionLink className="three-world-browse" href="/products">{`Browse all ${products.length} designs ↗`}</MotionLink>
     </div>
     <span className="three-world-sr">Travelling through the Toyon world: {world.title}. Featured designs are linked to their product pages.</span>
   </div>;

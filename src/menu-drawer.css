@@ -35,3 +35,5 @@
 }
 @media(prefers-reduced-motion:reduce){#root .site-header .header-actions .menu-toggle,#root .site-header .header-actions .menu-label{transition:none}}
 #root .menu-drawer .menu-drawer-link span{color:inherit}#root .menu-drawer .menu-drawer-link,#root .menu-drawer .menu-drawer-link:hover{color:#fff;--text-color:#fff}#root .menu-drawer .menu-drawer-link[aria-current=page]{color:var(--toyon-yellow,#f5bc19)}
+/* Phone: the drawer covers the full screen, so hide the logo (its red Y would blend into the red drawer). */
+@media(max-width:600px){#root .site-header.is-menu-open .brand-link{opacity:0;visibility:hidden;pointer-events:none}}

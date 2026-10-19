@@ -31,3 +31,11 @@
 #root .site-footer .footer-main{grid-template-columns:minmax(0,1.2fr) minmax(0,.6fr) minmax(0,.8fr) minmax(0,1fr)}
 @media(max-width:900px){#root .site-footer .footer-main{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){#root .site-footer .footer-main{grid-template-columns:1fr}}
+/* Full-width Toyon wordmark closing the footer (colour letters, no white box). */
+#root .site-footer .footer-wordmark{display:block;margin:clamp(32px,5vw,64px) 0 0;line-height:0}
+#root .site-footer .footer-wordmark img{display:block;width:100%;height:auto;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+#root .site-footer .footer-wordmark:hover{text-decoration:none}
+@media(hover:hover){#root .site-footer .footer-wordmark:hover img{transform:translateY(-6px)}}
+@media(prefers-reduced-motion:reduce){#root .site-footer .footer-wordmark img{transition:none}}
+#root .site-footer .footer-identity{display:block}
+@media(max-width:600px){#root .site-footer .footer-wordmark{margin-bottom:64px}}

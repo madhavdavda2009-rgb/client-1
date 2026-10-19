@@ -55,7 +55,6 @@ function Footer() {
     <div className="footer-inner">
       <div className="footer-main">
         <div className="footer-identity">
-          <Link href="/" className="footer-brand" aria-label="Toyon home"><img src={logo} alt="Toyon" width="1600" height="1131" loading="lazy" /></Link>
           <div className="footer-copy"><p className="footer-company">{company.name}</p><p>Products for manufacturers and business buyers.</p></div>
         </div>
         <nav className="footer-navigation" aria-label="Footer navigation">
@@ -79,6 +78,7 @@ function Footer() {
         <nav className="footer-policies" aria-label="Legal links"><Link href="/privacy-policy">Privacy policy</Link><Link href="/terms-and-conditions">Terms &amp; conditions</Link></nav>
         <p className="footer-credit">Website created and managed by <a href="https://www.infronixweb.in/" target="_blank" rel="noopener noreferrer">InfronixWeb</a></p>
       </div>
+      <Link href="/" className="footer-wordmark" aria-label="Toyon home"><img src="/assets/brand/toyon-wordmark.svg" alt="Toyon" width="841" height="302" loading="lazy" decoding="async" /></Link>
     </div>
   </footer>;
 }

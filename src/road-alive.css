@@ -30,3 +30,7 @@
 @keyframes portal-shine{0%{transform:translateX(0) skewX(-16deg)}32%,100%{transform:translateX(560%) skewX(-16deg)}}
 
 @media(prefers-reduced-motion:reduce){.balloon-float,.is-poked .balloon-poke,.portal-breathe,.portal-shine::before{animation:none}.portal-shine{display:none}}
+
+/* While the road scrolls, decorative motion pauses (the camera move is the motion); it resumes on stop. */
+.three-road-world.is-scrolling .balloon-float,.three-road-world.is-scrolling .portal-breathe{animation-play-state:paused}
+.three-road-world.is-scrolling .portal-shine{display:none}

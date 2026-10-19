@@ -14,12 +14,12 @@ const confettiColors = ['#f5bc19', '#e7473c', '#00a6ce', '#019e42', '#ffffff'];
 const mixFor = (theme: RoadTheme): [Kind, number][] => theme === 'christmas' ? [['snow', .88], ['twinkle', .12]] : theme === 'dinosaurs' ? [['leaf', .55], ['firefly', .4], ['ptero', .05]] : [['bat', .24], ['ember', .76]];
 const kindsFor = (theme: RoadTheme): Kind[] => mixFor(theme).map(([kind]) => kind);
 
-export function startRoadParticles(canvas: HTMLCanvasElement, options: { theme: () => RoadTheme | undefined; station: () => number; running: () => boolean }) {
+export function startRoadParticles(canvas: HTMLCanvasElement, options: { theme: () => RoadTheme | undefined; station: () => number; running: () => boolean; busy?: () => boolean }) {
   const ctx = canvas.getContext('2d'); if (!ctx) return () => {};
-  let width = 0, height = 0, ratio = 1, raf = 0, last = 0, fade = 0, visible = true, stopped = false, lastStation = -1;
+  let width = 0, height = 0, ratio = 1, raf = 0, last = 0, fade = 0, visible = true, stopped = false, lastStation = -1, skip = false;
   const particles: Particle[] = [];
   const resize = () => {
-    ratio = Math.min(devicePixelRatio || 1, 1.5); width = canvas.clientWidth; height = canvas.clientHeight;
+    ratio = Math.min(devicePixelRatio || 1, canvas.clientWidth < 620 ? 1 : 1.5); // small soft dots need no extra pixels on phones width = canvas.clientWidth; height = canvas.clientHeight;
     canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
   };
   const target = () => (width < 620 ? 46 : 90);
@@ -76,6 +76,8 @@ export function startRoadParticles(canvas: HTMLCanvasElement, options: { theme: 
 
   const frame = (now: number) => {
     raf = 0; if (stopped) return;
+    // While the road is scrolling, update every other frame so the 3D road keeps the frame budget.
+    if (options.busy?.() && (skip = !skip)) { if (visible && !document.hidden) raf = requestAnimationFrame(frame); return; }
     const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
     const theme = options.theme(), on = options.running() && !!theme;
     fade += ((on ? 1 : 0) - fade) * Math.min(1, dt * 4);

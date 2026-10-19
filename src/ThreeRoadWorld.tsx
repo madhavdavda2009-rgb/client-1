@@ -99,6 +99,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
     return startRoadParticles(canvas, {
       theme: () => journeyWorlds[Number(host.dataset.active) || 0]?.theme,
       station: () => Number(host.dataset.active) || 0,
+      busy: () => host.classList.contains('is-scrolling'),
       // Start once the O has opened onto the road (and keep going along it).
       running: () => { const journey = document.getElementById('toyon-journey'); return !reducedMotion.matches && !!journey && (journey.dataset.phase === 'road' || Number(journey.dataset.openingProgress) > .55); },
     });
@@ -110,18 +111,22 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
     const balloonOf = (target: EventTarget | null) => (target as Element | null)?.closest?.<HTMLAnchorElement>('.three-featured-product') ?? null;
     const poke = (link: HTMLElement) => { if (link.classList.contains('is-poked')) return; link.classList.add('is-poked'); setTimeout(() => link.classList.remove('is-poked'), 750); };
     const onDown = (event: PointerEvent) => { pointer = event.pointerType; };
-    const onOver = (event: PointerEvent) => { if (event.pointerType !== 'mouse') return; const link = balloonOf(event.target); if (link && !link.contains(event.relatedTarget as Node)) poke(link); };
+    const onOver = (event: PointerEvent) => { if (event.pointerType !== 'mouse') return; const link = balloonOf(event.target); if (link && !link.contains(event.relatedTarget as Node)) { link.classList.add('is-tagged'); poke(link); } };
+    const onOut = (event: PointerEvent) => { const link = balloonOf(event.target); if (link && !link.contains(event.relatedTarget as Node) && !link.classList.contains('is-peek')) link.classList.remove('is-tagged'); };
     const onClick = (event: MouseEvent) => {
       const link = balloonOf(event.target); if (!link || pointer === 'mouse' || link.classList.contains('is-peek')) return;
       event.preventDefault();
-      host.querySelectorAll('.three-featured-product.is-peek').forEach(other => other.classList.remove('is-peek'));
-      link.classList.add('is-peek'); poke(link);
-      clearTimeout(peekTimer); peekTimer = window.setTimeout(() => link.classList.remove('is-peek'), 3500);
+      host.querySelectorAll('.three-featured-product.is-peek').forEach(other => other.classList.remove('is-peek', 'is-tagged'));
+      link.classList.add('is-peek', 'is-tagged'); poke(link);
+      clearTimeout(peekTimer); peekTimer = window.setTimeout(() => link.classList.remove('is-peek', 'is-tagged'), 3500);
     };
-    host.addEventListener('pointerdown', onDown, true); host.addEventListener('pointerover', onOver); host.addEventListener('click', onClick, true);
-    return () => { clearTimeout(peekTimer); host.removeEventListener('pointerdown', onDown, true); host.removeEventListener('pointerover', onOver); host.removeEventListener('click', onClick, true); };
+    host.addEventListener('pointerdown', onDown, true); host.addEventListener('pointerover', onOver); host.addEventListener('pointerout', onOut); host.addEventListener('click', onClick, true);
+    return () => { clearTimeout(peekTimer); host.removeEventListener('pointerdown', onDown, true); host.removeEventListener('pointerover', onOver); host.removeEventListener('pointerout', onOut); host.removeEventListener('click', onClick, true); };
   }, []);
-  useMotionValueEvent(progress, 'change', value => { targetProgress.current = clamp(value);if(value>.01&&!extrasEnabled)setExtrasEnabled(true);prepareWorld(value*layout.count>.15?Math.min(layout.count-1,layout.stationAt(value)+1):0);wake.current(); });
+  const scrollIdle = useRef(0);
+  useMotionValueEvent(progress, 'change', value => {
+    const host = mount.current; if (host) { if (!host.classList.contains('is-scrolling')) host.classList.add('is-scrolling'); clearTimeout(scrollIdle.current); scrollIdle.current = window.setTimeout(() => host.classList.remove('is-scrolling'), 180); }
+    targetProgress.current = clamp(value);if(value>.01&&!extrasEnabled)setExtrasEnabled(true);prepareWorld(value*layout.count>.15?Math.min(layout.count-1,layout.stationAt(value)+1):0);wake.current(); });
 
   useEffect(() => {
     const host = mount.current; if (!host) return;
@@ -340,7 +345,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
         const y = (1 - projectedBase.y) * screenHeight / 2;
         const height=Math.abs(projectedTop.y-projectedBase.y)*screenHeight/2;
         link.style.transform=`translate3d(${x}px,${y}px,0) scale(${width/200},${height/244}) translate(-50%,-100%)`;
-        link.style.setProperty('--tag-sx',(200/Math.max(1,width)).toFixed(3));link.style.setProperty('--tag-sy',(244/Math.max(1,height)).toFixed(3));
+        if(link.classList.contains('is-tagged')){link.style.setProperty('--tag-sx',(200/Math.max(1,width)).toFixed(3));link.style.setProperty('--tag-sy',(244/Math.max(1,height)).toFixed(3))}
         const image=productImages[worldIndex][slot];
         const aspect=(image?.naturalWidth||1)/(image?.naturalHeight||image?.naturalWidth||1);
         const baseImageWidth=Math.min(200,244*aspect);
@@ -377,7 +382,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
         link.style.visibility=alpha>.01?'visible':'hidden';link.style.willChange=alpha>.01?'transform':'auto';link.style.opacity=String(alpha);link.style.pointerEvents=alpha>.5?'auto':'none';link.tabIndex=alpha>.5?0:-1;
         if(alpha>.01){
           link.style.transform=`translate3d(${x}px,${y}px,0) scale(${width/200},${height/244}) translate(-50%,-100%)`;
-          link.style.setProperty('--tag-sx',(200/Math.max(1,width)).toFixed(3));link.style.setProperty('--tag-sy',(244/Math.max(1,height)).toFixed(3));
+          if(link.classList.contains('is-tagged')){link.style.setProperty('--tag-sx',(200/Math.max(1,width)).toFixed(3));link.style.setProperty('--tag-sy',(244/Math.max(1,height)).toFixed(3))}
           image.style.transform=`scale(${imageWidth/(baseWidth*(width/200)||1)},${imageWidth/(baseWidth*(height/244)||1)})`;
         }
         if(alpha>.01)occupied.push(bounds);

@@ -51,7 +51,7 @@ const organization = () => ({
   '@type': 'Organization', '@id': `${siteBase}/#organization`, name: company.name, legalName: company.name, alternateName: ['Toyon Industry', 'Toyon'], url: siteBase,
   logo: `${siteBase}/favicon-256.png`, email: company.email,
   founder: { '@type': 'Person', name: company.founder },
-  address: { '@type': 'PostalAddress', streetAddress: 'Gaytri Estate, Odhav', addressLocality: 'Ahmedabad', addressRegion: 'Gujarat', addressCountry: 'IN' },
+  address: { '@type': 'PostalAddress', streetAddress: 'A/06, Gaytri Ind. Estate, Nr. Central Workshop Odhav, Odhav Industrial Estate', addressLocality: 'Ahmedabad', addressRegion: 'Gujarat', postalCode: '382415', addressCountry: 'IN' },
   description: `Foil balloon manufacturer in ${place} with ${products.length} designs for wholesale and bulk orders.`,
   knowsAbout: ['Foil balloons', 'Balloon manufacturing', 'Party balloons', 'Wholesale balloons', 'Bulk balloon orders'],
   areaServed: { '@type': 'Country', name: 'India' },

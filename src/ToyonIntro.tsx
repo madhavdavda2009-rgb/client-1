@@ -41,7 +41,8 @@ export default function ToyonIntro(){
     const closingLength=CLOSING_SCROLL;
     const totalLength=journeyScreens(layout.count),openingFraction=intro.length/totalLength;
     root.dataset.travelStart=String(intro.length*.44/totalLength);root.dataset.travelEnd=String((totalLength-closingLength)/totalLength);
-    function measure(){width=stage.clientWidth;height=stage.clientHeight;baseWidth=Math.min(width*(width<900?.78:.96),height*1.2,860);portalRadius=Math.min(width*(width<700?.45:.31),height*(width<700?.265:.43));root.style.setProperty('--portal-radius',`${portalRadius}px`);root.style.height=`${height*(1+totalLength)}px`;logo.setAttribute('viewBox',`0 0 ${width} ${height}`);lastOpening=-1;}
+    function measure(){width=stage.clientWidth;height=stage.clientHeight;// Laptops and desktops get a larger logo so it fills the clear space in the product collage.
+      baseWidth=width<900?Math.min(width*.78,height*1.2,860):Math.min(width*.96,height*1.32,1000);portalRadius=Math.min(width*(width<700?.45:.31),height*(width<700?.265:.43));root.style.setProperty('--portal-radius',`${portalRadius}px`);root.style.height=`${height*(1+totalLength)}px`;logo.setAttribute('viewBox',`0 0 ${width} ${height}`);lastOpening=-1;}
     function render(){
       // Start travelling as soon as the scenic O is revealed; avoid an empty hold after the logo.
       const opening=clamp(progress/openingFraction),travel=range(progress,openingFraction*.44,(totalLength-closingLength)/totalLength);

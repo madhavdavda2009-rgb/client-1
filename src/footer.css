@@ -39,3 +39,6 @@
 @media(prefers-reduced-motion:reduce){#root .site-footer .footer-wordmark img{transition:none}}
 #root .site-footer .footer-identity{display:block}
 @media(max-width:600px){#root .site-footer .footer-wordmark{margin-bottom:64px}}
+/* Header logo: the transparent wordmark, larger, with no white box. */
+#root .site-header .brand-link{width:136px;mix-blend-mode:normal}#root .site-header .brand-link img{display:block;width:100%;height:auto;mix-blend-mode:normal;background:none}
+@media(max-width:600px){#root .site-header .brand-link{width:108px}}

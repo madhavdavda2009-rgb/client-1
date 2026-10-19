@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { m, AnimatePresence, type MotionValue, useMotionValueEvent } from 'framer-motion';
 import * as THREE from 'three';
 import Link from 'next/link';
@@ -91,12 +91,14 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
   const lastBunch=useRef<number|null>(null);
   const mount = useRef<HTMLDivElement>(null); const targetProgress = useRef(0); const reduced = useRef(false);
   const [active, setActive] = useState(0); const [ready, setReady] = useState(false);
-  const particlesRef = useRef<HTMLCanvasElement>(null);
-  // Theme particles over the road (snow, leaves, bats); off for reduced motion.
-  useEffect(() => {
-    const canvas = particlesRef.current, host = mount.current; if (!canvas || !host) return;
+  // Theme particles over the road (snow, leaves, bats); off for reduced motion. A callback ref (not an effect) so
+  // the loop always draws into the canvas that is actually on the page, even if React replaces the element.
+  const stopParticles = useRef<(() => void) | null>(null);
+  const particlesRef = useCallback((canvas: HTMLCanvasElement | null) => {
+    stopParticles.current?.(); stopParticles.current = null;
+    const host = canvas?.parentElement; if (!canvas || !host) return;
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-    return startRoadParticles(canvas, {
+    stopParticles.current = startRoadParticles(canvas, {
       theme: () => journeyWorlds[Number(host.dataset.active) || 0]?.theme,
       station: () => Number(host.dataset.active) || 0,
       busy: () => host.classList.contains('is-scrolling'),

@@ -11,7 +11,8 @@ const leafColors = ['#4f9a3c', '#7bbf4a', '#a7d36b', '#3f7d33'];
 const emberColors = ['#ff9a3c', '#ffb347', '#ff7a1a'];
 const confettiColors = ['#f5bc19', '#e7473c', '#00a6ce', '#019e42', '#ffffff'];
 // Share of each kind per theme.
-const mixFor = (theme: RoadTheme): [Kind, number][] => theme === 'christmas' ? [['snow', .88], ['twinkle', .12]] : theme === 'dinosaurs' ? [['leaf', .55], ['firefly', .4], ['ptero', .05]] : [['bat', .24], ['ember', .76]];
+// One kind per theme: snow (Christmas), leaves (dinosaurs), bats (Halloween).
+const mixFor = (theme: RoadTheme): [Kind, number][] => theme === 'christmas' ? [['snow', 1]] : theme === 'dinosaurs' ? [['leaf', 1]] : [['bat', 1]];
 const kindsFor = (theme: RoadTheme): Kind[] => mixFor(theme).map(([kind]) => kind);
 
 export function startRoadParticles(canvas: HTMLCanvasElement, options: { theme: () => RoadTheme | undefined; station: () => number; running: () => boolean; busy?: () => boolean }) {
@@ -19,7 +20,8 @@ export function startRoadParticles(canvas: HTMLCanvasElement, options: { theme: 
   let width = 0, height = 0, ratio = 1, raf = 0, last = 0, fade = 0, visible = true, stopped = false, lastStation = -1, skip = false;
   const particles: Particle[] = [];
   const resize = () => {
-    ratio = Math.min(devicePixelRatio || 1, canvas.clientWidth < 620 ? 1 : 1.5); // small soft dots need no extra pixels on phones width = canvas.clientWidth; height = canvas.clientHeight;
+    // Small soft dots need no extra pixels on phones.
+    ratio = Math.min(devicePixelRatio || 1, canvas.clientWidth < 620 ? 1 : 1.5); width = canvas.clientWidth; height = canvas.clientHeight;
     canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
   };
   const target = () => (width < 620 ? 46 : 90);
@@ -76,6 +78,9 @@ export function startRoadParticles(canvas: HTMLCanvasElement, options: { theme: 
 
   const frame = (now: number) => {
     raf = 0; if (stopped) return;
+    // The road may still be hidden (size 0) when the loop starts, e.g. on phones: measure again once it has a size.
+    if (canvas.clientWidth !== width || canvas.clientHeight !== height) resize();
+    if (!width || !height) { if (visible && !document.hidden) raf = requestAnimationFrame(frame); return; }
     // While the road is scrolling, update every other frame so the 3D road keeps the frame budget.
     if (options.busy?.() && (skip = !skip)) { if (visible && !document.hidden) raf = requestAnimationFrame(frame); return; }
     const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
@@ -85,11 +90,11 @@ export function startRoadParticles(canvas: HTMLCanvasElement, options: { theme: 
     const kinds = theme ? kindsFor(theme) : [];
     // Arriving at a new station: a short confetti burst from around the O.
     const station = options.station();
-    if (on && fade > .5 && lastStation !== -1 && station !== lastStation) for (let i = 0; i < (width < 620 ? 28 : 46); i++) particles.push(spawn('confetti', false));
+    
     if (on) lastStation = station;
     if (on) {
       // Count only particles of the current theme, so the next theme fills in while the old one fades away.
-      const want = Math.round(target() * (kinds.includes('bat') ? .55 : kinds.includes('leaf') ? .6 : 1)), current = particles.filter(p => kinds.includes(p.kind)).length; let ptero = particles.filter(p => p.kind === 'ptero').length;
+      const want = Math.round(target() * (kinds.includes('bat') ? .18 : kinds.includes('leaf') ? .6 : 1)), current = particles.filter(p => kinds.includes(p.kind)).length; let ptero = particles.filter(p => p.kind === 'ptero').length;
       if (current < want) { const fresh = current === 0, add = fresh ? want : Math.min(2, want - current); const handover = fresh && particles.length > 0;
         for (let i = 0; i < add; i++) { let kind = pick(theme!); if (kind === 'ptero' && ptero >= 1) kind = 'leaf'; else if (kind === 'ptero') ptero++; const p = spawn(kind, fresh); if (handover) p.out = .01; particles.push(p); }
       }
@@ -114,11 +119,11 @@ export function startRoadParticles(canvas: HTMLCanvasElement, options: { theme: 
     ctx.globalAlpha = 1;
     if (visible && !document.hidden) raf = requestAnimationFrame(frame);
   };
-  const wake = () => { if (!raf && !stopped && visible && !document.hidden) { last = 0; raf = requestAnimationFrame(frame); } };
-  const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (visible) wake(); }, { threshold: 0 });
-  observer.observe(canvas);
+  // On screen? Checked directly (an IntersectionObserver can miss the road growing out of a clipped circle on phones).
+  const onScreen = () => { const box = canvas.getBoundingClientRect(); return box.bottom > 0 && box.top < innerHeight && box.width > 0; };
+  const wake = () => { visible = onScreen(); if (!raf && !stopped && visible && !document.hidden) { last = 0; raf = requestAnimationFrame(frame); } };
   const onResize = () => { resize(); wake(); };
   resize(); addEventListener('resize', onResize); document.addEventListener('visibilitychange', wake);
   const poll = setInterval(wake, 400); // wakes the loop when the road phase starts
-  return () => { stopped = true; cancelAnimationFrame(raf); clearInterval(poll); observer.disconnect(); removeEventListener('resize', onResize); document.removeEventListener('visibilitychange', wake); };
+  return () => { stopped = true; cancelAnimationFrame(raf); clearInterval(poll); removeEventListener('resize', onResize); document.removeEventListener('visibilitychange', wake); };
 }

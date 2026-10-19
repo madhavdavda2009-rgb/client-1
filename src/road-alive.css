@@ -1,0 +1,32 @@
+/* Makes the road feel alive: floating balloons, a bounce on hover/tap with a name tag, theme particles, and a
+   breathing O with a light sweep. All motion is transform/opacity only and stops for reduced motion. */
+
+/* Balloons bob and sway like real foil balloons, pivoting at the tie (bottom centre). */
+.balloon-float,.balloon-poke{display:flex;align-items:end;justify-content:center;width:100%;height:100%;transform-origin:50% 100%}
+.balloon-float{animation:balloon-float 4.2s ease-in-out infinite}
+.three-extra-product .balloon-float{animation-duration:3.6s}
+@keyframes balloon-float{0%,100%{transform:translateY(0) rotate(-2.2deg)}50%{transform:translateY(-4.5%) rotate(2.2deg)}}
+.is-poked .balloon-poke{animation:balloon-poke .7s cubic-bezier(.3,1.6,.5,1)}
+@keyframes balloon-poke{0%{transform:scale(1,1)}25%{transform:translateY(-12%) scale(.94,1.08)}55%{transform:translateY(0) scale(1.06,.94)}75%{transform:scale(.98,1.02)}100%{transform:none}}
+
+/* Name tag above a balloon; counter-scaled so it reads at the same size near or far. */
+.balloon-tag{position:absolute;left:50%;bottom:100%;z-index:2;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 12px 8px;border:1px solid #c9940e;border-radius:2px;background:#fffdf7f2;box-shadow:0 3px 0 #bf8a0b,0 8px 20px #0f262a2e;color:#000;white-space:nowrap;pointer-events:none;opacity:0;transform:translateX(-50%) scale(var(--tag-sx,1),var(--tag-sy,1)) translateY(6px);transform-origin:0 100%;transition:opacity .18s ease,transform .25s cubic-bezier(.22,1,.36,1)}
+.balloon-tag b{font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+.balloon-tag small{font-family:var(--font-body);font-size:11px;font-weight:650;opacity:.75}
+.balloon-tag .tag-touch{display:none}
+@media(hover:none),(pointer:coarse){.balloon-tag .tag-hover{display:none}.balloon-tag .tag-touch{display:block}}
+@media(hover:hover) and (pointer:fine){.three-featured-product:hover .balloon-tag{opacity:1;transform:translateX(-50%) scale(var(--tag-sx,1),var(--tag-sy,1)) translateY(-4px)}}
+.three-featured-product.is-peek .balloon-tag{opacity:1;transform:translateX(-50%) scale(var(--tag-sx,1),var(--tag-sy,1)) translateY(-4px)}
+.three-featured-product:focus-visible .balloon-tag{opacity:1}
+
+/* Particle layer: above the road and the O, below the balloons and the text. */
+#root .three-road-world canvas.road-particles{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none;mask-image:none;-webkit-mask-image:none;clip-path:none;filter:none}
+
+/* The O breathes slowly and a light sweep crosses its artwork every few seconds. */
+.portal-breathe{position:absolute;inset:0;animation:portal-breathe 7s ease-in-out infinite;transform-origin:50% 50%}
+@keyframes portal-breathe{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.025) rotate(.8deg)}}
+.portal-shine{position:absolute;inset:0;overflow:hidden;pointer-events:none;-webkit-mask-image:var(--o-mask);mask-image:var(--o-mask);-webkit-mask-size:contain;mask-size:contain;-webkit-mask-position:center;mask-position:center;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.portal-shine::before{content:"";position:absolute;top:-25%;bottom:-25%;left:-45%;width:30%;background:linear-gradient(100deg,transparent 0%,#ffffff00 20%,#ffffffb3 50%,#ffffff00 80%,transparent 100%);transform:translateX(0) skewX(-16deg);animation:portal-shine 5.5s cubic-bezier(.45,0,.25,1) infinite}
+@keyframes portal-shine{0%{transform:translateX(0) skewX(-16deg)}32%,100%{transform:translateX(560%) skewX(-16deg)}}
+
+@media(prefers-reduced-motion:reduce){.balloon-float,.is-poked .balloon-poke,.portal-breathe,.portal-shine::before{animation:none}.portal-shine{display:none}}

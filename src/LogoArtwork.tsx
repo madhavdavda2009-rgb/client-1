@@ -15,8 +15,11 @@ const gateArtwork=[
 // uploaded O artwork per station (Admin → Roads → Scene look), which replaces the theme artwork for that station.
 export function BrandO({ active, requested=3, themes=[0,1,2], custom=[] }: { active:number;requested?:number;themes?:number[];custom?:(string|undefined)[] }) {
   const shown=custom[active]?-1:themes[active]??active,loaded=themes.filter((_,station)=>station<requested&&!custom[station]);
-  return <div className="three-portal-o" aria-hidden="true">{gateArtwork.map((art,index)=><img key={art.src} className={`three-portal-world${index===shown?' is-active':''}`} src={loaded.includes(index)?artworkSrc(index):undefined} width="1024" height="1024" decoding="async" alt=""/>)}
-    {custom.map((url,station)=>url&&<img key={`custom-${station}`} className={`three-portal-world${station===active?' is-active':''}`} src={station<requested?cloudinaryImage(url,innerWidth<620&&devicePixelRatio<=2?768:1024):undefined} width="1024" height="1024" decoding="async" alt=""/>)}</div>;
+  // The active artwork also masks a light sweep, so the shine only crosses the painted O (not its hole).
+  const customUrl=custom[active],activeSrc=customUrl&&active<requested?cloudinaryImage(customUrl,1024):loaded.includes(shown)?artworkSrc(shown):undefined;
+  return <div className="three-portal-o" aria-hidden="true"><div className="portal-breathe">{gateArtwork.map((art,index)=><img key={art.src} className={`three-portal-world${index===shown?' is-active':''}`} src={loaded.includes(index)?artworkSrc(index):undefined} width="1024" height="1024" decoding="async" alt=""/>)}
+    {custom.map((url,station)=>url&&<img key={`custom-${station}`} className={`three-portal-world${station===active?' is-active':''}`} src={station<requested?cloudinaryImage(url,innerWidth<620&&devicePixelRatio<=2?768:1024):undefined} width="1024" height="1024" decoding="async" alt=""/>)}
+    {activeSrc&&<span key={activeSrc} className="portal-shine" style={{'--o-mask':`url("${activeSrc}")`} as React.CSSProperties}/>}</div></div>;
 }
 export default function LogoArtwork() {
   const reduced=useReducedMotion();

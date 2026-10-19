@@ -5,8 +5,10 @@ import Link from 'next/link';
 import { categoryById, productAlt, productById, products, roads, themeIndex, type Category, type Product, type RoadTheme } from './catalog';
 import './three-road.css';
 import './animated-backdrops.css';
+import './road-alive.css';
 import { MotionLink, Reveal, softSpring } from './MotionUI';
 import { BrandO } from './LogoArtwork';
+import { startRoadParticles } from './road-particles';
 import { RenderQuality } from './render-quality';
 import { useRequestedWorlds,prepareWorld,thumbnailSet,detailSet,recoverImage } from './assets';
 import { roadLayout } from './road-layout';
@@ -74,6 +76,11 @@ function roadRibbon(roadCurve: THREE.CatmullRomCurve3, scale: number, width = 5.
   geometry.setIndex(indices); geometry.computeVertexNormals(); return geometry;
 }
 
+// Name shown above a balloon on hover (desktop) or first tap (touch).
+function BalloonTag({ title }: { title: string }) {
+  return <span className="balloon-tag" aria-hidden="true"><b>{title}</b><small className="tag-hover">View design ↗</small><small className="tag-touch">Tap again to view ↗</small></span>;
+}
+
 export default function ThreeRoadWorld({ progress }: { progress: MotionValue<number> }) {
   const journeyWorlds=useMemo(buildJourneyWorlds,[]);const layout=useMemo(()=>roadLayout(journeyWorlds.length),[journeyWorlds]);const roadPath=useMemo(()=>buildRoad(layout.lengthScale),[layout]);const backdropPalettes=journeyWorlds.map(world=>world.theme);const portalThemes=journeyWorlds.map(world=>themeIndex(world.theme));const extraDesigns=journeyWorlds.map(world=>world.products.slice(3));
   const requested=useRequestedWorlds();const wake=useRef(()=>{});const [extrasEnabled,setExtrasEnabled]=useState(false);
@@ -83,6 +90,36 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
   const lastBunch=useRef<number|null>(null);
   const mount = useRef<HTMLDivElement>(null); const targetProgress = useRef(0); const reduced = useRef(false);
   const [active, setActive] = useState(0); const [ready, setReady] = useState(false);
+  const particlesRef = useRef<HTMLCanvasElement>(null);
+  // Theme particles over the road (snow, leaves, bats); off for reduced motion.
+  useEffect(() => {
+    const canvas = particlesRef.current, host = mount.current; if (!canvas || !host) return;
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    return startRoadParticles(canvas, {
+      theme: () => journeyWorlds[Number(host.dataset.active) || 0]?.theme,
+      station: () => Number(host.dataset.active) || 0,
+      // Start once the O has opened onto the road (and keep going along it).
+      running: () => { const journey = document.getElementById('toyon-journey'); return !reducedMotion.matches && !!journey && (journey.dataset.phase === 'road' || Number(journey.dataset.openingProgress) > .55); },
+    });
+  }, [journeyWorlds]);
+  // Balloons react: a bounce on hover; on touch the first tap bounces and shows the name, the second tap opens it.
+  useEffect(() => {
+    const host = mount.current; if (!host) return;
+    let pointer = 'mouse', peekTimer = 0;
+    const balloonOf = (target: EventTarget | null) => (target as Element | null)?.closest?.<HTMLAnchorElement>('.three-featured-product') ?? null;
+    const poke = (link: HTMLElement) => { if (link.classList.contains('is-poked')) return; link.classList.add('is-poked'); setTimeout(() => link.classList.remove('is-poked'), 750); };
+    const onDown = (event: PointerEvent) => { pointer = event.pointerType; };
+    const onOver = (event: PointerEvent) => { if (event.pointerType !== 'mouse') return; const link = balloonOf(event.target); if (link && !link.contains(event.relatedTarget as Node)) poke(link); };
+    const onClick = (event: MouseEvent) => {
+      const link = balloonOf(event.target); if (!link || pointer === 'mouse' || link.classList.contains('is-peek')) return;
+      event.preventDefault();
+      host.querySelectorAll('.three-featured-product.is-peek').forEach(other => other.classList.remove('is-peek'));
+      link.classList.add('is-peek'); poke(link);
+      clearTimeout(peekTimer); peekTimer = window.setTimeout(() => link.classList.remove('is-peek'), 3500);
+    };
+    host.addEventListener('pointerdown', onDown, true); host.addEventListener('pointerover', onOver); host.addEventListener('click', onClick, true);
+    return () => { clearTimeout(peekTimer); host.removeEventListener('pointerdown', onDown, true); host.removeEventListener('pointerover', onOver); host.removeEventListener('click', onClick, true); };
+  }, []);
   useMotionValueEvent(progress, 'change', value => { targetProgress.current = clamp(value);if(value>.01&&!extrasEnabled)setExtrasEnabled(true);prepareWorld(value*layout.count>.15?Math.min(layout.count-1,layout.stationAt(value)+1):0);wake.current(); });
 
   useEffect(() => {
@@ -302,6 +339,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
         const y = (1 - projectedBase.y) * screenHeight / 2;
         const height=Math.abs(projectedTop.y-projectedBase.y)*screenHeight/2;
         link.style.transform=`translate3d(${x}px,${y}px,0) scale(${width/200},${height/244}) translate(-50%,-100%)`;
+        link.style.setProperty('--tag-sx',(200/Math.max(1,width)).toFixed(3));link.style.setProperty('--tag-sy',(244/Math.max(1,height)).toFixed(3));
         const image=productImages[worldIndex][slot];
         const aspect=(image?.naturalWidth||1)/(image?.naturalHeight||image?.naturalWidth||1);
         const baseImageWidth=Math.min(200,244*aspect);
@@ -338,6 +376,7 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
         link.style.visibility=alpha>.01?'visible':'hidden';link.style.willChange=alpha>.01?'transform':'auto';link.style.opacity=String(alpha);link.style.pointerEvents=alpha>.5?'auto':'none';link.tabIndex=alpha>.5?0:-1;
         if(alpha>.01){
           link.style.transform=`translate3d(${x}px,${y}px,0) scale(${width/200},${height/244}) translate(-50%,-100%)`;
+          link.style.setProperty('--tag-sx',(200/Math.max(1,width)).toFixed(3));link.style.setProperty('--tag-sy',(244/Math.max(1,height)).toFixed(3));
           image.style.transform=`scale(${imageWidth/(baseWidth*(width/200)||1)},${imageWidth/(baseWidth*(height/244)||1)})`;
         }
         if(alpha>.01)occupied.push(bounds);
@@ -371,8 +410,9 @@ export default function ThreeRoadWorld({ progress }: { progress: MotionValue<num
   return <div className="three-road-world" ref={mount} data-ready={ready} data-active={active}>
     <div className="three-category-backdrops" aria-hidden="true">{backdropPalettes.map((palette,index)=><StationBackdrop key={index} theme={palette} scene={journeyWorlds[index].scene} present={active===index} load={index<requested}/>)}</div>
     <BrandO active={active} requested={Math.max(1,requested)} themes={portalThemes} custom={journeyWorlds.map(world=>world.scene.portalUrl)}/>
-    <div className="three-featured-products">{journeyWorlds.map((item, index) => <div className={`three-featured-set${active === index ? ' is-active' : ''}`} aria-hidden={active !== index} key={item.roadId}>{item.products.slice(0,3).map((product, productIndex) => <Link href={`/products/${product.slug}`} prefetch={false} className="three-featured-product" key={product.id} tabIndex={active === index ? 0 : -1} aria-label={`View ${product.title}`}><m.div className="motion-product-visual" initial={{opacity:0,scale:.94,y:12}} animate={visibleBunch===index?{opacity:1,scale:1,y:0}:{opacity:0,scale:.94,y:12}} transition={{...softSpring,delay:visibleBunch===index?productIndex*.07:0}} whileHover={{scale:1.03,y:-3}} whileTap={{scale:.98}}><picture><source media="(max-width: 600px)" srcSet={index<requested?thumbnailSet(product):undefined} sizes="200px"/><img src={index<requested?product.image:undefined} srcSet={index<requested?detailSet(product):undefined} sizes="350px" onError={event=>recoverImage(event,product.image)} alt={productAlt(product)} loading="eager" decoding="async" /></picture></m.div></Link>)}</div>)}</div>
-    <div className="three-extra-products">{extraDesigns.map((items,index)=><div className={`three-extra-set${active===index?' is-active':''}`} aria-hidden={active!==index} key={journeyWorlds[index].roadId}>{items.map(product=><Link href={`/products/${product.slug}`} prefetch={false} className="three-featured-product three-extra-product" key={product.id} tabIndex={-1} aria-label={`View ${product.title}`}><m.div className="motion-product-visual" initial={false} whileHover={{scale:1.03,y:-3}} whileTap={{scale:.98}} transition={softSpring}><img src={extrasEnabled&&index<requested?product.thumb:undefined} alt={productAlt(product)} width="240" height="240" decoding="async" onError={event=>recoverImage(event,product.image)}/></m.div></Link>)}</div>)}</div>
+    <canvas className="road-particles" ref={particlesRef} aria-hidden="true"/>
+    <div className="three-featured-products">{journeyWorlds.map((item, index) => <div className={`three-featured-set${active === index ? ' is-active' : ''}`} aria-hidden={active !== index} key={item.roadId}>{item.products.slice(0,3).map((product, productIndex) => <Link href={`/products/${product.slug}`} prefetch={false} className="three-featured-product" key={product.id} tabIndex={active === index ? 0 : -1} aria-label={`View ${product.title}`}><m.div className="motion-product-visual" initial={{opacity:0,scale:.94,y:12}} animate={visibleBunch===index?{opacity:1,scale:1,y:0}:{opacity:0,scale:.94,y:12}} transition={{...softSpring,delay:visibleBunch===index?productIndex*.07:0}} whileTap={{scale:.97}}><span className="balloon-float" style={{animationDelay:`${-(productIndex*1.37+index*.61)}s`}}><span className="balloon-poke"><picture><source media="(max-width: 600px)" srcSet={index<requested?thumbnailSet(product):undefined} sizes="200px"/><img src={index<requested?product.image:undefined} srcSet={index<requested?detailSet(product):undefined} sizes="350px" onError={event=>recoverImage(event,product.image)} alt={productAlt(product)} loading="eager" decoding="async" /></picture></span></span></m.div><BalloonTag title={product.title}/></Link>)}</div>)}</div>
+    <div className="three-extra-products">{extraDesigns.map((items,index)=><div className={`three-extra-set${active===index?' is-active':''}`} aria-hidden={active!==index} key={journeyWorlds[index].roadId}>{items.map(product=><Link href={`/products/${product.slug}`} prefetch={false} className="three-featured-product three-extra-product" key={product.id} tabIndex={-1} aria-label={`View ${product.title}`}><m.div className="motion-product-visual" initial={false} whileTap={{scale:.97}} transition={softSpring}><span className="balloon-float" style={{animationDelay:`${-((product.title.length%7)*.53)}s`}}><span className="balloon-poke"><img src={extrasEnabled&&index<requested?product.thumb:undefined} alt={productAlt(product)} width="240" height="240" decoding="async" onError={event=>recoverImage(event,product.image)}/></span></span></m.div><BalloonTag title={product.title}/></Link>)}</div>)}</div>
     <div className="three-world-ui" aria-live="polite">
       
       <AnimatePresence mode="sync"><m.div key={world.roadId} className="three-world-copy" initial={{opacity:0,scale:.985,y:12}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:1.015,y:-6,pointerEvents:'none'}} transition={{duration:.45,ease:[.25,.1,.25,1]}}><Reveal><span className="eyebrow">{world.label}</span><h2>{world.title}</h2><p>{world.description}</p><MotionLink className="three-world-cta" href={`/categories/${world.id}`}>Explore collection <span aria-hidden="true">↗</span></MotionLink><p className="collection-scroll-cue"><span className="scroll-desktop">{isLastStation?'Scroll to continue':'Scroll for the next collection'}</span><span className="scroll-touch">{isLastStation?'Swipe up to continue':'Swipe up for the next collection'}</span><span aria-hidden="true"> ↓</span></p></Reveal></m.div></AnimatePresence>

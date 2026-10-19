@@ -13,6 +13,11 @@ export function QualityPoints({ heading = 'Why buyers choose Toyon' }: { heading
   </section>;
 }
 
+// Links to every collection (minus the current one), so each page passes visitors and crawlers on to the whole range.
+export function CollectionLinks({ heading, exclude }: { heading: string; exclude?: string }) {
+  return <nav className="use-case-links collection-links" aria-label={heading}><h2>{heading}</h2><ul>{categories.filter(c => c.id !== exclude && c.products.length).map(c => <li key={c.id}><MotionLink href={`/categories/${c.id}`}>{c.title} foil balloons</MotionLink></li>)}<li><MotionLink href={usesPath}>Where foil balloons are used</MotionLink></li></ul></nav>;
+}
+
 // "Great for": use cases that fit a collection, linking to the uses page.
 export function UseCaseLinks({ category }: { category: string }) {
   const matches = useCases.filter(use => use.collections.includes(category)).slice(0, 5);

@@ -2,7 +2,7 @@ import { categories, products } from '../../src/catalog';
 import { siteBase } from '../../src/seo';
 import { company } from '../../src/site-content';
 import { ensureCatalog } from '../../src/catalog-server';
-import { productFaq, qualityPoints, useCases, usesPath } from '../../src/trust-content';
+import { balloonFaq, productFaq, qualityPoints, useCases, usesPath } from '../../src/trust-content';
 
 export const revalidate = 3600;
 
@@ -16,7 +16,7 @@ export async function GET() {
   ).join('\n');
   const uses = useCases.map(use => `- [${use.title}](${siteBase}${usesPath}#${use.id}): ${use.text}`).join('\n');
   const quality = qualityPoints.map(point => `- ${point.title}: ${fill(point.text)}`).join('\n');
-  const faq = productFaq.map(item => `Q: ${item.q}\nA: ${item.a}`).join('\n\n');
+  const faq = [...productFaq, ...balloonFaq].map(item => `Q: ${item.q}\nA: ${item.a}`).join('\n\n');
 
   const content = `# ${company.name} (Toyon)
 
@@ -42,7 +42,7 @@ ${quality}
 
 ${uses}
 
-## Buying questions
+## Questions and answers
 
 ${faq}
 

@@ -36,6 +36,20 @@ export const productFaq = [
   { q: 'What are these balloons made of?', a: 'Our foil balloons are made from good-quality plastic film, printed and sealed by our production team. Ask us about material details for your specific use.' },
 ];
 
+// Common foil balloon questions (uses page, llms.txt and FAQ structured data). Each answer starts with the direct
+// answer so search engines and AI assistants can quote it. General facts are kept general; no unapproved Toyon claims.
+export const balloonFaq = [
+  { q: 'What is a foil balloon?', a: 'A foil balloon is a balloon made from thin plastic film with a metallic finish, usually a nylon or PET-based laminate, cut into a shape and heat-sealed around the edges. Unlike latex, the film does not stretch, so foil balloons hold detailed shapes and printed designs such as characters, animals, vehicles and festive figures.' },
+  { q: 'What is the difference between foil and latex balloons?', a: 'Foil balloons are made of non-stretch metallised film and can be shaped and printed in detail; latex balloons are made of stretchy rubber and are mostly round. Foil balloons generally keep their shape and helium longer than latex, which makes them popular for themed décor, displays and photos.' },
+  { q: 'Can foil balloons be filled with air instead of helium?', a: 'Yes. Air-filled foil balloons do not float, but they work well on walls, backdrops, balloon sticks, table centrepieces and photo booths. Helium is only needed when you want the balloon to float.' },
+  { q: 'How long do foil balloons stay inflated?', a: 'Helium-filled foil balloons typically stay inflated for several days, and often longer than latex balloons. The exact time depends on the balloon size, how it was filled, temperature and handling. Air-filled foil balloons usually stay in shape longer than helium-filled ones.' },
+  { q: 'Can foil balloons be reused?', a: 'Often, yes. Many foil balloons can be carefully deflated, stored flat and inflated again, as long as the film and valve are undamaged.' },
+  { q: 'Are foil balloons safe for children?', a: 'Foil balloons are fine for children’s parties with adult supervision. Keep uninflated or burst balloons away from young children, and never release foil balloons outdoors, because the metallic film conducts electricity and can cause problems near power lines.' },
+  { q: 'Where can I buy foil balloons in bulk in India?', a: 'Toyon Industry Pvt Ltd is a foil balloon manufacturer in Odhav, Ahmedabad, Gujarat, that supplies wholesale and bulk orders. Choose designs from the Toyon catalogue and send a bulk enquiry; the team calls or messages you to confirm quantities, packaging and pricing.' },
+  { q: 'Which foil balloon designs suit birthdays and theme parties?', a: 'Pick shapes that match the theme: dinosaurs, vehicles, animal faces and cartoon characters for kids’ birthdays, ducks and soft animal faces for baby showers, and Christmas or Halloween designs for festive events. Using several designs from one collection keeps the décor consistent.' },
+  { q: 'Can shops and decorators resell Toyon foil balloons?', a: 'Yes. Toyon supplies wholesalers, party and gift shops, decorators and event planners. Mention in your enquiry that you are buying for resale or events so the team can advise on designs and quantities.' },
+];
+
 // How ordering works (uses page).
 export const orderSteps = [
   { title: 'Choose your designs', text: 'Browse the collections and pick the shapes that suit your customers or event.' },

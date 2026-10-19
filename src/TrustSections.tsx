@@ -1,6 +1,6 @@
 import { categories, categoryById, products } from './catalog';
 import { MotionLink, Reveal } from './MotionUI';
-import { orderSteps, productFaq, qualityPoints, useCases, usesPath } from './trust-content';
+import { balloonFaq, orderSteps, productFaq, qualityPoints, useCases, usesPath } from './trust-content';
 import './trust.css';
 
 const fill = (text: string) => text.replace('{designs}', String(products.length)).replace('{collections}', String(categories.length));
@@ -32,6 +32,13 @@ export function ProductFaq() {
   </section>;
 }
 
+function BalloonFaq() {
+  return <section className="trust-faq" aria-labelledby="balloon-faq-title">
+    <h2 id="balloon-faq-title">Foil balloon questions, answered</h2>
+    {balloonFaq.map(item => <details key={item.q}><summary>{item.q}</summary><p>{item.a}</p></details>)}
+  </section>;
+}
+
 function OrderSteps() {
   return <section className="order-steps" aria-labelledby="order-steps-title">
     <h2 id="order-steps-title">How ordering works</h2>
@@ -50,6 +57,7 @@ export function UsesPage() {
       <p className="use-case-collections">{use.collections.filter(id => categoryById[id]).map(id => <MotionLink key={id} href={`/categories/${id}`}>{categoryById[id].title}</MotionLink>)}</p>
     </article>)}</div>
     <QualityPoints heading="Why wholesalers and shops trust Toyon" />
+    <BalloonFaq />
     <OrderSteps />
   </main>;
 }

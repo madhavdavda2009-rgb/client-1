@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { categories, categoryById, productAlt, productById, products } from './catalog';
-import { productFaq, useCases, usesPath } from './trust-content';
+import { balloonFaq, productFaq, useCases, usesPath } from './trust-content';
 import manufacturing from './manufacturing-content.json';
 import legalContent from './legal-content.json';
 import { company } from './site-content';
@@ -55,6 +55,7 @@ const organization = () => ({
   description: `Foil balloon manufacturer in ${place} with ${products.length} designs for wholesale and bulk orders.`,
   knowsAbout: ['Foil balloons', 'Balloon manufacturing', 'Party balloons', 'Wholesale balloons', 'Bulk balloon orders'],
   areaServed: { '@type': 'Country', name: 'India' },
+  hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Toyon foil balloon collections', itemListElement: categories.filter(c => c.products.length).map(c => ({ '@type': 'OfferCatalog', name: `${c.title} foil balloons`, url: `${siteBase}/categories/${c.id}` })) },
 });
 // Question-and-answer data: AI assistants and search engines read these as ready-made answers.
 const faq = (items: { q: string; a: string }[]) => ({ '@type': 'FAQPage', mainEntity: items.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
@@ -67,7 +68,7 @@ export function structuredData(path: string): object | null {
   const category = path.startsWith('/categories/') ? categoryById[path.slice('/categories/'.length)] : undefined;
   if (path === '/') return { '@context': 'https://schema.org', '@graph': [organization(), { '@type': 'WebSite', '@id': `${siteBase}/#website`, url: `${siteBase}/`, name: company.name, alternateName: ['Toyon Industry', 'Toyon'], publisher: { '@id': `${siteBase}/#organization` } }, faq(manufacturing.faqs.map(item => ({ q: item.question, a: item.answer })))] };
   if (path === '/about' || path === '/contact') return { '@context': 'https://schema.org', '@graph': [organization()] };
-  if (path === usesPath) return { '@context': 'https://schema.org', '@graph': [crumbs([['Home', '/'], ['Foil balloon uses', usesPath]]), { '@type': 'ItemList', name: 'Where foil balloons are used', itemListElement: useCases.map((use, index) => ({ '@type': 'ListItem', position: index + 1, name: use.title, description: use.text, url: `${siteBase}${usesPath}#${use.id}` })) }] };
+  if (path === usesPath) return { '@context': 'https://schema.org', '@graph': [crumbs([['Home', '/'], ['Foil balloon uses', usesPath]]), { '@type': 'ItemList', name: 'Where foil balloons are used', itemListElement: useCases.map((use, index) => ({ '@type': 'ListItem', position: index + 1, name: use.title, description: use.text, url: `${siteBase}${usesPath}#${use.id}` })) }, faq(balloonFaq)] };
   if (product) {
     const parent = categoryById[product.category];
     return { '@context': 'https://schema.org', '@graph': [faq(productFaq), crumbs([['Home', '/'], ['Foil balloons', '/products'], ...(parent ? [[`${parent.title} balloons`, `/categories/${parent.id}`] as [string, string]] : []), [productAlt(product), path]])] };

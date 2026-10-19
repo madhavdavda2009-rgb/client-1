@@ -11,7 +11,7 @@ import { thumbnailSet,detailSet,heroSizes,catalogueSizes,recoverImage } from './
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { LazyMotion, m, AnimatePresence, useReducedMotion, MotionConfig } from 'framer-motion';
+import { LazyMotion, m, MotionConfig } from 'framer-motion';
 const loadMotionFeatures=()=>import('./motion-features').then(module=>module.default);
 // While the road loads, reserve its full scroll height so lazy images further down (manufacturing, ending) stay lazy.
 const ToyonIntro = dynamic(() => import('./ToyonIntro'), { ssr: false, loading: () => <div style={{ height: `${(1 + journeyScreens(roads.length)) * 100}lvh` }}><div className="stage" /></div> });
@@ -23,11 +23,12 @@ import EnquiryWizard from './EnquiryWizard';
 import { CollectionLinks, ProductFaq, QualityPoints, UseCaseLinks, UsesPage } from './TrustSections';
 import { usesPath } from './trust-content';
 import WhatsAppButton from './WhatsAppButton';
+import SiteHeader from './SiteHeader';
 import EnquiryPrompt from './EnquiryPrompt';
 import { whatsappLink } from './whatsapp';
 const logo = '/assets/brand/toyon-hierarchy.svg';
 import './site.css';
-import { MotionLink, MotionNextLink, MotionButton, Reveal, PageTransition, softSpring, uiSpring, staggerContainer, menuItem } from './MotionUI';
+import { MotionLink, MotionButton, Reveal, PageTransition, softSpring, uiSpring } from './MotionUI';
 
 const journeyBackgrounds: Record<string, string> = {
   christmas: '/assets/scenery/supplied/chirstmas_bg.webp',
@@ -36,22 +37,6 @@ const journeyBackgrounds: Record<string, string> = {
 };
 const categoryBackground = (id: string) => journeyBackgrounds[id] || categoryById[id].background;
 
-function Header({path}:{path:string}) {
-  const home=path==='/';const reduced=useReducedMotion();
-  const [open,setOpen]=useState(false),[hovered,setHovered]=useState<string|null>(null),[scrolled,setScrolled]=useState(false);
-  // The logo stays at the top of the page: it hides once the visitor scrolls, so it never sits over content.
-  useEffect(()=>{const update=()=>setScrolled(scrollY>40);update();addEventListener('scroll',update,{passive:true});return()=>removeEventListener('scroll',update)},[]);
-  useEffect(()=>{setOpen(false);setHovered(null)},[path]);
-  useEffect(()=>{document.documentElement.dataset.ambientPaused='false';window.dispatchEvent(new Event('toyon:motion'))},[]);
-  useEffect(()=>{const close=(e:KeyboardEvent)=>{if(e.key==='Escape')setOpen(false)};window.addEventListener('keydown',close);return()=>window.removeEventListener('keydown',close)},[]);
-  return <m.header className={`site-header${home?' home-header':''}${scrolled?' is-scrolled':''}`} initial={reduced?false:{opacity:0,y:-12}} animate={{opacity:1,y:0}} transition={softSpring}>
-    {!home&&<MotionLink href="/" className="brand-link" aria-label="Toyon home"><img src="/assets/brand/toyon-wordmark.svg" alt="Toyon" width="841" height="302"/></MotionLink>}
-    <div className="header-actions"><MotionButton className="menu-toggle" onClick={()=>setOpen(!open)} aria-expanded={open} aria-controls="site-menu"><span className="menu-label">{open?'Close':'Menu'}</span><span className="menu-glyph" aria-hidden="true"><m.i animate={{rotate:open?45:0,y:open?3.5:0}} transition={uiSpring}/><m.i animate={{rotate:open?-45:0,y:open?-3.5:0}} transition={uiSpring}/></span></MotionButton></div>
-    <AnimatePresence>{open&&<m.nav id="site-menu" className="site-menu" aria-label="Main navigation" initial="hidden" animate="visible" exit="exit" variants={{hidden:{opacity:0,scale:reduced?1:.97},visible:{opacity:1,scale:1,transition:{...softSpring,staggerChildren:.055}},exit:{opacity:0,scale:reduced?1:.98,transition:{duration:.18,staggerChildren:.035,staggerDirection:-1}}}} onPointerLeave={()=>setHovered(null)}>
-      {[['/','Home'],['/products','Products'],['/categories','Categories'],[usesPath,'Balloon uses'],['/about','About us'],['/contact','Contact']].map(([href,label])=><MotionNextLink key={href} href={href} variants={reduced?{hidden:{opacity:0},visible:{opacity:1},exit:{opacity:0}}:menuItem} whileHover={reduced?undefined:{y:-1}} whileTap={reduced?undefined:{scale:.98}} onPointerEnter={()=>setHovered(href)} onFocus={()=>setHovered(href)} onBlur={()=>setHovered(null)} aria-current={path===href?'page':undefined}>{label}<m.span aria-hidden="true" animate={{x:hovered===href?3:0}} transition={uiSpring}>↗</m.span>{(hovered||path)===href&&<m.span className="menu-shared-line" layoutId="menu-highlight" transition={uiSpring}/>}</MotionNextLink>)}
-    </m.nav>}</AnimatePresence>
-  </m.header>;
-}
 function Footer() {
   return <footer className="site-footer">
     <div className="footer-inner">
@@ -137,5 +122,5 @@ export default function App({path,searchProduct}:{path:string;searchProduct?:str
   else if (path === '/contact') page = <ContactPage searchProduct={searchProduct} />;
   else if (path === usesPath) page = <UsesPage />;
   else page = <NotFound />;
-  return <MotionConfig reducedMotion="user"><LazyMotion features={loadMotionFeatures}><MotionLink className="skip-link" href="/products">Skip to product catalogue</MotionLink><Header path={path} /><PageTransition home={path==='/'}>{page}</PageTransition><Footer /><WhatsAppButton raised={path==='/'} /><EnquiryPrompt path={path} /></LazyMotion></MotionConfig>;
+  return <MotionConfig reducedMotion="user"><LazyMotion features={loadMotionFeatures}><MotionLink className="skip-link" href="/products">Skip to product catalogue</MotionLink><SiteHeader path={path} /><PageTransition home={path==='/'}>{page}</PageTransition><Footer /><WhatsAppButton raised={path==='/'} /><EnquiryPrompt path={path} /></LazyMotion></MotionConfig>;
 }

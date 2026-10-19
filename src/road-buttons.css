@@ -1,0 +1,14 @@
+/* One consistent size for the buttons on the road (loaded last; older layered rules differ per file).
+   Collection CTA (yellow) and "Browse all" (paper) share height, padding and type; both line up with the text. */
+#root .journey .three-world-ui .three-world-copy .three-world-cta,
+#root .journey .three-world-ui .three-world-browse{display:inline-flex;align-items:center;justify-content:center;gap:12px;width:auto;min-width:0;min-height:46px;height:46px;padding:0 18px;font-family:var(--font-body);font-size:14px;font-weight:700;line-height:1;letter-spacing:.01em;white-space:nowrap;border-radius:2px}
+#root .journey .three-world-ui .three-world-browse{left:var(--road-copy-left,3.5%);bottom:max(22px,env(safe-area-inset-bottom));box-shadow:0 3px 0 #c9940e66}
+#root .journey .three-world-ui .three-world-progress{bottom:max(22px,env(safe-area-inset-bottom));min-height:46px;display:flex;align-items:center;padding:0;font-size:12px}
+@media(max-width:900px){#root .journey .three-world-ui{--road-copy-left:5%}}
+@media(max-width:767px){#root .journey .three-world-ui{--road-copy-left:6%}}
+@media(max-width:600px){
+  #root .journey .three-world-ui .three-world-copy .three-world-cta,
+  #root .journey .three-world-ui .three-world-browse{min-height:42px;height:42px;padding:0 14px;gap:10px;font-size:13px}
+  #root .journey .three-world-ui .three-world-browse,#root .journey .three-world-ui .three-world-progress{bottom:max(14px,env(safe-area-inset-bottom))}
+  #root .journey .three-world-ui .three-world-progress{min-height:42px}
+}

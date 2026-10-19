@@ -32,7 +32,8 @@
 .palette-custom .mesh-a{background:radial-gradient(ellipse 64% 50% at 46% 48%,color-mix(in srgb,var(--c2) 85%,transparent) 0%,transparent 76%)}
 .palette-custom .mesh-b{background:radial-gradient(ellipse 60% 44% at 20% 22%,color-mix(in srgb,var(--c1) 80%,transparent) 0%,transparent 80%)}
 .palette-custom .mesh-c{background:radial-gradient(ellipse 58% 48% at 84% 82%,var(--c3) 0%,color-mix(in srgb,var(--c3) 55%,transparent) 36%,transparent 80%)}
-.palette-custom .mesh-d{background:radial-gradient(ellipse 58% 44% at 70% 30%,color-mix(in srgb,var(--c1) 60%,var(--c3)) 0%,transparent 78%)}
+/* Use the first colour only: mixing two opposite colours (e.g. green and red) turns muddy brown. */
+.palette-custom .mesh-d{background:radial-gradient(ellipse 58% 44% at 70% 30%,color-mix(in srgb,var(--c1) 55%,transparent) 0%,transparent 78%)}
 /* Uploaded image, GIF or video backgrounds cover the whole scene. */
 /* (More specific than the old ".three-category-backdrops img{opacity:0}" rule for the retired raster backdrops.) */
 .three-category-backdrops .animated-category-backdrop.has-media .backdrop-media,.animated-category-backdrop.has-media .backdrop-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:1;transform:none;transition:none;pointer-events:none}

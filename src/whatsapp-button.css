@@ -12,3 +12,8 @@
 @media(max-width:600px){.whatsapp-float{height:54px;min-width:54px;padding:0 12px}.whatsapp-float.is-raised{bottom:max(64px,calc(env(safe-area-inset-bottom) + 54px))}}
 @media(prefers-reduced-motion:reduce){.whatsapp-float,.whatsapp-float-label{transition:none}.whatsapp-float::before{animation:none}}
 @media print{.whatsapp-float{display:none}}
+/* Floating WhatsApp button: a square that matches the menu button's style instead of a 70×58 block. */
+.whatsapp-float{height:56px;min-width:56px;padding:0;gap:0;justify-content:center}
+.whatsapp-float:hover,.whatsapp-float:focus-visible{padding:0 15px}
+.whatsapp-float:hover .whatsapp-float-label,.whatsapp-float:focus-visible .whatsapp-float-label{margin-left:10px}
+@media(max-width:600px){.whatsapp-float{height:50px;min-width:50px;padding:0}}

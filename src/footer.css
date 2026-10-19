@@ -42,3 +42,5 @@
 /* Header logo: the transparent wordmark, larger, with no white box. */
 #root .site-header .brand-link{width:136px;mix-blend-mode:normal}#root .site-header .brand-link img{display:block;width:100%;height:auto;mix-blend-mode:normal;background:none}
 @media(max-width:600px){#root .site-header .brand-link{width:108px}}
+#root .site-header .brand-link{transition:opacity .25s ease,transform .3s cubic-bezier(.22,1,.36,1),visibility .3s}#root .site-header.is-scrolled .brand-link{opacity:0;visibility:hidden;transform:translateY(-12px);pointer-events:none}
+@media(prefers-reduced-motion:reduce){#root .site-header .brand-link{transition:none}}

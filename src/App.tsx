@@ -38,11 +38,13 @@ const categoryBackground = (id: string) => journeyBackgrounds[id] || categoryByI
 
 function Header({path}:{path:string}) {
   const home=path==='/';const reduced=useReducedMotion();
-  const [open,setOpen]=useState(false),[hovered,setHovered]=useState<string|null>(null);
+  const [open,setOpen]=useState(false),[hovered,setHovered]=useState<string|null>(null),[scrolled,setScrolled]=useState(false);
+  // The logo stays at the top of the page: it hides once the visitor scrolls, so it never sits over content.
+  useEffect(()=>{const update=()=>setScrolled(scrollY>40);update();addEventListener('scroll',update,{passive:true});return()=>removeEventListener('scroll',update)},[]);
   useEffect(()=>{setOpen(false);setHovered(null)},[path]);
   useEffect(()=>{document.documentElement.dataset.ambientPaused='false';window.dispatchEvent(new Event('toyon:motion'))},[]);
   useEffect(()=>{const close=(e:KeyboardEvent)=>{if(e.key==='Escape')setOpen(false)};window.addEventListener('keydown',close);return()=>window.removeEventListener('keydown',close)},[]);
-  return <m.header className={`site-header${home?' home-header':''}`} initial={reduced?false:{opacity:0,y:-12}} animate={{opacity:1,y:0}} transition={softSpring}>
+  return <m.header className={`site-header${home?' home-header':''}${scrolled?' is-scrolled':''}`} initial={reduced?false:{opacity:0,y:-12}} animate={{opacity:1,y:0}} transition={softSpring}>
     {!home&&<MotionLink href="/" className="brand-link" aria-label="Toyon home"><img src="/assets/brand/toyon-wordmark.svg" alt="Toyon" width="841" height="302"/></MotionLink>}
     <div className="header-actions"><MotionButton className="menu-toggle" onClick={()=>setOpen(!open)} aria-expanded={open} aria-controls="site-menu"><span className="menu-label">{open?'Close':'Menu'}</span><span className="menu-glyph" aria-hidden="true"><m.i animate={{rotate:open?45:0,y:open?3.5:0}} transition={uiSpring}/><m.i animate={{rotate:open?-45:0,y:open?-3.5:0}} transition={uiSpring}/></span></MotionButton></div>
     <AnimatePresence>{open&&<m.nav id="site-menu" className="site-menu" aria-label="Main navigation" initial="hidden" animate="visible" exit="exit" variants={{hidden:{opacity:0,scale:reduced?1:.97},visible:{opacity:1,scale:1,transition:{...softSpring,staggerChildren:.055}},exit:{opacity:0,scale:reduced?1:.98,transition:{duration:.18,staggerChildren:.035,staggerDirection:-1}}}} onPointerLeave={()=>setHovered(null)}>

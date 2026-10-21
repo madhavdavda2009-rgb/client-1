@@ -1,6 +1,7 @@
 import type { MouseEvent } from 'react';
 const logo = '/assets/brand/toyon-hierarchy.svg';
 import './opening-products.css';
+import Foil from './FoilText';
 export default function OpeningProducts({embedded=false,onEnter}:{embedded?:boolean;onEnter?:()=>void}){
  const enterWorlds=(event:MouseEvent<HTMLAnchorElement>)=>{
   if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
@@ -12,6 +13,6 @@ export default function OpeningProducts({embedded=false,onEnter}:{embedded?:bool
   <div className="opening-product-collage" aria-hidden="true"/>
   <span className="opening-sr">Toyon products</span>
   {!embedded&&<img className="opening-logo" src={logo} alt="Toyon Industry Pvt Ltd" width="1600" height="1131" fetchPriority="high"/>}
-  <div className="opening-guide"><a className="text-link opening-world-link" href="#toyon-journey" onClick={enterWorlds}>Explore worlds <span aria-hidden="true">↓</span></a><span className="opening-scroll-note">Scroll to enter the worlds</span></div>
+  <div className="opening-guide"><p className="opening-tagline"><Foil>{'Foil balloon manufacturer · Ahmedabad'}</Foil></p><a className="text-link opening-world-link" href="#toyon-journey" onClick={enterWorlds}>Explore worlds <span aria-hidden="true">↓</span></a><span className="opening-scroll-note">Scroll to enter the worlds</span></div>
  </section>;
 }

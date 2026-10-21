@@ -2,6 +2,7 @@ import { categories, categoryById, products } from './catalog';
 import { MotionLink, Reveal } from './MotionUI';
 import { balloonFaq, orderSteps, productFaq, qualityPoints, useCases, usesPath } from './trust-content';
 import './trust.css';
+import Foil from './FoilText';
 
 const fill = (text: string) => text.replace('{designs}', String(products.length)).replace('{collections}', String(categories.length));
 
@@ -9,7 +10,7 @@ const fill = (text: string) => text.replace('{designs}', String(products.length)
 export function QualityPoints({ heading = 'Why buyers choose Toyon' }: { heading?: string }) {
   return <section className="trust-points" aria-labelledby="trust-points-title">
     <h2 id="trust-points-title">{heading}</h2>
-    <ul>{qualityPoints.map(point => <li key={point.title}><h3>{point.title}</h3><p>{fill(point.text)}</p></li>)}</ul>
+    <ul>{qualityPoints.map(point => <li key={point.title}><h3>{point.title}</h3><p><Foil>{fill(point.text)}</Foil></p></li>)}</ul>
   </section>;
 }
 
@@ -28,14 +29,14 @@ export function UseCaseLinks({ category }: { category: string }) {
 export function ProductFaq() {
   return <section className="trust-faq" aria-labelledby="trust-faq-title">
     <h2 id="trust-faq-title">Buying this design</h2>
-    {productFaq.map(item => <details key={item.q}><summary>{item.q}</summary><p>{item.a}</p></details>)}
+    {productFaq.map(item => <details key={item.q}><summary>{item.q}</summary><p><Foil>{item.a}</Foil></p></details>)}
   </section>;
 }
 
 function BalloonFaq() {
   return <section className="trust-faq" aria-labelledby="balloon-faq-title">
     <h2 id="balloon-faq-title">Foil balloon questions, answered</h2>
-    {balloonFaq.map(item => <details key={item.q}><summary>{item.q}</summary><p>{item.a}</p></details>)}
+    {balloonFaq.map(item => <details key={item.q}><summary>{item.q}</summary><p><Foil>{item.a}</Foil></p></details>)}
   </section>;
 }
 
@@ -50,10 +51,10 @@ function OrderSteps() {
 // /foil-balloon-uses: where foil balloons are used, then why buyers can trust Toyon, then how to order.
 export function UsesPage() {
   return <main className="content-page uses-page">
-    <Reveal className="page-heading"><span className="eyebrow">Foil balloon uses</span><h1>Where are our<br />products used?</h1><p>From birthday tables to shop windows, our foil balloons turn an ordinary space into a celebration. Here is where they are used most, and which collections fit each occasion.</p></Reveal>
+    <Reveal className="page-heading"><span className="eyebrow">Foil balloon uses</span><h1>Where are our<br />products used?</h1><p><Foil>{'From birthday tables to shop windows, our foil balloons turn an ordinary space into a celebration. Here is where they are used most, and which collections fit each occasion.'}</Foil></p></Reveal>
     <div className="use-cases">{useCases.map(use => <article key={use.id} id={use.id} className="use-case">
       {use.image && <img src={use.image} alt={use.title} loading="lazy" decoding="async" />}
-      <h2>{use.title}</h2><p>{use.text}</p>
+      <h2>{use.title}</h2><p><Foil>{use.text}</Foil></p>
       <p className="use-case-collections">{use.collections.filter(id => categoryById[id]).map(id => <MotionLink key={id} href={`/categories/${id}`}>{categoryById[id].title}</MotionLink>)}</p>
     </article>)}</div>
     <QualityPoints heading="Why wholesalers and shops trust Toyon" />

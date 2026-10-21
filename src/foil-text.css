@@ -1,0 +1,6 @@
+/* "foil balloon" marker highlight: a brand-yellow stroke behind the words (works on light and dark sections). */
+#root .foil-mark{background:linear-gradient(180deg,transparent 56%,var(--toyon-yellow,#f5bc19) 56%,var(--toyon-yellow,#f5bc19) 90%,transparent 90%);color:inherit;font-weight:800;padding:0 .08em;margin:0 -.04em;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.site-footer .foil-mark,.manufacturing-company .foil-mark{background:linear-gradient(180deg,transparent 56%,#f5bc1999 56%,#f5bc1999 90%,transparent 90%)}
+/* Home hero: what Toyon makes, right under the logo. */
+#root .opening-tagline{margin:0 0 4px;font-family:var(--font-body);font-size:clamp(15px,1.4vw,19px);font-weight:700;line-height:1.35;letter-spacing:.01em;color:#000;text-align:center;white-space:nowrap}
+@media(max-width:600px){#root .opening-tagline{font-size:14px}}

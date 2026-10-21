@@ -20,9 +20,9 @@ export function routeMetadata(path: string): Metadata {
   // A few well-known themes for descriptions (written out so names keep their capitals).
   const themes = 'Christmas, Halloween, dinosaur, animal and character';
   const fixed: Record<string, { title: string; description: string }> = {
-    '/': { title: `Foil Balloon Manufacturer | Toyon Industry Pvt Ltd`, description: `Toyon makes foil balloons in ${place}: ${products.length} ${themes} designs for wholesale and bulk orders.` },
-    '/products': { title: `Foil Balloon Designs for Wholesale (${products.length}) | Toyon`, description: `Browse ${products.length} foil balloon designs in ${categories.length} collections: Christmas, Halloween, dinosaurs, animals and more. Wholesale and bulk orders from Ahmedabad.` },
-    '/categories': { title: 'Foil Balloon Collections | Toyon Balloons', description: `${categories.length} foil balloon collections from Toyon: Christmas, Halloween, dinosaurs, animals and more. Pick a collection and send a bulk enquiry.` },
+    '/': { title: `Foil Balloon Manufacturer | Toyon Industry Pvt Ltd`, description: `Toyon makes foil balloons in ${place}: a wide range of ${themes} designs for wholesale and bulk orders.` },
+    '/products': { title: 'Foil Balloon Designs for Wholesale | Toyon', description: 'Browse a wide range of foil balloon designs across themed collections: Christmas, Halloween, dinosaurs, animals and more. Wholesale and bulk orders from Ahmedabad.' },
+    '/categories': { title: 'Foil Balloon Collections | Toyon Balloons', description: 'Foil balloon collections from Toyon: Christmas, Halloween, dinosaurs, animals and more. Pick a collection and send a bulk enquiry.' },
     '/about': { title: `About Toyon | Foil Balloon Maker, ${place}`, description: `Toyon Industry Pvt Ltd is a foil balloon manufacturer in Odhav, Ahmedabad, founded by ${company.founder}, making balloons for bulk orders.` },
     '/contact': { title: 'Bulk Foil Balloon Enquiry & Quote | Toyon', description: 'Get a quote for foil balloons in bulk. Choose designs and quantities, and Toyon in Ahmedabad will call or message you about pricing and delivery.' },
     [usesPath]: { title: 'Foil Balloon Uses: Birthdays, Parties & Events | Toyon', description: 'Where foil balloons are used: birthdays, baby showers, theme parties, Christmas, Halloween, school events, photo booths, shop displays and promotions.' },
@@ -54,7 +54,7 @@ const organization = () => ({
   logo: `${siteBase}/favicon-256.png`, email: company.email,
   founder: { '@type': 'Person', name: company.founder },
   address: { '@type': 'PostalAddress', streetAddress: 'A/06, Gaytri Ind. Estate, Nr. Central Workshop Odhav, Odhav Industrial Estate', addressLocality: 'Ahmedabad', addressRegion: 'Gujarat', postalCode: '382415', addressCountry: 'IN' },
-  description: `Foil balloon manufacturer in ${place} with ${products.length} designs for wholesale and bulk orders.`,
+  description: `Foil balloon manufacturer in ${place} with a wide range of designs for wholesale and bulk orders.`,
   knowsAbout: ['Foil balloons', 'Balloon manufacturing', 'Party balloons', 'Wholesale balloons', 'Bulk balloon orders'],
   areaServed: { '@type': 'Country', name: 'India' },
   hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Toyon foil balloon collections', itemListElement: categories.filter(c => c.products.length).map(c => ({ '@type': 'OfferCatalog', name: `${c.title} foil balloons`, url: `${siteBase}/categories/${c.id}` })) },

@@ -4,10 +4,10 @@
 
 export const usesPath = '/foil-balloon-uses';
 
-// Shown on every product page and on the uses page. {designs} and {collections} are filled in with live counts.
+// Shown on every product page and on the uses page. No fixed counts: the range keeps growing.
 export const qualityPoints = [
   { title: 'Good-quality plastic film', text: 'Every balloon is made from good-quality plastics, then printed and sealed by our professional production team.' },
-  { title: 'Distinctive designs', text: '{designs} designs across {collections} themed collections, from festive favourites to animals, characters and vehicles.' },
+  { title: 'Distinctive designs', text: 'A wide range of designs across themed collections, from festive favourites to animals, characters and vehicles.' },
   { title: 'Direct from the manufacturer', text: 'Made at our unit in Odhav, Ahmedabad, so you speak directly with the people who produce your order.' },
   { title: 'Clean, careful handling', text: 'Cleanliness and non-harmful material choices are priorities, from production through to packing.' },
   { title: 'Built for bulk orders', text: 'Pick designs and rough quantities online. Our team calls or messages you to confirm details, packaging and pricing.' },

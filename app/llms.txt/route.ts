@@ -20,7 +20,7 @@ export async function GET() {
 
   const content = `# ${company.name} (Toyon)
 
-> ${company.name} is a foil balloon manufacturer based in Odhav, Ahmedabad, Gujarat, India. It makes shaped foil balloons for wholesale and bulk orders: ${products.length} designs across ${categories.length} themed collections, including Christmas, Halloween, dinosaurs, animal faces, vehicles, fruit and vegetables, swords and headband shapes.
+> ${company.name} is a foil balloon manufacturer based in Odhav, Ahmedabad, Gujarat, India. It makes shaped foil balloons for wholesale and bulk orders: a wide range of designs across themed collections, including Christmas, Halloween, dinosaurs, animal faces, vehicles, fruit and vegetables, swords and headband shapes.
 
 Website: ${siteBase}/
 
@@ -49,8 +49,8 @@ ${faq}
 ## Main pages
 
 - [Home](${siteBase}/): Brand introduction, how foil balloons are made, and frequently asked questions.
-- [All foil balloon designs](${siteBase}/products): The full catalogue of ${products.length} designs.
-- [Collections](${siteBase}/categories): The ${categories.length} themed collections.
+- [All foil balloon designs](${siteBase}/products): The full catalogue of designs.
+- [Collections](${siteBase}/categories): All themed collections.
 - [Foil balloon uses](${siteBase}${usesPath}): Occasions and businesses that use foil balloons, with matching collections.
 - [About ${company.name}](${siteBase}/about): Company background.
 - [Bulk enquiry and quote](${siteBase}/contact): Enquiry form for wholesale and bulk orders.

@@ -9,8 +9,8 @@ export const siteBase = 'https://www.toyonindustry.com';
 const shareImage = '/assets/scenery/toyon-share-card.jpg';
 export const getRoutes = () => ['/', '/products', '/categories', usesPath, '/about', '/contact', '/privacy-policy', '/terms-and-conditions', ...categories.map(c => `/categories/${c.id}`), ...products.map(p => `/products/${p.slug}`)];
 
-// Search wording: buyers search for "foil balloon(s)", "balloon manufacturer", "wholesale" and the city, so titles lead
-// with those words. Keep titles under ~60 characters and descriptions under ~160 so Google shows them in full.
+// Search wording: buyers search for "foil balloon(s)", "balloon manufacturer", "wholesale" and the city, so the
+// descriptions use those words. Keep titles under ~60 characters and descriptions under ~160 so Google shows them in full.
 const place = 'Ahmedabad, India';
 const clip = (text: string, max = 160) => text.length <= max ? text : text.slice(0, text.lastIndexOf(' ', max - 1)).replace(/[,;:\s]+$/, '') + '…';
 
@@ -19,23 +19,25 @@ export function routeMetadata(path: string): Metadata {
   const category = path.startsWith('/categories/') ? categoryById[path.slice('/categories/'.length)] : undefined;
   // A few well-known themes for descriptions (written out so names keep their capitals).
   const themes = 'Christmas, Halloween, dinosaur, animal and character';
+  // Titles name products generically because the range will grow beyond foil balloons; descriptions say what
+  // Toyon makes today.
   const fixed: Record<string, { title: string; description: string }> = {
-    '/': { title: `Foil Balloon Manufacturer | Toyon Industry Pvt Ltd`, description: `Toyon makes foil balloons in ${place}: a wide range of ${themes} designs for wholesale and bulk orders.` },
-    '/products': { title: 'Foil Balloon Designs for Wholesale | Toyon', description: 'Browse a wide range of foil balloon designs across themed collections: Christmas, Halloween, dinosaurs, animals and more. Wholesale and bulk orders from Ahmedabad.' },
-    '/categories': { title: 'Foil Balloon Collections | Toyon Balloons', description: 'Foil balloon collections from Toyon: Christmas, Halloween, dinosaurs, animals and more. Pick a collection and send a bulk enquiry.' },
-    '/about': { title: `About Toyon | Foil Balloon Maker, ${place}`, description: `Toyon Industry Pvt Ltd is a foil balloon manufacturer in Odhav, Ahmedabad, founded by ${company.founder}, making balloons for bulk orders.` },
-    '/contact': { title: 'Bulk Foil Balloon Enquiry & Quote | Toyon', description: 'Get a quote for foil balloons in bulk. Choose designs and quantities, and Toyon in Ahmedabad will call or message you about pricing and delivery.' },
-    [usesPath]: { title: 'Foil Balloon Uses: Birthdays, Parties & Events | Toyon', description: 'Where foil balloons are used: birthdays, baby showers, theme parties, Christmas, Halloween, school events, photo booths, shop displays and promotions.' },
+    '/': { title: 'Toyon Industry Pvt Ltd | Product Manufacturer in Ahmedabad', description: `Toyon makes foil balloons in ${place}: a wide range of ${themes} designs for wholesale and bulk orders.` },
+    '/products': { title: 'Our Products | Wholesale & Bulk Orders | Toyon', description: 'Browse a wide range of foil balloon designs across themed collections: Christmas, Halloween, dinosaurs, animals and more. Wholesale and bulk orders from Ahmedabad.' },
+    '/categories': { title: 'Product Collections | Toyon', description: 'Foil balloon collections from Toyon: Christmas, Halloween, dinosaurs, animals and more. Pick a collection and send a bulk enquiry.' },
+    '/about': { title: `About Toyon Industry Pvt Ltd | ${place}`, description: `Toyon Industry Pvt Ltd is a foil balloon manufacturer in Odhav, Ahmedabad, founded by ${company.founder}, making balloons for bulk orders.` },
+    '/contact': { title: 'Bulk Product Enquiry & Quote | Toyon', description: 'Get a quote for foil balloons in bulk. Choose designs and quantities, and Toyon in Ahmedabad will call or message you about pricing and delivery.' },
+    [usesPath]: { title: 'Where Our Products Are Used | Toyon', description: 'Where foil balloons are used: birthdays, baby showers, theme parties, Christmas, Halloween, school events, photo booths, shop displays and promotions.' },
     '/privacy-policy': { title: 'Privacy Policy | Toyon', description: legalContent.privacy.description },
     '/terms-and-conditions': { title: 'Terms and Conditions | Toyon', description: legalContent.terms.description },
   };
   // Some designs share a name across collections; distinguish their search titles.
   const productCollection = product && products.some(other => other.slug !== product.slug && other.title === product.title)
     ? categoryById[product.category]?.title : undefined;
-  const productTitle = product && `${product.title} foil balloon${productCollection ? ` (${productCollection})` : ''}`;
+  const productTitle = product && `${product.title}${productCollection ? ` (${productCollection})` : ''}`;
   // Drop the brand suffix when it would push a product title past what Google shows in full.
   const title = productTitle ? (productTitle.length > 56 ? productTitle : `${productTitle} | Toyon`)
-    : category ? `${category.title} foil balloons – wholesale | Toyon`
+    : category ? `${category.title} Collection | Toyon`
     : fixed[path]?.title ?? 'Toyon foil balloons';
   const description = clip(product ? `${product.title} foil balloon for bulk and wholesale orders from Toyon, ${place}. ${product.description}`
     : category ? `${category.products.length} ${category.title} foil balloon designs from Toyon, ${place}. Browse the collection and send a bulk or wholesale enquiry.`

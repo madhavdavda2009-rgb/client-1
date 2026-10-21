@@ -19,11 +19,11 @@ export function routeMetadata(path: string): Metadata {
   const category = path.startsWith('/categories/') ? categoryById[path.slice('/categories/'.length)] : undefined;
   // A few well-known themes for descriptions (written out so names keep their capitals).
   const themes = 'Christmas, Halloween, dinosaur, animal and character';
-  // Titles name products generically because the range will grow beyond foil balloons; descriptions say what
-  // Toyon makes today.
+  // Titles name products generically because the range will grow beyond foil balloons (home and products keep
+  // 'Foil Balloon Manufacturer'); descriptions say what Toyon makes today.
   const fixed: Record<string, { title: string; description: string }> = {
-    '/': { title: 'Toyon Industry Pvt Ltd | Product Manufacturer in Ahmedabad', description: `Toyon makes foil balloons in ${place}: a wide range of ${themes} designs for wholesale and bulk orders.` },
-    '/products': { title: 'Our Products | Wholesale & Bulk Orders | Toyon', description: 'Browse a wide range of foil balloon designs across themed collections: Christmas, Halloween, dinosaurs, animals and more. Wholesale and bulk orders from Ahmedabad.' },
+    '/': { title: 'Foil Balloon Manufacturer | Toyon Industry Pvt Ltd', description: `Toyon makes foil balloons in ${place}: a wide range of ${themes} designs for wholesale and bulk orders.` },
+    '/products': { title: 'Our Products | Foil Balloon Manufacturer | Toyon', description: 'Browse a wide range of foil balloon designs across themed collections: Christmas, Halloween, dinosaurs, animals and more. Wholesale and bulk orders from Ahmedabad.' },
     '/categories': { title: 'Product Collections | Toyon', description: 'Foil balloon collections from Toyon: Christmas, Halloween, dinosaurs, animals and more. Pick a collection and send a bulk enquiry.' },
     '/about': { title: `About Toyon Industry Pvt Ltd | ${place}`, description: `Toyon Industry Pvt Ltd is a foil balloon manufacturer in Odhav, Ahmedabad, founded by ${company.founder}, making balloons for bulk orders.` },
     '/contact': { title: 'Bulk Product Enquiry & Quote | Toyon', description: 'Get a quote for foil balloons in bulk. Choose designs and quantities, and Toyon in Ahmedabad will call or message you about pricing and delivery.' },

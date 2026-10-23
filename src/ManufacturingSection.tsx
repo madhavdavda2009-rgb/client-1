@@ -8,7 +8,7 @@ import './manufacturing.css';
 export default function ManufacturingSection(){
  return <section className="manufacturing-section" id="manufacturing" aria-labelledby="manufacturing-title">
   <div className="manufacturing-wrap">
-   <Reveal className="manufacturing-intro"><span className="eyebrow">Manufacturing · Ahmedabad</span><h1 id="manufacturing-title">From film to<br/>finished balloon.</h1><p><Foil>{'Explore the stages behind foil balloon manufacturing, from material preparation and printing to sealing and quality checks.'}</Foil></p></Reveal>
+   <Reveal className="manufacturing-intro"><span className="eyebrow">Manufacturing · Ahmedabad</span><h2 id="manufacturing-title">From film to<br/>finished balloon.</h2><p><Foil>{'Explore the stages behind foil balloon manufacturing, from material preparation and printing to sealing and quality checks.'}</Foil></p></Reveal>
    <p className="process-scope">A general manufacturing overview. Confirm the material, equipment and inspection requirements for your selected products directly with Toyon.</p>
    <div className="manufacturing-designs" aria-label="Selected Toyon product designs">{categories.filter(category=>productById[category.products[0]]).slice(0,3).map(category=>{const product=productById[category.products[0]];return <MotionLink href={`/products/${product.slug}`} key={product.id}><img src={product.thumb} alt={productAlt(product)} loading="lazy" decoding="async"/><span>{category.title} <span aria-hidden="true">↗</span></span></MotionLink>})}</div>
    <ol className="manufacturing-steps">{content.steps.map((step,index)=><li key={step.title}><Reveal><span className="process-number" aria-hidden="true">{String(index+1).padStart(2,'0')}</span><h3>{step.title}</h3><p>{step.body}</p></Reveal></li>)}</ol>

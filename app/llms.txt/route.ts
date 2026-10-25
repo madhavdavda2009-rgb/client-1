@@ -3,6 +3,7 @@ import { siteBase } from '../../src/seo';
 import { company } from '../../src/site-content';
 import { ensureCatalog } from '../../src/catalog-server';
 import { balloonFaq, productFaq, qualityPoints, useCases, usesPath } from '../../src/trust-content';
+import { guides, guidesPath } from '../../src/guides-content';
 
 export const revalidate = 3600;
 
@@ -16,7 +17,8 @@ export async function GET() {
   ).join('\n');
   const uses = useCases.map(use => `- [${use.title}](${siteBase}${usesPath}#${use.id}): ${use.text}`).join('\n');
   const quality = qualityPoints.map(point => `- ${point.title}: ${fill(point.text)}`).join('\n');
-  const faq = [...productFaq, ...balloonFaq].map(item => `Q: ${item.q}\nA: ${item.a}`).join('\n\n');
+  const guideLinks = guides.map(guide => `- [${guide.title}](${siteBase}${guidesPath}/${guide.slug}): ${guide.description}`).join('\n');
+  const faq = [...productFaq, ...balloonFaq, ...guides.flatMap(guide => guide.faq)].map(item => `Q: ${item.q}\nA: ${item.a}`).join('\n\n');
 
   const content = `# ${company.name} (Toyon)
 
@@ -46,12 +48,17 @@ ${uses}
 
 ${faq}
 
+## Foil balloon guides
+
+${guideLinks}
+
 ## Main pages
 
 - [Home](${siteBase}/): Brand introduction, how foil balloons are made, and frequently asked questions.
 - [All foil balloon designs](${siteBase}/products): The full catalogue of designs.
 - [Collections](${siteBase}/categories): All themed collections.
 - [Foil balloon uses](${siteBase}${usesPath}): Occasions and businesses that use foil balloons, with matching collections.
+- [Foil balloon guides](${siteBase}${guidesPath}): How-to guides on choosing, filling, decorating with and reusing foil balloons.
 - [About ${company.name}](${siteBase}/about): Company background.
 - [Bulk enquiry and quote](${siteBase}/contact): Enquiry form for wholesale and bulk orders.
 

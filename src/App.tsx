@@ -22,6 +22,8 @@ import { company } from './site-content';
 import EnquiryWizard from './EnquiryWizard';
 import { CollectionLinks, ProductFaq, QualityPoints, UseCaseLinks, UsesPage } from './TrustSections';
 import { usesPath } from './trust-content';
+import { guidesPath } from './guides-content';
+import { GuidesIndex, GuidePage } from './GuidesPage';
 import WhatsAppButton from './WhatsAppButton';
 import SiteHeader from './SiteHeader';
 import Foil from './FoilText';
@@ -47,7 +49,7 @@ function Footer() {
         </div>
         <nav className="footer-navigation" aria-label="Footer navigation">
           <h2>Explore Toyon</h2>
-          {[['/products','Products'],['/categories','Collections'],[usesPath,'Balloon uses'],['/about','About us'],['/contact','Contact']].map(([href,label])=><Link key={href} href={href}>{label}</Link>)}
+          {[['/products','Products'],['/categories','Collections'],[usesPath,'Balloon uses'],[guidesPath,'Guides'],['/about','About us'],['/contact','Contact']].map(([href,label])=><Link key={href} href={href}>{label}</Link>)}
         </nav>
         <nav className="footer-navigation footer-collections" aria-label="Foil balloon collections">
           <h2>Collections</h2>
@@ -125,6 +127,8 @@ export default function App({path,searchProduct}:{path:string;searchProduct?:str
   else if (path === '/about') page = <AboutPage />;
   else if (path === '/contact') page = <ContactPage searchProduct={searchProduct} />;
   else if (path === usesPath) page = <UsesPage />;
+  else if (path === guidesPath) page = <GuidesIndex />;
+  else if (path.startsWith(guidesPath + '/')) page = <GuidePage slug={path.slice(guidesPath.length + 1)} notFound={<NotFound />} />;
   else page = <NotFound />;
   return <MotionConfig reducedMotion="user"><LazyMotion features={loadMotionFeatures}><MotionLink className="skip-link" href="/products">Skip to product catalogue</MotionLink><SiteHeader path={path} /><PageTransition home={path==='/'}>{page}</PageTransition><Footer /><WhatsAppButton raised={path==='/'} /><EnquiryPrompt path={path} /></LazyMotion></MotionConfig>;
 }

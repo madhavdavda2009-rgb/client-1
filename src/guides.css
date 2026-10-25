@@ -1,0 +1,24 @@
+/* Foil balloon guides (/guides and /guides/<slug>): reading width like the legal pages, brand yellow accents. */
+.guide-page{max-width:1120px;margin:0 auto}.guide-page .page-heading{max-width:780px}
+.guide-page .page-heading p+p{margin-top:16px}
+.guide-hero,.guide-figure{margin:0 0 36px}
+.guide-hero img,.guide-figure img{display:block;width:100%;height:auto;border-radius:2px;background:#f6f9f7}
+.guide-figure{margin:24px 0 0}.guide-figure img{max-height:620px;object-fit:cover}
+.guide-hero figcaption,.guide-figure figcaption{margin-top:8px;font-size:12px;line-height:1.5;opacity:.65}
+.guide-contents{display:flex;flex-wrap:wrap;gap:10px 20px;padding:4px 0 30px;border-bottom:1px solid #0002;margin-bottom:36px}
+.guide-contents a{font-size:13px;text-underline-offset:4px;line-height:1.6}
+.guide-body{max-width:780px}
+.guide-body>section{margin-bottom:40px;scroll-margin-top:104px}
+.guide-body>section>h2{font-family:var(--font-display);font-size:clamp(22px,2.4vw,30px);font-weight:700;line-height:1.25;letter-spacing:-.02em;margin:0 0 16px}
+.guide-body>section>p,.guide-body>section>ul{font-size:16px;line-height:1.85;margin:0 0 16px}
+.guide-body>section>ul{padding-left:22px}.guide-body>section>ul li+li{margin-top:6px}
+.guide-body .use-case-collections{margin:4px 0 0!important}
+.guide-shop{padding:28px;border:1px solid #c9940e55;border-top:4px solid var(--toyon-yellow,#f5bc19);border-radius:2px;background:var(--toyon-paper,#f6f9f7)}
+.guide-shop .use-case-collections{margin:0 0 22px!important}
+.guide-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px}
+#root .guide-card{display:flex;flex-direction:column;padding:0 0 22px;border:1px solid #183e4426;border-radius:2px;background:#fff;color:#000;text-decoration:none;overflow:hidden}
+.guide-card img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;margin-bottom:18px}
+.guide-card h2{margin:0 22px 10px;font-family:var(--font-display);font-size:22px;font-weight:600;letter-spacing:-.02em;line-height:1.25}
+.guide-card p{margin:0 22px;font-size:15px;line-height:1.65}
+#root .guide-card .text-link{align-self:flex-start;margin:16px 22px 0}
+@media(max-width:600px){.guide-body>section>p,.guide-body>section>ul{font-size:15px;line-height:1.8}.guide-contents{gap:12px 18px;margin-bottom:28px;padding-bottom:24px}.guide-body>section{margin-bottom:32px}.guide-shop{padding:20px}.guide-hero{margin-bottom:28px}}

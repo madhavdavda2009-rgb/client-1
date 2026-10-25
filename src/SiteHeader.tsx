@@ -3,11 +3,12 @@ import { createPortal } from 'react-dom';
 import { AnimatePresence, m, useReducedMotion } from 'framer-motion';
 import { MotionLink, MotionNextLink, softSpring, uiSpring } from './MotionUI';
 import { usesPath } from './trust-content';
+import { guidesPath } from './guides-content';
 import { company } from './site-content';
 import { whatsappLink } from './whatsapp';
 import './menu-drawer.css';
 
-const links: [string, string][] = [['/', 'Home'], ['/products', 'Products'], ['/categories', 'Collections'], [usesPath, 'Balloon uses'], ['/about', 'About us'], ['/contact', 'Contact']];
+const links: [string, string][] = [['/', 'Home'], ['/products', 'Products'], ['/categories', 'Collections'], [usesPath, 'Balloon uses'], [guidesPath, 'Guides'], ['/about', 'About us'], ['/contact', 'Contact']];
 const drawerSpring = { type: 'spring', stiffness: 260, damping: 32, mass: .9 } as const;
 
 // Header: logo at the top left, and a menu button that slides in from the right edge. Once the visitor scrolls, the

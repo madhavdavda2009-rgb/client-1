@@ -4,10 +4,11 @@ import { balloonFaq, productFaq, useCases, usesPath } from './trust-content';
 import manufacturing from './manufacturing-content.json';
 import legalContent from './legal-content.json';
 import { company } from './site-content';
+import { guideBySlug, guides, guidesPath } from './guides-content';
 
 export const siteBase = 'https://www.toyonindustry.com';
 const shareImage = '/assets/scenery/toyon-share-card.jpg';
-export const getRoutes = () => ['/', '/products', '/categories', usesPath, '/about', '/contact', '/privacy-policy', '/terms-and-conditions', ...categories.map(c => `/categories/${c.id}`), ...products.map(p => `/products/${p.slug}`)];
+export const getRoutes = () => ['/', '/products', '/categories', usesPath, '/about', '/contact', '/privacy-policy', '/terms-and-conditions', guidesPath, ...guides.map(g => `${guidesPath}/${g.slug}`), ...categories.map(c => `/categories/${c.id}`), ...products.map(p => `/products/${p.slug}`)];
 
 // Search wording: buyers search for "foil balloon(s)", "balloon manufacturer", "wholesale" and the city, so the
 // descriptions use those words. Keep titles under ~60 characters and descriptions under ~160 so Google shows them in full.
@@ -17,6 +18,7 @@ const clip = (text: string, max = 160) => text.length <= max ? text : text.slice
 export function routeMetadata(path: string): Metadata {
   const product = path.startsWith('/products/') ? productById[path.slice('/products/'.length)] : undefined;
   const category = path.startsWith('/categories/') ? categoryById[path.slice('/categories/'.length)] : undefined;
+  const guide = path.startsWith(guidesPath + '/') ? guideBySlug[path.slice(guidesPath.length + 1)] : undefined;
   // A few well-known themes for descriptions (written out so names keep their capitals).
   const themes = 'Christmas, Halloween, dinosaur, animal and character';
   // Titles name products generically because the range will grow beyond foil balloons (home and products keep
@@ -27,6 +29,7 @@ export function routeMetadata(path: string): Metadata {
     '/categories': { title: 'Product Collections | Toyon', description: 'Foil balloon collections from Toyon: Christmas, Halloween, dinosaurs, animals and more. Pick a collection and send a bulk enquiry.' },
     '/about': { title: `About Toyon Industry Pvt Ltd | ${place}`, description: `Toyon Industry Pvt Ltd is a foil balloon manufacturer in Odhav, Ahmedabad, founded by ${company.founder}, making balloons for bulk orders.` },
     '/contact': { title: 'Bulk Product Enquiry & Quote | Toyon', description: 'Get a quote for foil balloons in bulk. Choose designs and quantities, and Toyon in Ahmedabad will call or message you about pricing and delivery.' },
+    [guidesPath]: { title: 'Foil Balloon Guides | Toyon', description: 'Practical foil balloon guides: foil vs latex, filling with helium or air, decoration ideas by occasion, and how to store and reuse foil balloons.' },
     [usesPath]: { title: 'Where Our Products Are Used | Toyon', description: 'Where foil balloons are used: birthdays, baby showers, theme parties, Christmas, Halloween, school events, photo booths, shop displays and promotions.' },
     '/privacy-policy': { title: 'Privacy Policy | Toyon', description: legalContent.privacy.description },
     '/terms-and-conditions': { title: 'Terms and Conditions | Toyon', description: legalContent.terms.description },
@@ -36,16 +39,16 @@ export function routeMetadata(path: string): Metadata {
     ? categoryById[product.category]?.title : undefined;
   const productTitle = product && `${product.title}${productCollection ? ` (${productCollection})` : ''}`;
   // Drop the brand suffix when it would push a product title past what Google shows in full.
-  const title = productTitle ? (productTitle.length > 56 ? productTitle : `${productTitle} | Toyon`)
+  const title = guide ? guide.metaTitle : productTitle ? (productTitle.length > 56 ? productTitle : `${productTitle} | Toyon`)
     : category ? `${category.title} Collection | Toyon`
     : fixed[path]?.title ?? 'Toyon foil balloons';
-  const description = clip(product ? `${product.title} foil balloon for bulk and wholesale orders from Toyon, ${place}. ${product.description}`
+  const description = clip(guide ? guide.description : product ? `${product.title} foil balloon for bulk and wholesale orders from Toyon, ${place}. ${product.description}`
     : category ? `${category.products.length} ${category.title} foil balloon designs from Toyon, ${place}. Browse the collection and send a bulk or wholesale enquiry.`
     : fixed[path]?.description ?? `Foil balloons from Toyon, ${place}.`);
-  const image = product ? [{ url: product.image, alt: productAlt(product) }] : [{ url: shareImage, width: 1200, height: 630, alt: 'Toyon foil balloon designs and brand logo' }];
+  const image = guide ? [{ url: guide.hero.src, width: guide.hero.width, height: guide.hero.height, alt: guide.hero.alt }] : product ? [{ url: product.image, alt: productAlt(product) }] : [{ url: shareImage, width: 1200, height: 630, alt: 'Toyon foil balloon designs and brand logo' }];
   return {
     title, description, alternates: { canonical: siteBase + path },
-    openGraph: { title, description, url: siteBase + path, type: 'website', siteName: company.name, locale: 'en_IN', images: image },
+    openGraph: { title, description, url: siteBase + path, type: guide ? 'article' : 'website', siteName: company.name, locale: 'en_IN', images: image },
     twitter: { card: 'summary_large_image', title, description, images: image.map(i => i.url) },
   };
 }
@@ -72,6 +75,9 @@ export function structuredData(path: string): object | null {
   const category = path.startsWith('/categories/') ? categoryById[path.slice('/categories/'.length)] : undefined;
   if (path === '/') return { '@context': 'https://schema.org', '@graph': [organization(), { '@type': 'WebSite', '@id': `${siteBase}/#website`, url: `${siteBase}/`, name: company.name, alternateName: ['Toyon Industry', 'Toyon'], publisher: { '@id': `${siteBase}/#organization` } }, faq(manufacturing.faqs.map(item => ({ q: item.question, a: item.answer })))] };
   if (path === '/about' || path === '/contact') return { '@context': 'https://schema.org', '@graph': [organization()] };
+  if (path === guidesPath) return { '@context': 'https://schema.org', '@graph': [crumbs([['Home', '/'], ['Guides', guidesPath]]), { '@type': 'ItemList', name: 'Foil balloon guides', itemListElement: guides.map((g, index) => ({ '@type': 'ListItem', position: index + 1, name: g.title, url: `${siteBase}${guidesPath}/${g.slug}` })) }] };
+  const guide = path.startsWith(guidesPath + '/') ? guideBySlug[path.slice(guidesPath.length + 1)] : undefined;
+  if (guide) return { '@context': 'https://schema.org', '@graph': [crumbs([['Home', '/'], ['Guides', guidesPath], [guide.title, path]]), { '@type': 'Article', headline: guide.title, description: guide.description, image: siteBase + guide.hero.src, url: siteBase + path, mainEntityOfPage: siteBase + path, author: { '@id': `${siteBase}/#organization` }, publisher: { '@id': `${siteBase}/#organization` } }, organization(), faq(guide.faq)] };
   if (path === usesPath) return { '@context': 'https://schema.org', '@graph': [crumbs([['Home', '/'], ['Foil balloon uses', usesPath]]), { '@type': 'ItemList', name: 'Where foil balloons are used', itemListElement: useCases.map((use, index) => ({ '@type': 'ListItem', position: index + 1, name: use.title, description: use.text, url: `${siteBase}${usesPath}#${use.id}` })) }, faq(balloonFaq)] };
   if (product) {
     const parent = categoryById[product.category];

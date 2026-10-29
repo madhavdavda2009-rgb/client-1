@@ -4,6 +4,7 @@
 // Images in /assets/guides are AI illustrations, not Toyon stock, so every figure is captioned as illustrative.
 
 export const guidesPath = '/guides';
+export const promotionalGuideSlug = 'promotional-foil-balloons';
 
 export type GuideImage = { src: string; alt: string; width: number; height: number };
 export type GuideSection = { id: string; heading: string; paragraphs: string[]; list?: string[]; image?: GuideImage; collections?: string[] };
@@ -292,6 +293,70 @@ export const guides: Guide[] = [
       { q: 'How should foil balloons be stored?', a: 'Flat, in a box or folder, in a cool, dry place away from sunlight, with as few folds as possible and the valve kept straight.' },
     ],
     collections: ['christmas', 'halloween', 'vehicles'],
+  },
+  {
+    slug: promotionalGuideSlug,
+    title: 'Promotional foil balloons: a guide for brands, shops and events',
+    metaTitle: 'Promotional Foil Balloons Guide | Toyon',
+    description: 'How to use foil balloons for store openings, product launches, shop displays and promotional events: choosing shapes, quantities, placement and buying in bulk.',
+    summary: 'Store openings, launches, stalls and shop windows: how to plan foil balloons that get a promotion noticed.',
+    hero: { src: '/assets/collections/store-opening.webp', alt: 'Toyon pineapple, duck, dinosaur and cat face foil balloons tied at the entrance of a shop on its opening day.', width: 1376, height: 768 },
+    intro: [
+      'Promotional balloons do one job: make people notice a place, a product or an offer. Shaped foil balloons are well suited to it, because a recognisable shape reads from a distance and the metallic film catches light even indoors.',
+      'This guide covers where promotional foil balloons work best, how to choose designs and quantities, and how to place them so they draw people in.',
+    ],
+    sections: [
+      {
+        id: 'where', heading: 'Where promotional balloons work best',
+        paragraphs: ['Foil balloons are most effective where people are deciding where to walk or what to look at:'],
+        list: [
+          'Store and showroom openings: at the entrance, along the shopfront and at the billing counter.',
+          'Product launches and offers: around the product display or the sale section.',
+          'Exhibition stalls and promotional counters: above eye level so the stall can be spotted across a hall.',
+          'Mall activations and seasonal sections: Christmas, Halloween and festival displays.',
+          'School, society and corporate events: entrances, stages and photo areas.',
+        ],
+        image: { src: '/assets/collections/fruit-and-vegetables.webp', alt: 'Toyon watermelon, pineapple and strawberry foil balloons held up at a bright celebration.', width: 1376, height: 768 },
+      },
+      {
+        id: 'designs', heading: 'Choosing designs for a campaign',
+        paragraphs: [
+          'Match the shape to the message. A food brand or juice counter suits fruit shapes; a toy shop or car showroom suits vehicles; a kids’ brand suits dinosaurs, animal faces and characters; seasonal offers suit Christmas or Halloween designs.',
+          'Keep the theme consistent. Several designs from one collection look planned, while a random mix can look cluttered. Tell the Toyon team about your campaign and they can suggest designs from the range that fit it.',
+        ],
+        collections: ['fruit-and-vegetables', 'vehicles', 'christmas', 'halloween'],
+      },
+      {
+        id: 'quantities', heading: 'How many balloons to plan for',
+        paragraphs: [
+          'Plan by location rather than by a single total. A shop entrance usually needs a cluster on each side; a counter or display needs a few at eye level; a stall needs enough to be visible above the crowd. Add extras for every day of the promotion so tired or damaged balloons can be replaced.',
+          'For multi-store or multi-city campaigns, list the number of locations and the days each one runs. That makes it easier to agree quantities and packaging in one bulk order.',
+        ],
+      },
+      {
+        id: 'placement', heading: 'Placement tips that get noticed',
+        list: [
+          'Place balloons where people approach from, not only where they arrive: shopfronts, corners and corridors.',
+          'Group balloons in odd numbers and vary the heights so the display looks full.',
+          'Use air-filled balloons on walls, sticks and backdrops for displays that stay up for days; use helium where floating clusters are needed.',
+          'Keep balloons away from heat, sharp edges and direct afternoon sun to help them last.',
+          'Never release foil balloons outdoors, and keep them away from overhead power lines.',
+        ],
+        paragraphs: [],
+      },
+      {
+        id: 'bulk', heading: 'Buying promotional balloons in bulk',
+        paragraphs: [
+          'Toyon Industry Private Limited makes shaped foil balloons in Odhav, Ahmedabad, for wholesalers, shops, decorators and businesses running promotions. Shortlist designs from the collections, then send an enquiry with rough quantities, your timeline and how the balloons will be used. The team calls or messages you to confirm details, packaging and pricing.',
+        ],
+      },
+    ],
+    faq: [
+      { q: 'Are foil balloons good for promotions?', a: 'Yes. Shaped foil balloons are easy to recognise from a distance and keep their shape for days, which makes them popular for store openings, product launches, stalls and shop displays.' },
+      { q: 'Should promotional foil balloons be filled with helium or air?', a: 'Use air for balloons on walls, sticks and backdrops that need to stay up for several days, and helium where you want floating clusters at an entrance or stall.' },
+      { q: 'Where can I buy promotional foil balloons in bulk in Ahmedabad?', a: 'Toyon Industry Private Limited is a foil balloon manufacturer in Odhav, Ahmedabad. Choose designs from the Toyon collections and send a bulk enquiry; the team will call or message you about quantities, packaging and pricing.' },
+    ],
+    collections: ['vehicles', 'fruit-and-vegetables', 'headband-shapes', 'christmas'],
   },
 ];
 

@@ -54,7 +54,7 @@ export function UsesPage() {
   return <main className="content-page uses-page">
     <Reveal className="page-heading"><span className="eyebrow">Foil balloon uses</span><h1>Where are our<br />products used?</h1><p><Foil>{'From birthday tables to shop windows, our foil balloons turn an ordinary space into a celebration. Here is where they are used most, and which collections fit each occasion.'}</Foil></p></Reveal>
     <div className="use-cases">{useCases.map(use => <article key={use.id} id={use.id} className="use-case">
-      {use.image && <img src={use.image} alt={use.title} loading="lazy" decoding="async" />}
+      {use.image && <img src={use.image} alt={`Toyon foil balloons for ${use.title.toLowerCase()}`} width="1376" height="768" loading="lazy" decoding="async" />}
       <h2>{use.title}</h2><p><Foil>{use.text}</Foil></p>
       <p className="use-case-collections">{use.collections.filter(id => categoryById[id]).map(id => <MotionLink key={id} href={`/categories/${id}`}>{categoryById[id].title}</MotionLink>)}</p>
     </article>)}</div>

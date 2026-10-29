@@ -27,7 +27,10 @@ export function applyCatalog(next: CatalogData) {
   const key = JSON.stringify([next.products.length, next.categories.length, next.roads.length, next.products.map(p => p.id + p.title + p.image + p.category).join('|'), next.categories.map(c => c.id + c.title + c.products.join(',')).join('|'), next.roads.map(r => JSON.stringify(r.scene ?? {}) + r.id + r.label + r.description + r.theme + r.category + r.products.join(',')).join('|')]);
   if (key === appliedKey) return;
   appliedKey = key;
-  products.splice(0, products.length, ...next.products);
+  // Products follow their collection's order (Christmas first, then Animal faces, …), keeping their order within it.
+  const collectionOrder = new Map(next.categories.map((c, i) => [c.id, i]));
+  const rank = (p: Product) => collectionOrder.get(p.category) ?? next.categories.length;
+  products.splice(0, products.length, ...[...next.products].sort((a, b) => rank(a) - rank(b)));
   categories.splice(0, categories.length, ...next.categories);
   for (const id of Object.keys(productById)) delete productById[id];
   for (const id of Object.keys(categoryById)) delete categoryById[id];

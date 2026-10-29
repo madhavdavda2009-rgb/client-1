@@ -13,3 +13,10 @@
 .enquiry-prompt :focus-visible{outline:3px solid var(--toyon-blue,#00a6ce);outline-offset:3px}
 @media(max-width:600px){.enquiry-prompt{padding:22px 18px 18px}.enquiry-prompt h2{font-size:20px}}
 @media print{.enquiry-prompt-overlay{display:none}}
+/* Photo across the top of the pop-up, and the promotional guide link under the actions. */
+.enquiry-prompt-photo{display:block;width:calc(100% + 48px);height:auto;aspect-ratio:16/8;object-fit:cover;margin:-26px -24px 16px;max-width:none}
+.enquiry-prompt-close{z-index:1;background:#fffdf7e6}
+#root .enquiry-prompt-guide{display:block;margin-top:14px;padding-top:12px;border-top:1px solid #0000001a;font-size:13px;font-weight:650;color:#000;text-decoration:none}
+#root .enquiry-prompt-guide:hover{text-decoration:underline}
+.enquiry-prompt-overlay{overflow-y:auto}
+@media(max-width:600px){.enquiry-prompt-photo{width:calc(100% + 36px);margin:-22px -18px 14px}}

@@ -13,6 +13,10 @@ export const getRoutes = () => ['/', '/products', '/categories', usesPath, '/abo
 // Search wording: buyers search for "foil balloon(s)", "balloon manufacturer", "wholesale" and the city, so the
 // descriptions use those words. Keep titles under ~60 characters and descriptions under ~160 so Google shows them in full.
 const place = 'Ahmedabad, India';
+// Every title ends with the full company name so searches for "Toyon Industry Private Limited" match it; when that
+// would make the title too long for Google, the shorter "Toyon Industry" is used instead.
+const brand = 'Toyon Industry Private Limited';
+const branded = (text: string) => { const base = text.replace(/ \| Toyon$/, ''); return `${base} | ${(base + brand).length <= 66 ? brand : 'Toyon Industry'}`; };
 const clip = (text: string, max = 160) => text.length <= max ? text : text.slice(0, text.lastIndexOf(' ', max - 1)).replace(/[,;:\s]+$/, '') + '…';
 
 export function routeMetadata(path: string): Metadata {
@@ -24,24 +28,23 @@ export function routeMetadata(path: string): Metadata {
   // Titles name products generically because the range will grow beyond foil balloons (home and products keep
   // 'Foil Balloon Manufacturer'); descriptions say what Toyon makes today.
   const fixed: Record<string, { title: string; description: string }> = {
-    '/': { title: 'Foil Balloon Manufacturer | Toyon Industry Pvt Ltd', description: `Toyon makes foil balloons in ${place}: a wide range of ${themes} designs for wholesale and bulk orders.` },
-    '/products': { title: 'Our Products | Foil Balloon Manufacturer | Toyon', description: 'Browse a wide range of foil balloon designs across themed collections: Christmas, Halloween, dinosaurs, animals and more. Wholesale and bulk orders from Ahmedabad.' },
-    '/categories': { title: 'Product Collections | Toyon', description: 'Foil balloon collections from Toyon: Christmas, Halloween, dinosaurs, animals and more. Pick a collection and send a bulk enquiry.' },
-    '/about': { title: `About Toyon Industry Pvt Ltd | ${place}`, description: `Toyon Industry Pvt Ltd is a foil balloon manufacturer in Odhav, Ahmedabad, founded by ${company.founder}, making balloons for bulk orders.` },
-    '/contact': { title: 'Bulk Product Enquiry & Quote | Toyon', description: 'Get a quote for foil balloons in bulk. Choose designs and quantities, and Toyon in Ahmedabad will call or message you about pricing and delivery.' },
-    [guidesPath]: { title: 'Foil Balloon Guides | Toyon', description: 'Practical foil balloon guides: foil vs latex, filling with helium or air, decoration ideas by occasion, and how to store and reuse foil balloons.' },
-    [usesPath]: { title: 'Where Our Products Are Used | Toyon', description: 'Where foil balloons are used: birthdays, baby showers, theme parties, Christmas, Halloween, school events, photo booths, shop displays and promotions.' },
-    '/privacy-policy': { title: 'Privacy Policy | Toyon', description: legalContent.privacy.description },
-    '/terms-and-conditions': { title: 'Terms and Conditions | Toyon', description: legalContent.terms.description },
+    '/': { title: `${brand} | Foil Balloon Manufacturer Ahmedabad`, description: `${brand} makes foil balloons in ${place}: a wide range of ${themes} designs for wholesale and bulk orders.` },
+    '/products': { title: 'Foil Balloons in Ahmedabad | Our Products', description: 'Browse a wide range of foil balloon designs across themed collections: Christmas, Halloween, dinosaurs, animals and more. Wholesale and bulk orders from Ahmedabad.' },
+    '/categories': { title: 'Foil Balloon Collections', description: 'Foil balloon collections from Toyon: Christmas, Halloween, dinosaurs, animals and more. Pick a collection and send a bulk enquiry.' },
+    '/about': { title: 'About Us | Foil Balloon Manufacturer Ahmedabad', description: `Toyon Industry Private Limited is a foil balloon manufacturer in Odhav, Ahmedabad, founded by ${company.founder}, making balloons for bulk orders.` },
+    '/contact': { title: 'Bulk Foil Balloon Enquiry & Quote', description: 'Get a quote for foil balloons in bulk. Choose designs and quantities, and Toyon in Ahmedabad will call or message you about pricing and delivery.' },
+    [guidesPath]: { title: 'Foil Balloon Guides', description: 'Practical foil balloon guides: foil vs latex, filling with helium or air, decoration ideas by occasion, and how to store and reuse foil balloons.' },
+    [usesPath]: { title: 'Where Our Foil Balloons Are Used', description: 'Where foil balloons are used: birthdays, baby showers, theme parties, Christmas, Halloween, school events, photo booths, shop displays and promotions.' },
+    '/privacy-policy': { title: 'Privacy Policy', description: legalContent.privacy.description },
+    '/terms-and-conditions': { title: 'Terms and Conditions', description: legalContent.terms.description },
   };
   // Some designs share a name across collections; distinguish their search titles.
   const productCollection = product && products.some(other => other.slug !== product.slug && other.title === product.title)
     ? categoryById[product.category]?.title : undefined;
   const productTitle = product && `${product.title}${productCollection ? ` (${productCollection})` : ''}`;
   // Drop the brand suffix when it would push a product title past what Google shows in full.
-  const title = guide ? guide.metaTitle : productTitle ? (productTitle.length > 56 ? productTitle : `${productTitle} | Toyon`)
-    : category ? `${category.title} Collection | Toyon`
-    : fixed[path]?.title ?? 'Toyon foil balloons';
+  const title = path === '/' ? fixed[path].title : branded(guide ? guide.metaTitle : productTitle ? `${productTitle} Foil Balloon`
+    : category ? `${category.title} Foil Balloons` : fixed[path]?.title ?? 'Foil Balloons');
   const description = clip(guide ? guide.description : product ? `${product.title} foil balloon for bulk and wholesale orders from Toyon, ${place}. ${product.description}`
     : category ? `${category.products.length} ${category.title} foil balloon designs from Toyon, ${place}. Browse the collection and send a bulk or wholesale enquiry.`
     : fixed[path]?.description ?? `Foil balloons from Toyon, ${place}.`);
@@ -55,13 +58,13 @@ export function routeMetadata(path: string): Metadata {
 
 // Schema.org data for Google: who the company is (home page) and where a page sits (breadcrumbs).
 const organization = () => ({
-  '@type': 'Organization', '@id': `${siteBase}/#organization`, name: company.name, legalName: company.name, alternateName: ['Toyon Industry', 'Toyon'], url: siteBase,
-  logo: `${siteBase}/favicon-256.png`, email: company.email,
-  founder: { '@type': 'Person', name: company.founder },
+  '@type': ['Organization', 'LocalBusiness'], '@id': `${siteBase}/#organization`, name: company.name, legalName: company.name, alternateName: ['Toyon Industry Pvt Ltd', 'Toyon Industry', 'Toyon', 'Toyon Foil Balloons'], url: siteBase,
+  logo: `${siteBase}/favicon-256.png`, image: `${siteBase}/assets/scenery/toyon-share-card.jpg`, email: company.email, telephone: company.phone,
+  founder: { '@type': 'Person', name: company.founder.replace(/^Mr\.\s*/, ''), honorificPrefix: 'Mr.' },
   address: { '@type': 'PostalAddress', streetAddress: 'A/06, Gaytri Ind. Estate, Nr. Central Workshop Odhav, Odhav Industrial Estate', addressLocality: 'Ahmedabad', addressRegion: 'Gujarat', postalCode: '382415', addressCountry: 'IN' },
   description: `Foil balloon manufacturer in ${place} with a wide range of designs for wholesale and bulk orders.`,
   knowsAbout: ['Foil balloons', 'Balloon manufacturing', 'Party balloons', 'Wholesale balloons', 'Bulk balloon orders'],
-  areaServed: { '@type': 'Country', name: 'India' },
+  areaServed: [{ '@type': 'City', name: 'Ahmedabad' }, { '@type': 'State', name: 'Gujarat' }, { '@type': 'Country', name: 'India' }],
   hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Toyon foil balloon collections', itemListElement: categories.filter(c => c.products.length).map(c => ({ '@type': 'OfferCatalog', name: `${c.title} foil balloons`, url: `${siteBase}/categories/${c.id}` })) },
 });
 // Question-and-answer data: AI assistants and search engines read these as ready-made answers.

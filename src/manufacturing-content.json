@@ -1,54 +1,56 @@
 {
   "homeTitle": "Products & Manufacturing in Ahmedabad | Toyon",
-  "homeDescription": "Explore Toyon product designs and a foil balloon manufacturing overview. Contact Toyon Industry Pvt Ltd in Odhav, Ahmedabad for business enquiries.",
-  "aboutDescription": "Meet Toyon Industry Pvt Ltd, founded by Daksh Patel in Odhav, Ahmedabad, with a professional production team and a growing product range.",
-  "contactDescription": "Email toyonindustry@gmail.com or contact Daksh Patel to discuss Toyon product designs, quantities, materials and production requirements.",
-  "steps": [
+  "homeDescription": "Explore Toyon product designs and a foil balloon manufacturing overview. Contact Toyon Industry Private Limited in Odhav, Ahmedabad for business enquiries.",
+  "aboutDescription": "Meet Toyon Industry Private Limited, founded by Mr. Daksh Patel in Odhav, Ahmedabad, with a professional production team and a growing product range.",
+  "contactDescription": "Email toyonindustry@gmail.com or contact Mr. Daksh Patel to discuss Toyon product designs, quantities, materials and production requirements.",
+  "promises": [
     {
-      "title": "Film preparation & printing",
-      "body": "Foil-balloon constructions commonly use thin plastic film, including nylon or PET-based laminates. Artwork is printed on the selected film. A metallic finish may already be part of the supplied material; the preparation route varies."
+      "value": "{designs}+",
+      "label": "foil balloon designs"
     },
     {
-      "title": "Unwinding & tension control",
-      "body": "Prepared film rolls feed into the forming line. Rollers and tension controls help the material move steadily, reducing wrinkles and keeping the layers ready for the next stages."
+      "value": "{collections}",
+      "label": "themed collections"
     },
     {
-      "title": "Valve placement",
-      "body": "Where the specification includes a self-sealing valve, a valve strip is positioned at the inflation opening and bonded into the balloon structure. The valve design is part of the product specification."
+      "value": "Direct",
+      "label": "from our factory in Odhav, Ahmedabad"
     },
     {
-      "title": "Layer alignment",
-      "body": "The printed layers are brought into registration so the artwork and intended outline line up. Sensors and registration controls may help monitor alignment, depending on the equipment."
-    },
-    {
-      "title": "Heat sealing & cutting",
-      "body": "Heat and pressure join the layers along the intended boundary. Cutting tools separate the balloon shape from the surrounding film. Sealing and cutting arrangements depend on the design and production line."
-    },
-    {
-      "title": "Cooling & collection",
-      "body": "The processed pieces are allowed to cool and are collected or stacked for the next stage. The handling route depends on the machinery and the product being made."
-    },
-    {
-      "title": "Quality checks & packing",
-      "body": "Checks can cover print appearance, alignment, sealing and air retention. Sample inflation or leak testing may be used when relevant to the product. Inspection criteria and packing requirements should be agreed before production."
+      "value": "Bulk",
+      "label": "wholesale orders, quoted on call or WhatsApp"
     }
   ],
-  "equipment": [
+  "favourites": [
+    "christmas-01-decorated-tree",
+    "christmas-08-santa-with-gift-sack",
+    "dinosaurs-02-purple-long-neck-dinosaur",
+    "animal-faces-07-lion",
+    "headband-shapes-14-unicorn",
+    "fruit-and-vegetables-06-watermelon-slice",
+    "vehicles-01-police-car",
+    "halloween-02-jack-o-lantern"
+  ],
+  "qualityChecks": [
     {
-      "title": "Printing equipment",
-      "body": "Gravure or flexographic systems may be used to apply artwork to suitable film."
+      "title": "Material check",
+      "body": "Film is checked before production, so every balloon starts from good-quality plastic film."
     },
     {
-      "title": "Film preparation / metallising",
-      "body": "Metallic film may be purchased ready-prepared or processed separately. In-house metallising is not required for every production route."
+      "title": "Print & colour check",
+      "body": "Printed artwork is checked for colour, sharpness and alignment, so the balloon matches the design you chose."
     },
     {
-      "title": "Balloon forming equipment",
-      "body": "A configured forming line may combine film feeding, valve work, sealing and cutting."
+      "title": "Seal check",
+      "body": "Edges are checked after heat sealing for gaps or weak spots that could let air escape."
     },
     {
-      "title": "Compressed-air support",
-      "body": "An air compressor can support pneumatic machine functions where that equipment requires it."
+      "title": "Inflation test",
+      "body": "Sample balloons from each batch are inflated to check the shape and that they hold air."
+    },
+    {
+      "title": "Counted & packed clean",
+      "body": "Balloons are counted, folded flat and packed clean, so your order arrives ready to sell or use."
     }
   ],
   "faqs": [
@@ -62,7 +64,7 @@
     },
     {
       "question": "Where is Toyon located?",
-      "answer": "Toyon Industry Pvt Ltd is based at A/06, Gaytri Ind. Estate, Nr. Central Workshop Odhav, Odhav Industrial Estate, Ahmedabad, Gujarat, 382415, India."
+      "answer": "Toyon Industry Private Limited is based at A/06, Gaytri Ind. Estate, Nr. Central Workshop Odhav, Odhav Industrial Estate, Ahmedabad, Gujarat, 382415, India."
     },
     {
       "question": "What should I include in a manufacturing enquiry?",

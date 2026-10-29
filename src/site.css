@@ -106,3 +106,7 @@ html{font-family:var(--font-body)}
 .future-ranges .business-cta{flex:none}
 @media(max-width:900px){.about-art{flex-wrap:wrap;justify-content:center}.about-art img{flex:0 1 28%;height:clamp(110px,24vw,190px)}}
 @media(max-width:600px){.brand-priorities>div{display:grid;gap:26px}.brand-priorities article+article{margin-top:0}.future-ranges .business-cta{white-space:normal;width:100%;justify-content:center}}
+/* Playful collection photo at the top of each collection page. */
+.collection-hero{margin:18px 0 36px;border-radius:2px;overflow:hidden;border-bottom:6px solid var(--toyon-yellow,#f5bc19);box-shadow:0 18px 40px #0f262a26}
+.collection-hero img{display:block;width:100%;height:auto;aspect-ratio:1376/768;object-fit:cover}
+@media(max-width:600px){.collection-hero{margin:14px -7% 28px;border-radius:0}.collection-hero img{aspect-ratio:4/3}}

@@ -3,11 +3,14 @@ import { AnimatePresence, m, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
 import { productById } from './catalog';
 import { whatsappLink } from './whatsapp';
+import { collectionPhotos } from './collection-photos';
+import { guidesPath, promotionalGuideSlug } from './guides-content';
 import './enquiry-prompt.css';
 
 // "Planning a bulk order?" pop-up in the middle of the screen. It waits until the visitor has spent a while on the
 // site (counted across pages) and scrolled a little — on the home page, until after the road — so people can look
-// around first. Shown at most once per visit; once closed it stays hidden for a few days. Never on the contact page.
+// around first. Shown at most once per visit; it stays open until the visitor presses the close button (clicking
+// outside or Escape does not close it), then stays hidden for a few days. Never on the contact page.
 const DISMISS_KEY = 'toyon-enquiry-prompt-dismissed', SHOWN_KEY = 'toyon-enquiry-prompt-shown', VISIT_KEY = 'toyon-visit-started';
 const DISMISS_DAYS = 3, DELAY_SECONDS = 25;
 const storage = (kind: 'local' | 'session') => { try { return kind === 'local' ? window.localStorage : window.sessionStorage; } catch { return null; } };
@@ -19,6 +22,9 @@ export default function EnquiryPrompt({ path }: { path: string }) {
   const productId = path.startsWith('/products/') ? path.slice('/products/'.length) : '';
   const product = productById[productId];
   const href = product ? `/contact?product=${encodeURIComponent(product.id)}` : '/contact';
+  // Photo of the collection being viewed (or of the product's collection); Christmas elsewhere.
+  const categoryId = product?.category ?? (path.startsWith('/categories/') ? path.slice('/categories/'.length) : '');
+  const photo = collectionPhotos[categoryId] ?? collectionPhotos.christmas;
 
   useEffect(() => {
     setOpen(false);
@@ -51,19 +57,18 @@ export default function EnquiryPrompt({ path }: { path: string }) {
     if (!open) return;
     const previous = document.activeElement as HTMLElement | null;
     cta.current?.focus({ preventScroll: true });
-    const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') dismiss(); };
-    window.addEventListener('keydown', onKey);
-    return () => { window.removeEventListener('keydown', onKey); previous?.focus?.({ preventScroll: true }); };
+    return () => { previous?.focus?.({ preventScroll: true }); };
   }, [open]);
 
   function dismiss() { storage('local')?.setItem(DISMISS_KEY, String(Date.now())); setOpen(false); }
 
-  return <AnimatePresence>{open && <m.div className="enquiry-prompt-overlay" onClick={dismiss}
+  return <AnimatePresence>{open && <m.div className="enquiry-prompt-overlay"
     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .25 }}>
-    <m.div className="enquiry-prompt" role="dialog" aria-modal="true" aria-labelledby="enquiry-prompt-title" onClick={event => event.stopPropagation()}
+    <m.div className="enquiry-prompt" role="dialog" aria-modal="true" aria-labelledby="enquiry-prompt-title"
       initial={reduced ? { opacity: 0 } : { opacity: 0, y: 18, scale: .96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={reduced ? { opacity: 0 } : { opacity: 0, y: 12, scale: .97 }}
       transition={{ duration: .35, ease: [.22, 1, .36, 1] }}>
       <button type="button" className="enquiry-prompt-close" aria-label="Close" onClick={dismiss}>✕</button>
+      {photo && <img className="enquiry-prompt-photo" src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} decoding="async" />}
       <p className="enquiry-prompt-eyebrow">Wholesale &amp; bulk orders</p>
       <h2 id="enquiry-prompt-title">{product ? `Interested in the ${product.title.toLowerCase()}?` : 'Planning a bulk order?'}</h2>
       <p>Choose your designs and quantities. Our team will call or message you with details and pricing.</p>
@@ -71,6 +76,7 @@ export default function EnquiryPrompt({ path }: { path: string }) {
         <Link ref={cta} className="enquiry-prompt-cta" href={href} onClick={() => setOpen(false)}>Get a quote <span aria-hidden="true">↗</span></Link>
         <a className="enquiry-prompt-link" href={whatsappLink(product ? `Hi Toyon, I'm interested in the ${product.title} foil balloon.` : 'Hi Toyon, I would like a quote for foil balloons.')} target="_blank" rel="noopener noreferrer">or chat on WhatsApp</a>
       </div>
+      <Link className="enquiry-prompt-guide" href={`${guidesPath}/${promotionalGuideSlug}`} onClick={dismiss}>Planning a promotion? Read our promotional balloon guide ↗</Link>
     </m.div>
   </m.div>}</AnimatePresence>;
 }

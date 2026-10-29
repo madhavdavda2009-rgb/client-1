@@ -5,3 +5,19 @@
 .manufacturing-steps li:last-child{grid-column:1 / -1}
 
 .manufacturing-designs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:36px 0 42px}.manufacturing-designs a{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;min-height:260px;padding:20px;text-decoration:none;background:#e9f2eb;transition:transform .3s ease,background-color .3s ease}.manufacturing-designs a:nth-child(2){background:#e8f1f5}.manufacturing-designs a:nth-child(3){background:#fff0dc}.manufacturing-designs a:hover{transform:translateY(-4px)}.manufacturing-designs img{display:block;width:100%;height:200px;object-fit:contain}.manufacturing-designs a>span{align-self:stretch;display:flex;justify-content:space-between;font-size:13px;font-weight:700}.manufacturing-designs a>span span{font-size:16px}@media(max-width:700px){.manufacturing-designs{gap:8px;margin:26px 0}.manufacturing-designs a{min-height:140px;padding:8px}.manufacturing-designs img{height:115px}.manufacturing-designs a>span{font-size:10px}}
+/* Trust strip, best sellers and quality checks (home page). */
+.trust-promises{list-style:none;margin:40px 0 56px;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid #0003;border-bottom:1px solid #0003}
+.trust-promises li{display:flex;flex-direction:column;gap:6px;padding:24px 20px 24px 0}
+.trust-promises li+li{padding-left:20px;border-left:1px solid #0003}
+.trust-promises strong{font-family:var(--font-display);font-size:clamp(30px,3.4vw,44px);font-weight:700;letter-spacing:-.03em;line-height:1}
+.trust-promises span{font-size:14px;line-height:1.5;max-width:22ch}
+.best-sellers-heading{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px 24px}
+.best-sellers h3,.quality-checks>h3{font-family:var(--font-display);font-size:clamp(26px,2.8vw,38px);font-weight:650;letter-spacing:-.025em;line-height:1.15;margin:0}
+.best-sellers .manufacturing-designs{grid-template-columns:repeat(4,minmax(0,1fr));margin:24px 0 64px}
+.best-sellers .manufacturing-designs a{min-height:240px;background:#fff;border:1px solid #183e4426}
+.best-sellers .manufacturing-designs img{height:170px}
+.best-seller-name{display:flex;flex-direction:column;gap:2px}.best-seller-name small{font-size:12px;font-weight:500;opacity:.65}
+.quality-checks>h3{margin-bottom:12px}
+.quality-checks .manufacturing-steps{margin-bottom:24px}
+@media(max-width:900px){.trust-promises{grid-template-columns:repeat(2,minmax(0,1fr))}.trust-promises li:nth-child(3){padding-left:0;border-left:0}.trust-promises li:nth-child(n+3){border-top:1px solid #0003}.best-sellers .manufacturing-designs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.trust-promises{margin:28px 0 40px}.trust-promises li{padding:18px 12px 18px 0}.trust-promises li+li{padding-left:12px}.trust-promises li:nth-child(3){padding-left:0}.best-sellers .manufacturing-designs{margin-bottom:44px}.best-sellers .manufacturing-designs a{min-height:180px}.best-sellers .manufacturing-designs img{height:120px}.best-seller-name small{font-size:10px}}

@@ -2,7 +2,7 @@
   "privacy": {
     "title": "Privacy policy",
     "description": "How Toyon handles website browsing information, business enquiries and privacy questions.",
-    "intro": "This policy explains information handling on the Toyon product showcase operated by Toyon Industry Pvt Ltd. It covers this website and its business enquiry form.",
+    "intro": "This policy explains information handling on the Toyon product showcase operated by Toyon Industry Private Limited. It covers this website and its business enquiry form.",
     "sections": [
       {
         "id": "scope",
@@ -16,7 +16,7 @@
         "id": "enquiries",
         "title": "2. Business enquiries you submit",
         "paragraphs": [
-          "The enquiry form asks you to choose the designs you are interested in, approximate quantities, your type of business, your timeline and how you would like to be contacted, and then asks for your name, email address and phone or WhatsApp number. When you choose “Send enquiry”, these details are sent to Toyon Industry Pvt Ltd and stored in a secure database (Supabase) so the company can read and respond to your enquiry.",
+          "The enquiry form asks you to choose the designs you are interested in, approximate quantities, your type of business, your timeline and how you would like to be contacted, and then asks for your name, email address and phone or WhatsApp number. When you choose “Send enquiry”, these details are sent to Toyon Industry Private Limited and stored in a secure database (Supabase) so the company can read and respond to your enquiry.",
           "Before the form starts, a security check from Cloudflare Turnstile confirms that you are a person and not an automated program. To do this, Cloudflare processes technical information such as your IP address and browser details under its own privacy policy. It is used only to block spam and abuse, not for advertising or tracking.",
           "Enquiries can only be viewed by authorised Toyon Industry staff through a password-protected admin area. They are used to respond to your enquiry and to manage any resulting business discussion, and are not sold or used for advertising.",
           "Enquiries are kept for as long as needed for these purposes, after which they may be deleted. You can ask for your enquiry to be corrected or deleted at any time (see section 5)."
@@ -43,7 +43,7 @@
         "id": "requests",
         "title": "5. Privacy questions and requests",
         "paragraphs": [
-          "For information that you have actually shared with Toyon Industry Pvt Ltd, you may ask the company about access, correction, deletion or other rights available under applicable law. Do not include unnecessary sensitive information in an initial request.",
+          "For information that you have actually shared with Toyon Industry Private Limited, you may ask the company about access, correction, deletion or other rights available under applicable law. Do not include unnecessary sensitive information in an initial request.",
           "Email toyonindustry@gmail.com for privacy questions, or to ask for access to, correction of or deletion of an enquiry you have submitted."
         ]
       },
@@ -67,7 +67,7 @@
   "terms": {
     "title": "Terms and conditions",
     "description": "Website terms for browsing Toyon designs, sending enquiries and confirming product specifications before a business order.",
-    "intro": "These terms explain use of the Toyon product showcase operated by Toyon Industry Pvt Ltd. They concern website access and business enquiries; they are not a supply agreement or an online purchase contract.",
+    "intro": "These terms explain use of the Toyon product showcase operated by Toyon Industry Private Limited. They concern website access and business enquiries; they are not a supply agreement or an online purchase contract.",
     "sections": [
       {
         "id": "purpose",
@@ -105,7 +105,7 @@
         "id": "content",
         "title": "5. Branding, artwork and permissions",
         "paragraphs": [
-          "Toyon branding, product artwork and other website content may belong to Toyon Industry Pvt Ltd or their respective rights holders. Viewing the catalogue does not grant a licence to reproduce, manufacture, advertise or distribute a design.",
+          "Toyon branding, product artwork and other website content may belong to Toyon Industry Private Limited or their respective rights holders. Viewing the catalogue does not grant a licence to reproduce, manufacture, advertise or distribute a design.",
           "Character imagery, logos and other third-party material may require separate permissions. Confirm ownership and licensing requirements before any commercial use."
         ]
       },

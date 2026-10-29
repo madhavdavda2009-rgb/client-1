@@ -23,6 +23,6 @@ export function BrandO({ active, requested=3, themes=[0,1,2], custom=[] }: { act
 }
 export default function LogoArtwork() {
   const reduced=useReducedMotion();
-  return <svg className="logo" aria-label="Toyon Industry Pvt Ltd" role="img"><g data-logo-art><m.g initial={reduced?false:{opacity:0,scale:.96}} animate={{opacity:1,scale:1}} transition={softSpring}><g transform="scale(1.2279355334)" dangerouslySetInnerHTML={{ __html: artwork }} /></m.g></g></svg>;
+  return <svg className="logo" aria-label="Toyon Industry Private Limited" role="img"><g data-logo-art><m.g initial={reduced?false:{opacity:0,scale:.96}} animate={{opacity:1,scale:1}} transition={softSpring}><g transform="scale(1.2279355334)" dangerouslySetInnerHTML={{ __html: artwork }} /></m.g></g></svg>;
 }
 export { originalLogo };

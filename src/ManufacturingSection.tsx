@@ -11,7 +11,7 @@ export default function ManufacturingSection(){
  const favourites = content.favourites.map(id => productById[id]).filter(Boolean);
  return <section className="manufacturing-section" id="why-toyon" aria-labelledby="manufacturing-title">
   <div className="manufacturing-wrap">
-   <Reveal className="manufacturing-intro"><span className="eyebrow">Why buyers trust Toyon</span><h2 id="manufacturing-title">Made in Ahmedabad.<br/>Checked before it ships.</h2><p><Foil>{'Wholesalers, party shops and decorators buy directly from our factory: popular designs, consistent quality and a team that answers your questions.'}</Foil></p></Reveal>
+   <Reveal className="manufacturing-intro"><h1 className="eyebrow">Toyon Industry Private Limited: foil balloon manufacturer in Ahmedabad</h1><h2 id="manufacturing-title">Made in Ahmedabad.<br/>Checked before it ships.</h2><p><Foil>{'Wholesalers, party shops and decorators buy directly from our factory: popular designs, consistent quality and a team that answers your questions.'}</Foil></p></Reveal>
    <ul className="trust-promises">{content.promises.map(item => <li key={item.label}><strong>{fill(item.value)}</strong><span>{item.label}</span></li>)}</ul>
    {favourites.length > 0 && <section className="best-sellers" aria-labelledby="best-sellers-title">
     <div className="best-sellers-heading"><h3 id="best-sellers-title">Our best-selling designs</h3><MotionLink className="text-link" href="/products">See all designs <span aria-hidden="true">↗</span></MotionLink></div>

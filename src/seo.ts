@@ -59,7 +59,7 @@ export function routeMetadata(path: string): Metadata {
 // Schema.org data for Google: who the company is (home page) and where a page sits (breadcrumbs).
 const organization = () => ({
   '@type': ['Organization', 'LocalBusiness'], '@id': `${siteBase}/#organization`, name: company.name, legalName: company.name, alternateName: ['Toyon Industry Pvt Ltd', 'Toyon Industry', 'Toyon', 'Toyon Foil Balloons'], url: siteBase,
-  logo: `${siteBase}/favicon-256.png`, image: `${siteBase}/assets/scenery/toyon-share-card.jpg`, email: company.email, telephone: company.phone,
+  logo: `${siteBase}/favicon-256.png`, image: `${siteBase}/assets/scenery/toyon-share-card.jpg`, email: company.email, telephone: company.phone, sameAs: [company.instagram],
   founder: { '@type': 'Person', name: company.founder.replace(/^Mr\.\s*/, ''), honorificPrefix: 'Mr.' },
   address: { '@type': 'PostalAddress', streetAddress: 'A/06, Gaytri Ind. Estate, Nr. Central Workshop Odhav, Odhav Industrial Estate', addressLocality: 'Ahmedabad', addressRegion: 'Gujarat', postalCode: '382415', addressCountry: 'IN' },
   description: `Foil balloon manufacturer in ${place} with a wide range of designs for wholesale and bulk orders.`,

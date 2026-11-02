@@ -3,6 +3,14 @@
   "homeDescription": "Explore Toyon product designs and a foil balloon manufacturing overview. Contact Toyon Industry Private Limited in Odhav, Ahmedabad for business enquiries.",
   "aboutDescription": "Meet Toyon Industry Private Limited, founded by Mr. Daksh Patel in Odhav, Ahmedabad, with a professional production team and a growing product range.",
   "contactDescription": "Email toyonindustry@gmail.com or contact Mr. Daksh Patel to discuss Toyon product designs, quantities, materials and production requirements.",
+  "overview": {
+    "heading": "Foil balloons from our Ahmedabad factory",
+    "paragraphs": [
+      "Toyon Industry Private Limited is a foil balloon manufacturer in Odhav, Ahmedabad, Gujarat. We make {designs}+ foil balloon designs across {collections} themed collections and sell them directly from our factory for wholesale and bulk orders, with a minimum order of 500 pieces.",
+      "Wholesalers, party shops, gift shops and decorators buy from us for resale and events. Foil balloons are popular for birthdays, baby showers, theme parties, school events and shop displays.",
+      "Every order goes through material, print and seal checks, and sample balloons from each batch are inflation tested before balloons are counted and packed."
+    ]
+  },
   "promises": [
     {
       "value": "{designs}+",
@@ -60,7 +68,7 @@
     },
     {
       "question": "What is the minimum order quantity?",
-      "answer": "Ask Toyon to confirm the minimum order quantity for your selected designs. Include the products and quantities you have in mind in your enquiry; no fixed MOQ is published here."
+      "answer": "The minimum order quantity is 500 pieces. Include the designs and quantities you have in mind in your enquiry."
     },
     {
       "question": "Where is Toyon located?",

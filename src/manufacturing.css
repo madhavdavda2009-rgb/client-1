@@ -5,6 +5,11 @@
 .manufacturing-steps li:last-child{grid-column:1 / -1}
 
 .manufacturing-designs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:36px 0 42px}.manufacturing-designs a{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;min-height:260px;padding:20px;text-decoration:none;background:#e9f2eb;transition:transform .3s ease,background-color .3s ease}.manufacturing-designs a:nth-child(2){background:#e8f1f5}.manufacturing-designs a:nth-child(3){background:#fff0dc}.manufacturing-designs a:hover{transform:translateY(-4px)}.manufacturing-designs img{display:block;width:100%;height:200px;object-fit:contain}.manufacturing-designs a>span{align-self:stretch;display:flex;justify-content:space-between;font-size:13px;font-weight:700}.manufacturing-designs a>span span{font-size:16px}@media(max-width:700px){.manufacturing-designs{gap:8px;margin:26px 0}.manufacturing-designs a{min-height:140px;padding:8px}.manufacturing-designs img{height:115px}.manufacturing-designs a>span{font-size:10px}}
+/* Plain-language overview near the top of the page, for buyers and search engines. */
+.manufacturing-overview{max-width:760px;margin-top:40px}
+.manufacturing-overview h2{font-family:var(--font-display);font-size:clamp(26px,2.8vw,38px);font-weight:650;letter-spacing:-.025em;line-height:1.15;margin:0 0 16px}
+.manufacturing-overview p{font-size:16px;line-height:1.8;margin:0 0 14px;max-width:68ch}
+.manufacturing-overview a{text-underline-offset:4px}
 /* Trust strip, best sellers and quality checks (home page). */
 .trust-promises{list-style:none;margin:40px 0 56px;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid #0003;border-bottom:1px solid #0003}
 .trust-promises li{display:flex;flex-direction:column;gap:6px;padding:24px 20px 24px 0}

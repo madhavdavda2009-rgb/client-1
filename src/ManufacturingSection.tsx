@@ -9,9 +9,15 @@ import './manufacturing.css';
 const fill = (text: string) => text.replace('{designs}', String(products.length)).replace('{collections}', String(categories.filter(c => c.products.length).length));
 export default function ManufacturingSection(){
  const favourites = content.favourites.map(id => productById[id]).filter(Boolean);
+ const overviewLinks = ['christmas', 'halloween', 'dinosaurs', 'animal-faces'].map(id => categoryById[id]).filter(Boolean);
  return <section className="manufacturing-section" id="why-toyon" aria-labelledby="manufacturing-title">
   <div className="manufacturing-wrap">
-   <Reveal className="manufacturing-intro"><h1 className="eyebrow">Toyon Industry Private Limited: foil balloon manufacturer in Ahmedabad</h1><h2 id="manufacturing-title">Made in Ahmedabad.<br/>Checked before it ships.</h2><p><Foil>{'Wholesalers, party shops and decorators buy directly from our factory: popular designs, consistent quality and a team that answers your questions.'}</Foil></p></Reveal>
+   <Reveal className="manufacturing-intro"><h1 className="eyebrow">Toyon: Foil Balloon Manufacturer in Ahmedabad</h1><h2 id="manufacturing-title">Made in Ahmedabad.<br/>Checked before it ships.</h2><p><Foil>{'Wholesalers, party shops and decorators buy directly from our factory: popular designs, consistent quality and a team that answers your questions.'}</Foil></p></Reveal>
+   <section className="manufacturing-overview" aria-labelledby="manufacturing-overview-title">
+    <h2 id="manufacturing-overview-title">{content.overview.heading}</h2>
+    {content.overview.paragraphs.map(text => <p key={text}>{fill(text)}</p>)}
+    <p>Popular collections include {overviewLinks.map((category, index) => <span key={category.id}>{index > 0 && (index === overviewLinks.length - 1 ? ' and ' : ', ')}<a href={`/categories/${category.id}`}>{category.title}</a></span>)}, or you can <a href="/products">browse all designs</a>. To order, <a href="/contact">send an enquiry</a> with your designs and quantities and we will quote on call or WhatsApp.</p>
+   </section>
    <ul className="trust-promises">{content.promises.map(item => <li key={item.label}><strong>{fill(item.value)}</strong><span>{item.label}</span></li>)}</ul>
    {favourites.length > 0 && <section className="best-sellers" aria-labelledby="best-sellers-title">
     <div className="best-sellers-heading"><h3 id="best-sellers-title">Our best-selling designs</h3><MotionLink className="text-link" href="/products">See all designs <span aria-hidden="true">↗</span></MotionLink></div>

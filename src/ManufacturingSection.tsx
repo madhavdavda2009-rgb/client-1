@@ -12,7 +12,7 @@ export default function ManufacturingSection(){
  const overviewLinks = ['christmas', 'halloween', 'dinosaurs', 'animal-faces'].map(id => categoryById[id]).filter(Boolean);
  return <section className="manufacturing-section" id="why-toyon" aria-labelledby="manufacturing-title">
   <div className="manufacturing-wrap">
-   <Reveal className="manufacturing-intro"><h1 className="eyebrow">Toyon: Foil Balloon Manufacturer in Ahmedabad</h1><h2 id="manufacturing-title">Made in Ahmedabad.<br/>Checked before it ships.</h2><p><Foil>{'Wholesalers, party shops and decorators buy directly from our factory: popular designs, consistent quality and a team that answers your questions.'}</Foil></p></Reveal>
+   <Reveal className="manufacturing-intro"><span className="eyebrow">Toyon: Foil Balloon Manufacturer in Ahmedabad</span><h2 id="manufacturing-title">Made in Ahmedabad.<br/>Checked before it ships.</h2><p><Foil>{'Wholesalers, party shops and decorators buy directly from our factory: popular designs, consistent quality and a team that answers your questions.'}</Foil></p></Reveal>
    <section className="manufacturing-overview" aria-labelledby="manufacturing-overview-title">
     <h2 id="manufacturing-overview-title">{content.overview.heading}</h2>
     {content.overview.paragraphs.map(text => <p key={text}>{fill(text)}</p>)}

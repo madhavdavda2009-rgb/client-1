@@ -4,10 +4,10 @@
 .opening-showcase-photo{position:absolute;left:var(--dx);top:var(--dy);width:6.9vw;height:calc((100svh - 90px)*.078);object-fit:contain;transform:translate(-50%,-50%) rotate(var(--angle)) scale(var(--size));pointer-events:none;user-select:none;-webkit-user-drag:none}
 .opening-logo{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);width:min(76vw,850px);height:auto;mix-blend-mode:multiply;pointer-events:none;z-index:2}
 .opening-guide{position:absolute;z-index:3;top:55%;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:14px;width:min(42vw,300px);text-align:center}
-.opening-guide p{margin:0;font-size:15px;line-height:1.5}.opening-scroll-note{font-size:11px;line-height:1.5}
+.opening-guide :is(p,h1){margin:0;font-size:15px;line-height:1.5}.opening-scroll-note{font-size:11px;line-height:1.5}
 .opening-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
-@media(max-width:900px){.opening-showcase-photo{left:var(--mx);top:var(--my);width:9.3vw;height:calc((100svh - 90px)*.052)}.opening-logo{width:78vw;top:40%}.opening-guide{top:55%;gap:10px;width:44vw}.opening-guide p{font-size:12px}.opening-scroll-note{font-size:9px}#root .opening-world-link{font-size:11px;padding:12px 13px;gap:12px;min-height:44px}}
-@media(max-height:600px){.opening-products{min-height:540px}.opening-showcase-photo{height:45px}.opening-guide{top:54%;gap:7px}.opening-guide p{font-size:12px}.opening-scroll-note{font-size:9px}}
+@media(max-width:900px){.opening-showcase-photo{left:var(--mx);top:var(--my);width:9.3vw;height:calc((100svh - 90px)*.052)}.opening-logo{width:78vw;top:40%}.opening-guide{top:55%;gap:10px;width:44vw}.opening-guide :is(p,h1){font-size:12px}.opening-scroll-note{font-size:9px}#root .opening-world-link{font-size:11px;padding:12px 13px;gap:12px;min-height:44px}}
+@media(max-height:600px){.opening-products{min-height:540px}.opening-showcase-photo{height:45px}.opening-guide{top:54%;gap:7px}.opening-guide :is(p,h1){font-size:12px}.opening-scroll-note{font-size:9px}}
 
 .opening-products.is-embedded{position:absolute;inset:0;height:100%;min-height:0;background:transparent}
 #root img,#root .three-featured-product{filter:none;box-shadow:none}
@@ -35,3 +35,5 @@
 .opening-logo{top:37%}
 .opening-guide{top:56.5%}
 @media(max-height:600px){.opening-logo{top:28%}.opening-guide{top:54%}}
+.opening-guide .opening-intro{max-width:30ch;font-size:12px;line-height:1.45;color:#173f43}
+@media(max-width:900px){.opening-guide .opening-intro{font-size:10.5px}}

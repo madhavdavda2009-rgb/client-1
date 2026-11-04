@@ -61,7 +61,7 @@ const organization = () => ({
   '@type': ['Organization', 'LocalBusiness'], '@id': `${siteBase}/#organization`, name: company.name, legalName: company.name, alternateName: ['Toyon Industry Pvt Ltd', 'Toyon Industry', 'Toyon', 'Toyon Foil Balloons'], url: siteBase,
   logo: `${siteBase}/favicon-256.png`, image: `${siteBase}/assets/scenery/toyon-share-card.jpg`, email: company.email, telephone: company.phone, sameAs: [company.instagram],
   founder: { '@type': 'Person', name: company.founder.replace(/^Mr\.\s*/, ''), honorificPrefix: 'Mr.' },
-  address: { '@type': 'PostalAddress', streetAddress: 'A/06, Gaytri Ind. Estate, Nr. Central Workshop Odhav, Odhav Industrial Estate', addressLocality: 'Ahmedabad', addressRegion: 'Gujarat', postalCode: '382415', addressCountry: 'IN' },
+  address: { '@type': 'PostalAddress', streetAddress: 'A/6, Gaytri Ind. Estate', addressLocality: 'Ahmedabad', addressRegion: 'Gujarat', postalCode: '382415', addressCountry: 'IN' },
   description: `Foil balloon manufacturer in ${place} with a wide range of designs for wholesale and bulk orders.`,
   knowsAbout: ['Foil balloons', 'Balloon manufacturing', 'Party balloons', 'Wholesale balloons', 'Bulk balloon orders'],
   areaServed: [{ '@type': 'City', name: 'Ahmedabad' }, { '@type': 'State', name: 'Gujarat' }, { '@type': 'Country', name: 'India' }],

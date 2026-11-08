@@ -52,7 +52,7 @@ function OrderSteps() {
 // /foil-balloon-uses: where foil balloons are used, then why buyers can trust Toyon, then how to order.
 export function UsesPage() {
   return <main className="content-page uses-page">
-    <Reveal className="page-heading"><span className="eyebrow">Foil balloon uses</span><h1>Where are our<br />products used?</h1><p><Foil>{'From birthday tables to shop windows, our foil balloons turn an ordinary space into a celebration. Here is where they are used most, and which collections fit each occasion.'}</Foil></p></Reveal>
+    <Reveal className="page-heading"><span className="eyebrow">Foil balloon uses</span><h1>Where are our<br />products used?</h1><p><Foil>{'Our foil balloons end up everywhere from birthday tables to shop windows. These are the places they get used most, and the collections that suit each occasion.'}</Foil></p></Reveal>
     <div className="use-cases">{useCases.map(use => <article key={use.id} id={use.id} className="use-case">
       {use.image && <img src={use.image} alt={`Toyon foil balloons for ${use.title.toLowerCase()}`} width="1376" height="768" loading="lazy" decoding="async" />}
       <h2>{use.title}</h2><p><Foil>{use.text}</Foil></p>

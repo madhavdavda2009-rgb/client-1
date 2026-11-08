@@ -12,7 +12,7 @@ export default function ManufacturingSection(){
  const overviewLinks = ['christmas', 'halloween', 'dinosaurs', 'animal-faces'].map(id => categoryById[id]).filter(Boolean);
  return <section className="manufacturing-section" id="why-toyon" aria-labelledby="manufacturing-title">
   <div className="manufacturing-wrap">
-   <Reveal className="manufacturing-intro"><span className="eyebrow">Toyon: Foil Balloon Manufacturer in Ahmedabad</span><h2 id="manufacturing-title">Made in Ahmedabad.<br/>Checked before it ships.</h2><p><Foil>{'Wholesalers, party shops and decorators buy directly from our factory: popular designs, consistent quality and a team that answers your questions.'}</Foil></p></Reveal>
+   <Reveal className="manufacturing-intro"><span className="eyebrow">Toyon: Foil Balloon Manufacturer in Ahmedabad</span><h2 id="manufacturing-title">Made in Ahmedabad.<br/>Checked before it ships.</h2><p><Foil>{'Wholesalers, party shops and decorators buy straight from our factory. They come for the popular designs and steady quality, and a team that actually answers their questions.'}</Foil></p></Reveal>
    <section className="manufacturing-overview" aria-labelledby="manufacturing-overview-title">
     <h2 id="manufacturing-overview-title">{content.overview.heading}</h2>
     {content.overview.paragraphs.map(text => <p key={text}>{fill(text)}</p>)}
@@ -27,7 +27,7 @@ export default function ManufacturingSection(){
     <h3 id="quality-checks-title">Quality checks on every order</h3>
     <ol className="manufacturing-steps">{content.qualityChecks.map((check,index)=><li key={check.title}><Reveal><span className="process-number" aria-hidden="true">{String(index+1).padStart(2,'0')}</span><h3>{check.title}</h3><p>{check.body}</p></Reveal></li>)}</ol>
    </section>
-   <div className="manufacturing-company"><Reveal><h2>Meet Toyon.</h2><p>{company.name} was founded by {company.founder}. Our professional production team works with good-quality plastics, machine processing, printing and quality checks.</p><p className="company-location">{company.address}</p></Reveal><div className="manufacturing-contact"><h3>Start with your requirements.</h3><p>Choose the designs you are considering, then share your quantity and production questions.</p><MotionLink className="text-link" href="/contact">Start an enquiry <span aria-hidden="true">↗</span></MotionLink><a href={`mailto:${company.email}`}>{company.email}</a><span className="contact-person">{company.founder}</span></div></div>
+   <div className="manufacturing-company"><Reveal><h2>Meet Toyon.</h2><p>{company.name} was founded by {company.founder}. Our professional production team handles the good-quality plastics, machine processing, printing and quality checks.</p><p className="company-location">{company.address}</p></Reveal><div className="manufacturing-contact"><h3>Start with your requirements.</h3><p>Pick the designs you are thinking about, then send us your quantities and any production questions.</p><MotionLink className="text-link" href="/contact">Start an enquiry <span aria-hidden="true">↗</span></MotionLink><a href={`mailto:${company.email}`}>{company.email}</a><span className="contact-person">{company.founder}</span></div></div>
    <section className="manufacturing-faq" aria-labelledby="manufacturing-faq-title"><h2 id="manufacturing-faq-title">A few things to know.</h2>{content.faqs.map(item=><details key={item.question}><summary>{item.question}<span aria-hidden="true">+</span></summary><p>{item.answer}</p></details>)}</section>
   </div>
  </section>;

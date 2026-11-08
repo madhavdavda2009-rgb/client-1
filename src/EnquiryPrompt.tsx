@@ -71,7 +71,7 @@ export default function EnquiryPrompt({ path }: { path: string }) {
       {photo && <img className="enquiry-prompt-photo" src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} decoding="async" />}
       <p className="enquiry-prompt-eyebrow">Wholesale &amp; bulk orders</p>
       <h2 id="enquiry-prompt-title">{product ? `Interested in the ${product.title.toLowerCase()}?` : 'Planning a bulk order?'}</h2>
-      <p>Choose your designs and quantities. Our team will call or message you with details and pricing.</p>
+      <p>Pick your designs and quantities, and our team will call or message you with the details and pricing.</p>
       <div className="enquiry-prompt-actions">
         <Link ref={cta} className="enquiry-prompt-cta" href={href} onClick={() => setOpen(false)}>Get a quote <span aria-hidden="true">↗</span></Link>
         <a className="enquiry-prompt-link" href={whatsappLink(product ? `Hi Toyon, I'm interested in the ${product.title} foil balloon.` : 'Hi Toyon, I would like a quote for foil balloons.')} target="_blank" rel="noopener noreferrer">or chat on WhatsApp</a>

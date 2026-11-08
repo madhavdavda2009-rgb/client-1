@@ -13,6 +13,6 @@ export default function OpeningProducts({embedded=false,onEnter}:{embedded?:bool
   <div className="opening-product-collage" aria-hidden="true"/>
   <span className="opening-sr">Toyon products</span>
   {!embedded&&<img className="opening-logo" src={logo} alt="Toyon Industry Private Limited" width="1600" height="1131" fetchPriority="high"/>}
-  <div className="opening-guide"><h1 className="opening-tagline"><span className="opening-sr">Toyon Industry Private Limited: </span><Foil>{'Foil balloon manufacturer · Ahmedabad'}</Foil></h1><p className="opening-intro">Wholesale Christmas, Halloween, animal and character foil balloons, made in Odhav, Ahmedabad.</p><a className="text-link opening-world-link" href="#toyon-journey" onClick={enterWorlds}>Explore worlds <span aria-hidden="true">↓</span></a><span className="opening-scroll-note">Scroll to enter the worlds</span></div>
+  <div className="opening-guide"><h1 className="opening-tagline"><span className="opening-sr">Toyon Industry Private Limited: </span><Foil>{'Foil balloon manufacturer · Ahmedabad'}</Foil></h1><p className="opening-intro">Shaped foil balloons for wholesale buyers, made at our own factory in Odhav, Ahmedabad.</p><a className="text-link opening-world-link" href="#toyon-journey" onClick={enterWorlds}>Explore worlds <span aria-hidden="true">↓</span></a><span className="opening-scroll-note">Scroll to enter the worlds</span></div>
  </section>;
 }

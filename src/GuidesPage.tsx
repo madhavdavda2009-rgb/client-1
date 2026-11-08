@@ -16,7 +16,7 @@ function Collections({ ids }: { ids: string[] }) {
 // /guides: the list of foil balloon guides.
 export function GuidesIndex() {
   return <main className="content-page guides-page">
-    <Reveal className="page-heading"><span className="eyebrow">Foil balloon guides</span><h1>Guides</h1><p>Practical answers for buyers, decorators and shops: choosing, filling, decorating with and reusing foil balloons.</p></Reveal>
+    <Reveal className="page-heading"><span className="eyebrow">Foil balloon guides</span><h1>Guides</h1><p>Straight answers for buyers, decorators and shops on choosing, filling, decorating with and reusing foil balloons.</p></Reveal>
     <div className="guide-cards">{guides.map(guide => <MotionLink key={guide.slug} className="guide-card" href={`${guidesPath}/${guide.slug}`}>
       <img src={guide.hero.src} alt="" width={guide.hero.width} height={guide.hero.height} loading="lazy" decoding="async" />
       <h2>{guide.title}</h2><p>{guide.summary}</p><span className="text-link">Read the guide ↗</span>
@@ -42,7 +42,7 @@ export function GuidePage({ slug, notFound }: { slug: string; notFound: React.Re
         {section.image && <Figure image={section.image} />}
       </section>)}
       <section className="trust-faq" aria-labelledby="guide-faq-title"><h2 id="guide-faq-title">Quick answers</h2>{guide.faq.map(item => <details key={item.q}><summary>{item.q}</summary><p>{item.a}</p></details>)}</section>
-      <section className="guide-shop" aria-labelledby="guide-shop-title"><h2 id="guide-shop-title">Buying foil balloons in bulk?</h2><p>Toyon makes shaped foil balloons for wholesalers, shops, decorators and event planners. Browse the collections and send an enquiry; our team will call or message you about quantities, packaging and pricing.</p><Collections ids={guide.collections} /><MotionLink className="business-cta" href="/contact">Start a bulk enquiry <span aria-hidden="true">↗</span></MotionLink></section>
+      <section className="guide-shop" aria-labelledby="guide-shop-title"><h2 id="guide-shop-title">Buying foil balloons in bulk?</h2><p>Toyon makes shaped foil balloons for wholesalers, shops, decorators and event planners. Have a look through the collections and send us an enquiry. Our team will call or message you about quantities, packaging and pricing.</p><Collections ids={guide.collections} /><MotionLink className="business-cta" href="/contact">Start a bulk enquiry <span aria-hidden="true">↗</span></MotionLink></section>
       <nav className="use-case-links" aria-label="More guides"><h2>More guides</h2><ul>{others.map(other => <li key={other.slug}><MotionLink href={`${guidesPath}/${other.slug}`}>{other.title}</MotionLink></li>)}</ul></nav>
     </div>
   </main>;

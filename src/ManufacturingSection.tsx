@@ -3,6 +3,7 @@ import Foil from './FoilText';
 import { company } from './site-content';
 import { MotionLink, Reveal } from './MotionUI';
 import { categories, categoryById, productById, productAlt, products } from './catalog';
+import { promotionalToysPath } from './seo-copy';
 import './manufacturing.css';
 // Home page trust section after the journey: what buyers get, the most popular designs, and the quality checks.
 // Favourites and quality checks live in manufacturing-content.json; confirm them with the company before changing.
@@ -16,7 +17,7 @@ export default function ManufacturingSection(){
    <section className="manufacturing-overview" aria-labelledby="manufacturing-overview-title">
     <h2 id="manufacturing-overview-title">{content.overview.heading}</h2>
     {content.overview.paragraphs.map(text => <p key={text}>{fill(text)}</p>)}
-    <p>Popular collections include {overviewLinks.map((category, index) => <span key={category.id}>{index > 0 && (index === overviewLinks.length - 1 ? ' and ' : ', ')}<a href={`/categories/${category.id}`}>{category.title}</a></span>)}, or you can <a href="/products">browse all designs</a>. To order, <a href="/contact">send an enquiry</a> with your designs and quantities and we will quote on call or WhatsApp.</p>
+    <p>Popular collections include {overviewLinks.map((category, index) => <span key={category.id}>{index > 0 && (index === overviewLinks.length - 1 ? ' and ' : ', ')}<a href={`/categories/${category.id}`}>{category.title}</a></span>)}, or you can <a href="/products">browse all designs</a>. To order, <a href="/contact">send an enquiry</a> with your designs and quantities and we will quote on call or WhatsApp. Alongside balloons, we also make <a href={promotionalToysPath}>promotional toys</a> to order for brands.</p>
    </section>
    <ul className="trust-promises">{content.promises.map(item => <li key={item.label}><strong>{fill(item.value)}</strong><span>{item.label}</span></li>)}</ul>
    {favourites.length > 0 && <section className="best-sellers" aria-labelledby="best-sellers-title">

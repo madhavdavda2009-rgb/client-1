@@ -42,6 +42,12 @@ export function applyCatalog(next: CatalogData) {
   roads.splice(0, roads.length, ...chosen.map((r, i) => ({ ...r, products: r.products.filter(id => productById[id]).slice(0, roadCapacity(i, chosen.length)) })));
 }
 applyCatalog(fallbackCatalog);
-// Image alt text, e.g. "Snowman foil balloon" (helps Google Images; also describes the image for screen readers).
-export const productAlt = (product: Pick<Product, 'title'>) => `${product.title} foil balloon`;
+// Image alt text, e.g. "Snowman Christmas foil balloon" (helps Google Images; also describes the image for screen
+// readers). The collection word is added only where it is accurate and not already in the design name.
+const altWords: Record<string, string> = { christmas: 'Christmas', halloween: 'Halloween', 'animal-faces': 'animal face', 'bird-faces': 'bird face', 'headband-shapes': 'headband', swords: 'sword' };
+export const productAlt = (product: Pick<Product, 'title' | 'category'>) => {
+  const word = altWords[product.category];
+  const add = word && !product.title.toLowerCase().includes(word.split(' ')[0].toLowerCase());
+  return `${product.title}${add ? ` ${word}` : ''} foil balloon`;
+};
 export const themeIndex = (theme: RoadTheme) => Math.max(0, roadThemes.indexOf(theme));

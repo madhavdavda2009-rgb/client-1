@@ -33,7 +33,9 @@ Website: ${siteBase}/
 - Address: ${company.address}
 - Founder: ${company.founder}
 - Email: ${company.email}
-- Buyers: wholesalers, party and gift shops, decorators, event planners, schools and businesses running promotions
+- Buyers: wholesalers, distributors, party and gift shops, decorators, event planners, schools and businesses running promotions
+- Delivery: across India; minimum order 500 pieces
+- Also makes promotional toys to order for brands to give away with their products: ${siteBase}/promotional-toys
 - How to order: choose designs on the website and send a bulk enquiry at ${siteBase}/contact, or message on WhatsApp. The team calls or messages back to confirm quantities, packaging, pricing and delivery. There is no online checkout.
 
 ## Why buyers choose Toyon

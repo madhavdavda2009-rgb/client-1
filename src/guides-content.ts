@@ -87,7 +87,7 @@ export const guides: Guide[] = [
     slug: 'how-to-fill-foil-balloons',
     title: 'How to fill foil balloons: helium or air',
     metaTitle: 'How to Fill Foil Balloons: Helium or Air | Toyon',
-    description: 'How to fill foil balloons with helium or air: using the self-sealing valve, how full to fill them, mounting air-filled balloons on sticks and common mistakes.',
+    description: 'How to fill foil balloons with helium or air: the self-sealing valve, how full to fill them, mounting on sticks and common mistakes.',
     summary: 'Filling with helium or air step by step, how full to go, and the mistakes that burst balloons.',
     hero: img('filling-foil-balloons-helium', 'A silver foil balloon being filled through its valve from a helium cylinder.', 1600, 900),
     intro: [
@@ -242,7 +242,7 @@ export const guides: Guide[] = [
     slug: 'how-to-store-and-reuse-foil-balloons',
     title: 'How to store and reuse foil balloons',
     metaTitle: 'How to Store and Reuse Foil Balloons | Toyon',
-    description: 'How to deflate, fold, store and reuse foil balloons: letting the air out with a straw, storing them flat, refilling later and disposing of them responsibly.',
+    description: 'How to deflate, fold, store and reuse foil balloons: letting air out with a straw, storing flat, refilling later and disposing of them responsibly.',
     summary: 'Let the air out with a straw, store them flat and refill them later to get more than one use from each balloon.',
     hero: img('storing-foil-balloons', 'Deflated foil balloons stored flat in a clear box with a straw beside it.', 1600, 900),
     intro: [
@@ -298,7 +298,7 @@ export const guides: Guide[] = [
     slug: promotionalGuideSlug,
     title: 'Promotional foil balloons: a guide for brands, shops and events',
     metaTitle: 'Promotional Foil Balloons Guide | Toyon',
-    description: 'How to use foil balloons for store openings, product launches, shop displays and promotional events: choosing shapes, quantities, placement and buying in bulk.',
+    description: 'Using foil balloons for store openings, launches, shop displays and promotions: choosing shapes, quantities, placement and buying in bulk.',
     summary: 'How to plan foil balloons for store openings, launches, stalls and shop windows so your promotion gets noticed.',
     hero: { src: '/assets/collections/store-opening.webp', alt: 'Toyon pineapple, duck, dinosaur and cat face foil balloons tied at the entrance of a shop on its opening day.', width: 1376, height: 768 },
     intro: [

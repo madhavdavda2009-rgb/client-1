@@ -4,3 +4,4 @@
 /* Home hero: what Toyon makes, right under the logo. */
 #root .opening-tagline{margin:0 0 4px;font-family:var(--font-body);font-size:clamp(15px,1.4vw,19px);font-weight:700;line-height:1.35;letter-spacing:.01em;color:#000;text-align:center;white-space:nowrap}
 @media(max-width:600px){#root .opening-tagline{font-size:14px}}
+@media(max-width:359px){#root .opening-tagline{font-size:13px}}
